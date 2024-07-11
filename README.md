@@ -7,6 +7,16 @@
 
 프로젝트에 대한 상세 설명을 여기에 작성하세요. 이 프로젝트의 목적, 주요 기능, 사용된 기술 스택 등을 설명합니다.
 
+### Dependencies
+
+| 패키지 이름 | 버전 | 설명 |
+|-------------|-------|------|
+| [react](https://reactjs.org/) | ^18.3.1 | React 라이브러리 |
+| [react-dom](https://reactjs.org/docs/react-dom.html) | ^18.3.1 | DOM 관련 React 패키지 |
+| [react-router-dom](https://reactrouter.com/) | ^6.24.1 | React용 라우팅 라이브러리 |
+| [zustand]() | 사용 예정 | 상태 관리 라이브러리 |
+| [styled-component]() | 사용 예정 | CSS-in-JS 라이브러리 |
+
 ## 시작하기
 
 프로젝트 실행 방법
@@ -51,12 +61,12 @@ project-root
 
 #### 1. issues 탭의 new issue를 클릭하여 이슈를 생성합니다.
    * 적절한 label을 선택합니다.
-   * issue title 형식
-      [label명] 이슈 타이틀 이슈 타이틀
+   * issue title를 입력합니다.
+      ex) [documentation] 리드미 작성하기 
 
 #### 2. 우측 development - Create a branch를 클릭하여 브랜치를 생성합니다
-   * 브랜치명 형식
-      label명/number
+   * 브랜치명을 입력합니다.
+      ex) documentation/3
 
 #### 3. 로컬에서 명령어를 실행하여 브랜치를 전환합니다.
 ```bash
