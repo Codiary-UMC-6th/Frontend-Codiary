@@ -65,7 +65,7 @@ project-root
       ex) [documentation] 리드미 작성하기 
 
 #### 2. 우측 development - Create a branch를 클릭하여 브랜치를 생성합니다
-   * 브랜치명을 입력합니다.
+    * 브랜치명을 입력합니다.
       ex) documentation/3
 
 #### 3. 로컬에서 명령어를 실행하여 브랜치를 전환합니다.
@@ -82,7 +82,7 @@ git add .
 git commit -m "커밋 메시지"
 git push
 ```
-   * 커밋 메시지 형식
+    * 커밋 메시지 형식
       [label] commit message
 
 #### 6. 깃허브 레포지토리 페이지에서 Compare & pull request를 클릭하여 pull reqeust를 생성합니다.
