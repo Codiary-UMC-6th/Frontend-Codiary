@@ -60,12 +60,12 @@ project-root
 ## 기여 방법
 
 #### 1. issues 탭의 new issue를 클릭하여 이슈를 생성합니다.
-   * 적절한 label을 선택합니다.
-   * issue title를 입력합니다.
+  * 적절한 label을 선택합니다.
+  * issue title를 입력합니다.
       ex) [documentation] 리드미 작성하기 
 
 #### 2. 우측 development - Create a branch를 클릭하여 브랜치를 생성합니다
-    * 브랜치명을 입력합니다.
+  * 브랜치명을 입력합니다.
       ex) documentation/3
 
 #### 3. 로컬에서 명령어를 실행하여 브랜치를 전환합니다.
@@ -82,12 +82,12 @@ git add .
 git commit -m "커밋 메시지"
 git push
 ```
-    * 커밋 메시지 형식
-      [label] commit message
+  * 커밋 메시지 형식
+    [label] commit message
 
 #### 6. 깃허브 레포지토리 페이지에서 Compare & pull request를 클릭하여 pull reqeust를 생성합니다.
-    * 알맞은 label 선택
-    * 기록할 내용이 있다면 description에 작성 (작업 내용, 변경 사항 등)
+  * 알맞은 label 선택
+  * 기록할 내용이 있다면 description에 작성 (작업 내용, 변경 사항 등)
 
 #### 7. Confilt가 없다면 Merge pull request를 클릭하여 develop branch로 merge 합니다.
 
