@@ -14,8 +14,8 @@
 | [react](https://reactjs.org/) | ^18.3.1 | React 라이브러리 |
 | [react-dom](https://reactjs.org/docs/react-dom.html) | ^18.3.1 | DOM 관련 React 패키지 |
 | [react-router-dom](https://reactrouter.com/) | ^6.24.1 | React용 라우팅 라이브러리 |
-| [zustand]() | 사용 예정 | 상태 관리 라이브러리 |
-| [styled-component]() | 사용 예정 | CSS-in-JS 라이브러리 |
+| [zustand]() | ^4.5.4 | 상태 관리 라이브러리 |
+| [styled-component]() | ^2.8.0 | CSS-in-JS 라이브러리 |
 
 ## 시작하기
 
