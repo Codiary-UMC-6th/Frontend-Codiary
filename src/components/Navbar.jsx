@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 import * as Color from '../common/Color';
 
 import SearchBox from "./SearchBox";

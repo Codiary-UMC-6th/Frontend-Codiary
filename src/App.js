@@ -1,9 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Main from './pages/Main';
 import Profile from './pages/Profile';
 import Team from './pages/Team';
+
+import './App.css'
 
 function App() {
   return (
@@ -18,7 +21,7 @@ function App() {
         <Route path="*" element={"404 not found"}/>
       </Routes>
       </div>
-      
+      <Footer />
     </BrowserRouter>
   );
 }
