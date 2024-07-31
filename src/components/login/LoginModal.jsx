@@ -9,12 +9,12 @@ import EmailIcon from '../../assets/login/mailIcon.svg';
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
 
-export const LoginModal = () => {
+export const LoginModal = ({ onClose }) => {
 
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
-        <St.CloseButton onClick={onClick}><img src={CloseBtn} alt="Close" /></St.CloseButton>
+        <St.CloseButton onClick={onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
         <St.HeaderTitle>CODIARY</St.HeaderTitle>
         <St.Input
           type="text"
