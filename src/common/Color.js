@@ -13,6 +13,7 @@ export const text5 = "#999999";
 export const divider = "#999999";
 export const background = "#222222";
 export const background2 = "#666666";
+export const background3 = '#434343';
 
 export const semantic_negative = "#C80000";
 export const semantic_warning = "#FFB700";
