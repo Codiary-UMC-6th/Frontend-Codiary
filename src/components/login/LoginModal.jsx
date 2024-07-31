@@ -11,43 +11,52 @@ import EmailIcon from '../../assets/login/mailIcon.svg';
 export const LoginModal = () => {
 
   return (
-    <St.LoginModalWrapper>
-      <St.HeaderTitle>CODIARY</St.HeaderTitle>
-      <St.Input
-        type="text"
-        placeholder='input name = "userID"'
-      />
-      <St.Input
-        type="password"
-        placeholder='input name = "Password"'
-      />
-      <St.LoginSettingBox>
-        <St.Checkbox />
-        <St.StayLoginLabel>
-          로그인 유지하기
-        </St.StayLoginLabel>
-        회원이 아니신가요?
-        <St.LinkText href="/signup">회원가입</St.LinkText>
-      </St.LoginSettingBox>
-      <St.LoginButton title='로그인'>로그인</St.LoginButton>
-      <St.ButtonContainer>
-        <St.IconButton><img src={NaverIcon} alt="Naver" /></St.IconButton>
-        <St.IconButton><img src={KakaorIcon} alt="Naver" /></St.IconButton>
-        <St.IconButton><img src={GoogleIcon} alt="Naver" /></St.IconButton>
-        <St.IconButton><img src={GithubIcon} alt="Naver" /></St.IconButton>
-        <St.IconButton><img src={EmailIcon} alt="Naver" /></St.IconButton>
-      </St.ButtonContainer>
-    </St.LoginModalWrapper>
+    <St.LoginModalBackground>
+      <St.LoginModalWrapper>
+        <St.HeaderTitle>CODIARY</St.HeaderTitle>
+        <St.Input
+          type="text"
+          placeholder='input name = "userID"'
+        />
+        <St.Input
+          type="password"
+          placeholder='input name = "Password"'
+        />
+        <St.LoginSettingBox>
+          <St.Checkbox />
+          <St.StayLoginLabel>
+            로그인 유지하기
+          </St.StayLoginLabel>
+          회원이 아니신가요?
+          <St.LinkText href="/signup">회원가입</St.LinkText>
+        </St.LoginSettingBox>
+        <St.LoginButton title='로그인'>로그인</St.LoginButton>
+        <St.ButtonContainer>
+          <St.IconButton><img src={NaverIcon} alt="Naver" /></St.IconButton>
+          <St.IconButton><img src={KakaorIcon} alt="Naver" /></St.IconButton>
+          <St.IconButton><img src={GoogleIcon} alt="Naver" /></St.IconButton>
+          <St.IconButton><img src={GithubIcon} alt="Naver" /></St.IconButton>
+          <St.IconButton><img src={EmailIcon} alt="Naver" /></St.IconButton>
+        </St.ButtonContainer>
+      </St.LoginModalWrapper>
+    </St.LoginModalBackground>
   )
 }
 
 const St = {
 
   LoginModalBackground: styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: ${Color.primary_blue};
-    backdrop-filter: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px); /* 배경 화면 블러 효과 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
   `,
 
   LoginModalWrapper: styled.div`;
