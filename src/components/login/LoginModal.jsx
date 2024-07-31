@@ -62,6 +62,7 @@ const St = {
   `,
 
   LoginModalWrapper: styled.div`
+    position: relative; /* 기준 위치 설정 */
     display: flex;
     flex-direction: column;
     align-items: center;
