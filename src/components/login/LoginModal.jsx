@@ -19,7 +19,7 @@ export const LoginModal = () => {
         placeholder='input name = "userID"'
       />
       <St.Input
-        type="text"
+        type="password"
         placeholder='input name = "Password"'
       />
       <St.LoginSettingBox>
@@ -88,6 +88,7 @@ const St = {
 
     &::placeholder {
       color: ${Color.gray300};
+      font-wight: 400;
     }
   `,
 
@@ -169,7 +170,7 @@ const St = {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px;
+    padding: 0 12px;
 
     &:hover {
       opacity: 0.8;
