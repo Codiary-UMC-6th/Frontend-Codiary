@@ -3,18 +3,10 @@ import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
 const Input = ({ type, placeholder }) => {
-  const [isInputClicked, setIsInputClicked] = useState(false);
-
   return (
     <StyledInput
       type={type}
-      onFocus={() => {
-        setIsInputClicked(true);
-      }}
-      onBlur={() => {
-        setIsInputClicked(false);
-      }}
-      placeholder={isInputClicked === true ? '' : placeholder}
+      placeholder={placeholder}
     />
   );
 };
