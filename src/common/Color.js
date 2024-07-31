@@ -20,6 +20,6 @@ export const semantic_positive = "#59C900";
 export const semantic_informative = "#0075FF";
 
 export const backgroundBlur = "#434343";
-export const gray500 = "#434343";
-export const gray700 = "#666666";
 export const gray300 = "#CCCCCC";
+export const gray500 = "#999999";
+export const gray700 = "#666666";
