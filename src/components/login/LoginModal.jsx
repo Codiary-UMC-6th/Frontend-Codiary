@@ -10,7 +10,6 @@ import EmailIcon from '../../assets/login/mailIcon.svg';
 
 export const LoginModal = () => {
 
-
   return (
     <St.LoginModalWrapper>
       <St.HeaderTitle>CODIARY</St.HeaderTitle>
@@ -74,11 +73,10 @@ const St = {
   Input: styled.input`
     background-color: ${Color.gray700};
     color: ${Color.gray300};
-    font-family: 'D2Coding', monospace;
     margin-bottom: 24px;
     width: 400px;
     height: 56px;
-    font-wight: 400;
+    font-family: 'D2Coding';
     border: none;
     border-radius: 10px;
     font-size: 18px;
@@ -88,7 +86,6 @@ const St = {
 
     &::placeholder {
       color: ${Color.gray300};
-      font-wight: 400;
     }
   `,
 
@@ -128,7 +125,7 @@ const St = {
     margin-left: 4px;
     color: ${Color.gray500};
     font-size: 16px;
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Pretendard';
     text-decoration: none;
     cursor: pointer;
     text-decoration: underline;
