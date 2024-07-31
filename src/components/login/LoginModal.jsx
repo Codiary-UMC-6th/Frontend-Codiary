@@ -6,6 +6,7 @@ import KakaorIcon from '../../assets/login/kakaoIcon.svg';
 import GoogleIcon from '../../assets/login/googleIcon.svg';
 import GithubIcon from '../../assets/login/githubIcon.svg';
 import EmailIcon from '../../assets/login/mailIcon.svg';
+import CloseBtn from '../../assets/login/closeBtn.svg';
 
 
 export const LoginModal = () => {
@@ -13,6 +14,7 @@ export const LoginModal = () => {
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
+        <St.CloseButton onClick={onClick}><img src={CloseBtn} alt="Close" /></St.CloseButton>
         <St.HeaderTitle>CODIARY</St.HeaderTitle>
         <St.Input
           type="text"
@@ -59,7 +61,7 @@ const St = {
     z-index: 999;
   `,
 
-  LoginModalWrapper: styled.div`;
+  LoginModalWrapper: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,6 +69,15 @@ const St = {
     background-color: ${Color.backgroundBlur};
     width: 600px;
     height: 600px;
+  `,
+
+  CloseButton: styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
   `,
 
   HeaderTitle: styled.h1`
