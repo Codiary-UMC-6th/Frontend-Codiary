@@ -11,12 +11,20 @@ export const LoginModal = () => {
         <St.HeaderTitle>CODIARY</St.HeaderTitle>
         <St.Input
           type="text"
-          placeholder='input name - "userID"'
+          placeholder='input name = "userID"'
         />
         <St.Input
           type="text"
           placeholder='input name = "Password"'
         />
+        <St.LoginSettingBox>
+          <St.Checkbox />
+          <St.StayLoginLabel>
+            로그인 유지하기
+          </St.StayLoginLabel>
+          회원이 아니신가요?
+          <St.LinkText href="/signup">회원가입</St.LinkText>
+        </St.LoginSettingBox>
       </St.LoginModalWrapper>
     </St.LoginModalWrapper>
   )
@@ -69,5 +77,48 @@ const St = {
     &::placeholder {
       color: ${Color.gray300};
     }
-  `
+  `,
+
+  LoginSettingBox: styled.div`
+    display: flex;
+    margin-top: 12px;
+    padding-left: 90px;
+    padding-right: 100px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    align-items: center;
+    color: ${Color.gray500};
+  `,
+
+  StayLoginLabel: styled.div`
+    margin-right: 76px;
+    cursor: pointer;
+    font-family: Pretendard;
+  `,
+
+  Checkbox: styled.input.attrs({ type: 'checkbox' })`
+    appearance: none;
+    border: 1px solid ${Color.gray500};
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin-right: 16px;
+
+  &:checked {
+    background-color: ${Color.primary_blue};
+    border-color: ${Color.primary_blue};
+  }
+`,
+
+  LinkText: styled.a`
+    margin-left: 4px;
+    color: ${Color.gray500};
+    font-size: 16px;
+    font-family: 'Pretendard', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    text-decoration: underline;
+  `,
+
 }
