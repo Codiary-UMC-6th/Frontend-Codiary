@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Main from "./pages/Main";
 import Profile from "./pages/Profile";
 import Team from "./pages/Team";
+import Calendar from "./pages/Calendar"; // Calendar 컴포넌트 임포트
 import { LoginModal } from "./components/login/LoginModal";
 
 import "./App.css";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/team" element={<Team />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="*" element={"404 not found"} />
         </Routes>
         <button onClick={openLoginModal}>Login</button>
