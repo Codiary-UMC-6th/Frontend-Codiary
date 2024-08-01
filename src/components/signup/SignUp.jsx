@@ -47,7 +47,7 @@ const St = {
   SignUpWrapper: styled.div`
     width: 100%;
     height: 100%;
-    position: relative;
+    position: flex;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,7 +58,6 @@ const St = {
   SignUpContainerWrapper: styled.div`
     display: flex;
     align-items: center;
-    justentify-content: center;
     margin-top: 48px;
     flex-direction: column;
   `,

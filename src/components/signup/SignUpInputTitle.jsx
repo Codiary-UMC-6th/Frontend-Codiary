@@ -15,6 +15,7 @@ const St = {
 
   SignUpInputTitleWrapper: styled.div`
     display: flex;
+    width: 100px;
   `,
 
   StyledSignUpInputTitle: styled.h1`
