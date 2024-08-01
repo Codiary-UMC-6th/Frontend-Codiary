@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 import * as Color from '../common/Color';
 
 import SymbolSvg from '../assets/symbols_search.svg'
