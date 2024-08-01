@@ -1,0 +1,32 @@
+import React from 'react'
+import styled from 'styled-components'
+import * as Color from '../../common/Color';
+
+export const CheckDuplicateBtn = ({ isButtonHidden }) => {
+  console.log(isButtonHidden);
+  return (
+    <St.StyledCheckDuplicateBtn
+      title='중복확인'>
+      중복확인
+    </St.StyledCheckDuplicateBtn>
+  )
+}
+
+const St = {
+  StyledCheckDuplicateBtn: styled.button`
+    width: 123px;
+    height: 56px;
+    border: 2px solid;
+    border-color: ${Color.primary_yellow};
+    border-radius: 10px;
+    background-color: ${Color.backgroundBlur};
+    color: ${Color.primary_yellow};
+    margin-right: 0px;
+    cursor: pointer;
+    font-family: Pretendard;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 26px;
+  `,
+}
+
