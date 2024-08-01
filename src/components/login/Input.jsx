@@ -16,7 +16,6 @@ export default Input;
 const StyledInput = styled.input`
   background-color: ${Color.gray700};
   color: ${Color.gray300};
-  margin-bottom: 24px;
   width: 400px;
   height: 56px;
   font-family: 'D2Coding';
