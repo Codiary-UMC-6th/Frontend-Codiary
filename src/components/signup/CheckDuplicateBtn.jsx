@@ -2,8 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const CheckDuplicateBtn = ({ isButtonHidden }) => {
-  console.log(isButtonHidden);
+export const CheckDuplicateBtn = () => {
   return (
     <St.StyledCheckDuplicateBtn
       title='중복확인'>
@@ -21,7 +20,6 @@ const St = {
     border-radius: 10px;
     background-color: ${Color.backgroundBlur};
     color: ${Color.primary_yellow};
-    margin-right: 0px;
     cursor: pointer;
     font-family: Pretendard;
     font-size: 18px;
