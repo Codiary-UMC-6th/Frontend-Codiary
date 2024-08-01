@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from "../common/Color";
-
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
+import CalendarLeft from "../components/calendar/CalendarLeft";
 
 const Container = styled.div`
   background-color: ${Color.background};
@@ -17,7 +17,7 @@ const Top = styled.div`
   display: flex;
 `;
 
-const Callendar = styled.div`
+const CalendarWrapper = styled.div`
   background-color: #ffffff;
   height: 100%;
   flex: 1;
@@ -38,7 +38,9 @@ const Profile = () => {
     <Container>
       <Top>
         <UserInfo />
-        <Callendar onClick={handleCalendarClick}> 캘린더 </Callendar>
+        <CalendarWrapper onClick={handleCalendarClick}>
+          <CalendarLeft />
+        </CalendarWrapper>
       </Top>
       <MyDiary />
     </Container>
