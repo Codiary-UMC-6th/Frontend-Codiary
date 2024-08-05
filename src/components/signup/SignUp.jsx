@@ -57,6 +57,7 @@ const St = {
     align-items: center;
     justify-content: center;
     background-color: ${Color.background};
+    padding-bottom: 126px;
   `,
 
   SignUpContainerWrapper: styled.div`
