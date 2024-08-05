@@ -8,7 +8,28 @@ import Team from "./pages/Team";
 
 import "./App.css";
 
+import { get, post, put, del } from './common/api'; 
+
 function App() {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const openLoginModal = () => setIsLoginModalOpen(true);
+  const closeLoginModal = () => setIsLoginModalOpen(false);
+
+  const handleClick = async () => {
+    const data = {
+      email: "zxc534@naver.com",
+      password: "qwer1234"
+    };
+  
+    try {
+      const result = await post('/members/login', data);
+      console.log('POST 요청 결과:', result);
+    } catch (error) {
+      console.error('POST 요청 실패:', error);
+    }
+  }  
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -19,6 +40,9 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="*" element={"404 not found"} />
         </Routes>
+        <button onClick={openLoginModal}>Login</button>
+        {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
+        <button onClick={handleClick}>테스트 버튼</button>
       </div>
       <Footer />
     </BrowserRouter>
