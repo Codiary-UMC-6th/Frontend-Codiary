@@ -101,7 +101,7 @@
 
 .calendar-grid {
   width: 100%; /* calendar-left 안에 맞게 크기 조정 */
-  display: grid;
+  display: grid flex;
   grid-template-columns: repeat(7, 1fr); /* 가로로 7개씩 배치 */
   gap: 20px; /* 간격 조정 (가로, 세로) */
   margin-bottom: 20px;

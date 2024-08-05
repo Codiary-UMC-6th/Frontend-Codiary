@@ -1,23 +1,30 @@
 import React from "react";
 import "./CalendarLeft.css";
 
-const CalendarLeft = () => {
+const CalendarLeft = ({
+  currentMonth,
+  days,
+  selectedDay,
+  handlePreviousMonth,
+  handleNextMonth,
+  handleDayClick,
+}) => {
   return (
     <div className="calendar-left">
       <div className="month-records">
-        <button className="nav-button-left">
-          {/* 여기에 SVG 아이콘을 삽입하거나 import 해서 사용 */}
-        </button>
-        <div className="month-title">07월의 기록</div>
-        <button className="nav-button-right">
-          {/* 여기에 SVG 아이콘을 삽입하거나 import 해서 사용 */}
-        </button>
+        <div className="month-title">{currentMonth}월의 기록</div>
       </div>
       <div className="calendar-grid">
-        {Array(31)
+        {Array(days)
           .fill()
           .map((_, i) => (
-            <div className="calendar-cell" key={i}>
+            <div
+              className={`calendar-cell ${
+                selectedDay === i + 1 ? "selected" : ""
+              }`}
+              key={i}
+              onClick={() => handleDayClick(i + 1)}
+            >
               <div className="inner-grid">
                 <div className="inner-cell"></div>
                 <div className="inner-cell"></div>
@@ -27,7 +34,7 @@ const CalendarLeft = () => {
             </div>
           ))}
       </div>
-      <div className="diary-count">이번 달 31개의 다이어리 작성</div>
+      <div className="diary-count">이번 달 {days}개의 다이어리 작성</div>
     </div>
   );
 };

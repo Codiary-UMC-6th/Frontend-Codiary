@@ -134,6 +134,13 @@ const Calendar = () => {
               </div>
             ))}
           </div>
+          {/* Diary.jsx로 이동하는 버튼 추가 */}
+          <button
+            onClick={() => navigate("/diary")}
+            className="go-to-diary-button"
+          >
+            다이어리 작성
+          </button>
         </div>
       </div>
     </div>
