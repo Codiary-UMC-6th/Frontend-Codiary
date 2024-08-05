@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import SignUpTitle from './SignUpTitle';
 import { SignUpInputContainer } from './SignUpInputContainer';
+import { SocialInputContainer } from './SocialInputContainer'
+import { SignUpBtnBox } from './SignUpBtnBox';
 
 export const SignUp = () => {
   return (
@@ -38,6 +40,8 @@ export const SignUp = () => {
           isButtonHidden={Boolean(true)}
         />
       </St.SignUpContainerWrapper>
+      <SocialInputContainer />
+      <SignUpBtnBox />
     </St.SignUpWrapper>
   )
 }
@@ -52,7 +56,7 @@ const St = {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: ${Color.backgroundBlur};
+    background-color: ${Color.background};
   `,
 
   SignUpContainerWrapper: styled.div`
