@@ -1,6 +1,6 @@
 import React from "react";
 
-const BoardCard = ({ data }) => {
+const DiaryCard = ({ data }) => {
   const cardContainer = {
     display: "flex",
     flexDirection: "column",
@@ -36,4 +36,4 @@ const BoardCard = ({ data }) => {
   );
 };
 
-export default BoardCard;
+export default DiaryCard;
