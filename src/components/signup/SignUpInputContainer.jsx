@@ -5,7 +5,7 @@ import { SignUpInputTitle } from './SignUpInputTitle';
 import { CheckDuplicateBtn } from './CheckDuplicateBtn';
 import * as Color from '../../common/Color';
 
-export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden }) => {
+export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden, onChange }) => {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
 
@@ -30,6 +30,7 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
     setValue(value);
     const validationError = validateInput(value);
     setError(validationError);
+    onChange(value);
   };
 
   return (
