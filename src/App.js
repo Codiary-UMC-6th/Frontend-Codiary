@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -8,6 +9,7 @@ import Team from "./pages/Team";
 
 import Calendar from "./pages/Calendar";
 import Diary from "./pages/Diary";
+import DiaryDetails from "./pages/DiaryDetails";
 import DiaryRegister from "./components/diary/diary-register";
 import { LoginModal } from "./components/login/LoginModal";
 
@@ -45,6 +47,7 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/diary" element={<Diary />} />
+          <Route path="/DiaryDetails/:id" element={<DiaryDetails />} />
           <Route path="/diary-register" element={<DiaryRegister />} />
           <Route path="*" element={"404 not found"} />
         </Routes>
