@@ -43,6 +43,7 @@ export const SignUp = () => {
     });
   };
 
+  // 회원가입 api
   const handleSubmit = async () => {
     try {
       if (Object.values(errors).some(error => error)) {
@@ -58,6 +59,7 @@ export const SignUp = () => {
     }
   }
 
+  // 생년월일 포맷
   const birthFormatDate = (date) => {
     const year = date.slice(0, 4);
     const month = date.slice(4, 6);
