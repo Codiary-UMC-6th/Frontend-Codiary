@@ -30,7 +30,7 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
     setValue(value);
     const validationError = validateInput(value);
     setError(validationError);
-    onChange(value);
+    onChange(value, validationError);
   };
 
   return (

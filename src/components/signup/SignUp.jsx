@@ -21,7 +21,14 @@ export const SignUp = () => {
     "linkedin": ''
   });
 
-  const handleChange = (name, value) => {
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    nickname: '',
+    birth: ''
+  });
+
+  const handleChange = (name, value, error) => {
     if (name === 'birth') {
       value = birthFormatDate(value);
     }
@@ -30,10 +37,18 @@ export const SignUp = () => {
       ...signUpFormData,
       [name]: value,
     });
+    setErrors({
+      ...errors,
+      [name]: error,
+    });
   };
 
   const handleSubmit = async () => {
     try {
+      if (Object.values(errors).some(error => error)) {
+        console.error('폼 형식이 알맞지 않습니다.');
+        return;
+      }
       const response = await post('/members/sign-up', signUpFormData);
       console.log('회원가입 성공', response);
       // 뷰 이동?
@@ -61,7 +76,7 @@ export const SignUp = () => {
           type='text'
           placeholder='예: codiary@codiary.com'
           isButtonHidden={Boolean(false)}
-          onChange={(value) => handleChange('email', value)}
+          onChange={(value, error) => handleChange('email', value, error)}
         />
         <SignUpInputContainer
           title='비밀번호'
@@ -69,7 +84,7 @@ export const SignUp = () => {
           type='password'
           placeholder='8자 이상의 영문, 숫자 조합'
           isButtonHidden={Boolean(true)}
-          onChange={(value) => handleChange('password', value)}
+          onChange={(value, error) => handleChange('password', value, error)}
         />
         <SignUpInputContainer
           title='닉네임'
@@ -77,7 +92,7 @@ export const SignUp = () => {
           type='text'
           placeholder='사용자 닉네임을 입력해주세요.'
           isButtonHidden={Boolean(false)}
-          onChange={(value) => handleChange('nickname', value)}
+          onChange={(value, error) => handleChange('nickname', value, error)}
         />
         <SignUpInputContainer
           title='생년월일'
@@ -85,11 +100,11 @@ export const SignUp = () => {
           type='text'
           placeholder='YYYYDDMM'
           isButtonHidden={Boolean(true)}
-          onChange={(value) => handleChange('birth', value)}
+          onChange={(value, error) => handleChange('birth', value, error)}
         />
       </St.SignUpContainerWrapper>
       <SocialInputContainer />
-      <SignUpBtnBox onSubmit={handleSubmit} />
+      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={Object.values(errors).some(error => error)} />
     </St.SignUpWrapper>
   )
 }
