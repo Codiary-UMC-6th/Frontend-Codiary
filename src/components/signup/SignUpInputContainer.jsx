@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Input from '../login/Input';
 import { SignUpInputTitle } from './SignUpInputTitle';
 import { CheckDuplicateBtn } from './CheckDuplicateBtn';
+import * as Color from '../../common/Color';
 
 export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden }) => {
-  console.log(isButtonHidden);
+  const [value, setValue] = useState('');
+  const [error, setError] = useState('');
+
+  const validateInput = (value) => {
+    switch (title) {
+      case '이메일':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value) ? '' : '올바른 형식이 아닙니다';
+      case '비밀번호':
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(value) ? '' : '올바른 형식이 아닙니다';
+      case '생년월일':
+        const dateRegex = /^\d{4}\d{2}\d{2}$/;
+        return dateRegex.test(value) ? '' : '올바른 형식이 아닙니다';
+      default:
+        return '';
+    }
+  };
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setValue(value);
+    const validationError = validateInput(value);
+    setError(validationError);
+  };
 
   return (
     <St.SignUpInputContainerWrapper>
@@ -15,13 +40,17 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
           <Input
             type={type}
             placeholder={placeholder}
+            value={value}
+            onChange={handleChange}
+            hasError={!!error}
           />
+          {error && <St.ErrorText>{error}</St.ErrorText>}
         </St.SignUpInputWrapper>
-        {isButtonHidden && <CheckDuplicateBtn />}
+        {!isButtonHidden && <CheckDuplicateBtn />}
       </St.InputAndButtonWrapper>
     </St.SignUpInputContainerWrapper>
   );
-}
+};
 
 const St = {
   SignUpInputContainerWrapper: styled.div`
@@ -36,6 +65,7 @@ const St = {
     width: 400px;
     padding-left: 80px;
     padding-right: 57px;
+    position: relative;
   `,
 
   InputAndButtonWrapper: styled.div`
@@ -43,5 +73,14 @@ const St = {
     flex: 1;
     align-items: center;
     padding-right: 0px;
+  `,
+
+  ErrorText: styled.p`
+    color: ${Color.semantic_negative};
+    font-size: 14px;
+    position: absolute;
+    left: 0;
+    margin-left: 80px;
+    margin-top: 8px;
   `,
 };

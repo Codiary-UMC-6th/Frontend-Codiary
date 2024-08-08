@@ -1,12 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import * as Color from '../../common/Color';
 
-const Input = ({ type, placeholder }) => {
+const Input = ({ type, placeholder, value, onChange, hasError }) => {
   return (
     <StyledInput
       type={type}
       placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      hasError={hasError}
     />
   );
 };
@@ -29,4 +32,10 @@ const StyledInput = styled.input`
   &::placeholder {
     color: ${Color.gray300};
   }
+
+  ${(props) =>
+    props.hasError &&
+    css`
+      border: 2px solid ${Color.semantic_negative};
+    `}
 `;
