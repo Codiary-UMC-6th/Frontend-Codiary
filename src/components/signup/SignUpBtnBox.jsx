@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
 export const SignUpBtnBox = ({ onSubmit, isDisabled }) => {
+  console.log(isDisabled);
   return (
     <St.SignUpBtnBoxWrapper>
       <St.SignUpButton title='회원가입' onClick={onSubmit} disabled={isDisabled}>회원가입</St.SignUpButton>
@@ -34,6 +35,7 @@ const St = {
     line-height: 32px;
     text-align: center;
     margin-bottom: 24px;
+    pointer-events: ${props => props.disabled ? 'none' : 'auto'};
   `,
 
   BackButton: styled.button`

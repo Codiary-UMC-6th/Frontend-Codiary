@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import SignUpTitle from './SignUpTitle';
 import { SignUpInputContainer } from './SignUpInputContainer';
@@ -15,7 +15,7 @@ export const SignUp = () => {
     "email": '',
     "password": '',
     "nickname": '',
-    "birth": '2001-02-03',
+    "birth": '',
     "gender": 'Male',
     "github": '',
     "linkedin": ''
@@ -68,6 +68,16 @@ export const SignUp = () => {
     return `${year}-${month}-${day}`;
   }
 
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  useEffect(() => {
+    const hasErrors = Object.values(errors).some(error => error);
+    const requiredFields = ['email', 'password', 'nickname'];
+    const hasEmptyFields = requiredFields.some(field => !signUpFormData[field]);
+    const disable = hasErrors || hasEmptyFields;
+    setIsDisabled(disable);
+  }, [signUpFormData, errors]);
+
   return (
     <St.SignUpWrapper>
       <SignUpTitle>회원가입</SignUpTitle>
@@ -106,7 +116,7 @@ export const SignUp = () => {
         />
       </St.SignUpContainerWrapper>
       <SocialInputContainer />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={Object.values(errors).some(error => error)} />
+      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} />
     </St.SignUpWrapper>
   )
 }
