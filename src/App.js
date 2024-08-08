@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useState } from "react";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -13,7 +14,7 @@ import { LoginModal } from "./components/login/LoginModal";
 
 import "./App.css";
 
-import { get, post, put, del } from './common/api'; 
+import { get, post, put, del } from "./common/api";
 
 function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -24,16 +25,16 @@ function App() {
   const handleClick = async () => {
     const data = {
       email: "zxc534@naver.com",
-      password: "qwer1234"
+      password: "qwer1234",
     };
-  
+
     try {
-      const result = await post('/members/login', data);
-      console.log('POST 요청 결과:', result);
+      const result = await post("/members/login", data);
+      console.log("POST 요청 결과:", result);
     } catch (error) {
-      console.error('POST 요청 실패:', error);
+      console.error("POST 요청 실패:", error);
     }
-  }  
+  };
 
   return (
     <BrowserRouter>
