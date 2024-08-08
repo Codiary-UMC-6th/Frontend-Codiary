@@ -10,6 +10,10 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
   const [error, setError] = useState('');
 
   const validateInput = (value) => {
+    if (essential && !value) {
+      return '필수 입력 항목입니다.';
+    }
+
     switch (title) {
       case '이메일':
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
