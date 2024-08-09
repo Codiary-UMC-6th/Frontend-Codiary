@@ -74,13 +74,13 @@ const Navbar = () => {
           <Codiary>Codiary</Codiary>
           <Typography>*/</Typography>
         </LinkStyle>
-          {buttonInfo.map((contenst, index) => {
+          {buttonInfo.map((content, index) => {
             return (
                 <NavStyle
                   key={index}
-                  to={contenst.link}
+                  to={content.link}
                   >
-                  {contenst.name}
+                  {content.name}
                 </NavStyle>
             );
           })}
