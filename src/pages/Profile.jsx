@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
+
 import * as Color from "../common/Color";
+
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
 import CalendarLeft from "../components/calendar/CalendarLeft";
@@ -28,6 +31,24 @@ const CalendarWrapper = styled.div`
 `;
 
 const Profile = () => {
+  // load member info
+  const { memberId } = useParams();
+  const [ userInfoData, setUserInfoData ] = useState({});
+
+  useEffect(() => {
+    axios.get('/members/profile/1',{
+      headers: {
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6eGM1MzRAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoxLCJleHAiOjE3MjMyOTYzMTl9.uYN3kL521eiM26kRJF2NlQHLuIzHMgfoGaaOi8XhEuE'
+      }
+    })
+      .then((Response) => {
+        console.log(Response.data.result);
+        setUserInfoData(Response.data.result);
+      }) 
+      .catch((Error) => {console.log(Error)})
+  }, [memberId]);
+
+  // Calendar
   const navigate = useNavigate();
 
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
@@ -64,7 +85,7 @@ const Profile = () => {
   return (
     <Container>
       <Top>
-        <UserInfo />
+        <UserInfo userInfoData={userInfoData}/>
         <CalendarWrapper onClick={() => navigate("/calendar")}>
           <CalendarLeft
             currentMonth={currentMonth}
