@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+
 import TeamProfile from "../components/team/teamProfile.jsx";
 import TeamDiary from "../components/team/teamDiary.jsx";
 const Team = () => {

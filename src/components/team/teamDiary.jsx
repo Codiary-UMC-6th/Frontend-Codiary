@@ -116,7 +116,12 @@ const AddCategoryButton = styled.div`
   justify-content: center;
   color: white;
   font-size: 30px;
-  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const DiaryContainer = styled.div`
