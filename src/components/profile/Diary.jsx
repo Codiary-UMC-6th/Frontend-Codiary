@@ -77,7 +77,7 @@ const Diary = ( props ) => {
     const createdAt = createYear + "." + createMonth + "." + createDate;
 
     return (
-        <LinkStyle to={`/post/${props.postId}`}>
+        <LinkStyle to={`/DiaryDetails/${props.postId}`}>
             <Container>
                 <div>
                     <Img src={DefaultIMG}></Img>
