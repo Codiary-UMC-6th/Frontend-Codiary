@@ -1,7 +1,7 @@
 import styled, {css} from "styled-components";
-import * as Color from '../common/Color';
+import * as Color from '../../common/Color';
 
-import SymbolSvg from '../assets/symbols_write.svg'
+import SymbolSvg from '../../assets/symbols_write.svg'
 
 const Btn = styled.button`
     display : flex;
