@@ -1,7 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import * as Color from '../common/Color';
+import * as Color from '../../common/Color';
 
+import Dropdown from "./Dropdown";
 import SearchBox from "./SearchBox";
 import WriteBtn from "./WriteBtn";
 
@@ -74,16 +75,9 @@ const Navbar = () => {
           <Codiary>Codiary</Codiary>
           <Typography>*/</Typography>
         </LinkStyle>
-          {buttonInfo.map((content, index) => {
-            return (
-                <NavStyle
-                  key={index}
-                  to={content.link}
-                  >
-                  {content.name}
-                </NavStyle>
-            );
-          })}
+          <NavStyle to="/">홈</NavStyle>
+          <NavStyle to="/profile">내 다이어리</NavStyle>
+          <Dropdown></Dropdown>
       </Left>
       <Right>
         <SearchBox />

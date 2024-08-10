@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import * as Color from '../common/Color';
+import * as Color from '../../common/Color';
 
-import SymbolSvg from '../assets/symbols_search.svg'
+import SymbolSvg from '../../assets/symbols_search.svg'
 
 const Box = styled.div`
     display : flex;
