@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { memberData } from "../../pages/teamDataEx";
+import MemberAdd from "./memberAdd";
 
 const TeamMember = ({ isManager }) => {
   const [memberIndex, setMemberIndex] = useState(0);
+  const [isPop, setIsPop] = useState(false);
 
   const nextMember = () => {
     if (memberIndex + 3 < memberData.length) {
@@ -17,12 +19,16 @@ const TeamMember = ({ isManager }) => {
     }
   };
 
+  const togglePop = () => {
+    setIsPop(!isPop);
+  };
   return (
     <Container>
+      {isPop && <MemberAdd isPop={isPop} onClose={togglePop} />}
       <Title>
         구성원
         {isManager && (
-          <AddBtn>
+          <AddBtn onClick={togglePop}>
             <img
               src={`${process.env.PUBLIC_URL}/team_images/member.png`}
               style={{ marginLeft: "20px" }}
@@ -79,7 +85,11 @@ const Title = styled.div`
 `;
 
 const AddBtn = styled.div`
-  cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const MemberContainer = styled.div`
@@ -92,7 +102,11 @@ const NavigationButton = styled.img`
   width: 30px;
   height: 30px;
   margin: 15px;
-  cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const EmptyNavigationButton = styled.div`

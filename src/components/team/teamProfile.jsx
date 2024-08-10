@@ -1,26 +1,30 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import TeamMember from "./teamMember";
-
+import { useNavigate } from "react-router-dom";
 const TeamProfile = ({ isManager }) => {
   const [teamName, setTeamName] = useState("");
   const [teamUrl, setTeamUrl] = useState([]);
   const [teamDescription, setTeamDescription] = useState("");
   const [teamImage, setTeamImage] = useState("");
 
-  //   fetch(team information)
+  const isEdit = true;
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // fetchData("/projects/list")
-    //   .then((fetchedData) => {
-    //     setData(fetchedData);
-    //     console.log(data);
     setTeamName("Team Name");
     setTeamDescription("Team Description");
     setTeamUrl(["", "", "", ""]);
     setTeamImage(`${process.env.PUBLIC_URL}/team_images/profile.png`);
-    //   })
-    //   .catch((fetchError) => setError(fetchError));
   }, []);
+
+  const onClickEdit = () => {
+    navigate("/teamAdd", { state: { isEdit } });
+  };
+
+  const onClickMake = () => {
+    navigate("/teamAdd");
+  };
 
   return (
     <Container>
@@ -37,7 +41,12 @@ const TeamProfile = ({ isManager }) => {
             />
           </UrlContainer>
         </NameText>
-        {isManager && <ProfileEditBtn>프로필 수정</ProfileEditBtn>}
+        {isManager && (
+          <>
+            <ProfileEditBtn onClick={onClickEdit}>프로필 수정</ProfileEditBtn>
+            <ProfileEditBtn onClick={onClickMake}>팀 생성</ProfileEditBtn>
+          </>
+        )}
       </NameContainer>
 
       {/* Introduce Container */}
@@ -95,6 +104,11 @@ const ProfileEditBtn = styled.button`
   padding: 8px;
   font-size: 16px;
   margin-top: 20px;
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const IntroduceContainer = styled.div`
