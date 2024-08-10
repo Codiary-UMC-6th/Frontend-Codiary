@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import * as Color from '../../common/Color';
+import * as Color from '../../../common/Color';
 
 const Input = styled.input`
     display: flex;

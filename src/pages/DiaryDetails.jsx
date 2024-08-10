@@ -7,12 +7,13 @@ import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
 import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
 import { ReactComponent as Kebab } from "../assets/symbols_kebab.svg";
 
-import CategoryChip from "../components/CategoryChip";
-import ProfileCard from "../components/ProfileCard";
-import Comments from "../components/comments/Comments";
-import mockComments from "../components/comments/MockComments";
-import CommentInput from "../components/comments/CommentInput";
-import OtherCards from "../components/OtherCards";
+import FAB from "../components/diaryDetails/FAB";
+import CategoryChip from "../components/diaryDetails/CategoryChip";
+import ProfileCard from "../components/diaryDetails/ProfileCard";
+import Comments from "../components/diaryDetails/comments/Comments";
+import mockComments from "../components/diaryDetails/comments/MockComments";
+import CommentInput from "../components/diaryDetails/comments/CommentInput";
+import OtherCards from "../components/diaryDetails/OtherCards";
 
 const Container = styled.div`
     background-color : ${Color.background};
@@ -186,6 +187,7 @@ const DiaryDetails = () => {
 
     return (
         <Container>
+            <FAB />
             <CenterBox>
                 <Title>{state.title}</Title>
                 <CategoryChip />

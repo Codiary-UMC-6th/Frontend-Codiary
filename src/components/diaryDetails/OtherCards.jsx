@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import * as Color from '../common/Color';
-import Card from "./Card";
+import * as Color from '../../common/Color';
+import Card from "../main/Card";
 
 const Container = styled.div`
     display: flex;
