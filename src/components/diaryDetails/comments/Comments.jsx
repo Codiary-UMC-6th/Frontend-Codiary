@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import * as Color from '../../common/Color';
-import { ReactComponent as Kebab } from "../../assets/symbols_kebab.svg";
-import { ReactComponent as Reply } from "../../assets/symbols_reply.svg";
+import * as Color from '../../../common/Color';
+import { ReactComponent as Kebab } from "../../../assets/symbols_kebab.svg";
+import { ReactComponent as Reply } from "../../../assets/symbols_reply.svg";
 
 const Container = styled.div`
     margin-bottom: 40px;
@@ -104,6 +104,9 @@ const ReplyText = styled.span`
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+
+    &:hover {
+        color: ${Color.text4};
 `;
 
 const ReplyList = styled.div`

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as Color from "../../common/Color"; // 경로 수정
-import Card from "../Card"; // 경로 수정
+import Card from "../main/Card"; // 경로 수정
 
 const Container = styled.div`
   display: flex;
