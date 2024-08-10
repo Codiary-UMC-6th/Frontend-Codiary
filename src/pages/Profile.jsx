@@ -42,7 +42,7 @@ const Profile = () => {
       }
     })
       .then((Response) => {
-        console.log(Response.data.result);
+        //console.log(Response.data.result);
         setUserInfoData(Response.data.result);
       }) 
       .catch((Error) => {console.log(Error)})
@@ -97,7 +97,7 @@ const Profile = () => {
           />
         </CalendarWrapper>
       </Top>
-      <MyDiary />
+      <MyDiary memberId={memberId}/>
     </Container>
   );
 };

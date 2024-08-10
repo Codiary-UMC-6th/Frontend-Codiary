@@ -1,5 +1,7 @@
 import react, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
 import * as Color from '../../common/Color';
 
 import Diary from './Diary';
@@ -59,49 +61,19 @@ const DiaryBox = styled.div`
     margin : 64px 0px 0px 0px;
 `
 
-const MyDiary = () => {
+const MyDiary = (props) => {
     const [diaryList, setDiaryList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        const data = [
-            {
-                "postId": "1",
-                "projectId": "long",
-                "postTitle": "first post",
-                "postBody": "this is post body",
-                "createdAt": "2024-06-29T01:14:38.706Z"
-            },
-            {
-                "postId": "2",
-                "projectId": "long",
-                "postTitle": "POST ABOUT GOOD",
-                "postBody": "good is good, bad is bad",
-                "createdAt": "2024-07-01T07:33:38.706Z"
-            },
-            {
-                "postId": "3",
-                "projectId": "long",
-                "postTitle": "Hello, world.",
-                "postBody": "hello my name is syb",
-                "createdAt": "2024-07-22T06:24:38.706Z"
-            },
-            {
-                "postId": "4",
-                "projectId": "long",
-                "postTitle": "This is music",
-                "postBody": "music and life",
-                "createdAt": "2024-07-23T07:24:38.706Z"
-            },
-            {
-                "postId": "5",
-                "projectId": "long",
-                "postTitle": "Hmmm....,",
-                "postBody": "Aha",
-                "createdAt": "2024-07-29T07:24:38.706Z"
-            },
-        ]
-        setDiaryList(data);
+        const memberId = props.memberId;
+        axios.get(`/posts/member/${memberId}/paging?page=${currentPage-1}&size=5`)
+            .then((response) => {
+                console.log(response.data.result.posts);
+                setDiaryList(response.data.result.posts);
+            })
+            .catch((error) => {})
+        setDiaryList(diaryList);
         console.log("Page updated. current page : " + currentPage);
     }, [currentPage]);
 

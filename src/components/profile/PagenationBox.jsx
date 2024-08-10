@@ -12,11 +12,13 @@ const Container = styled.div`
 
 const Button = styled.img`
     margin : 0px 32px 0px 0px;
+    cursor: pointer;
 `
 
 const Page = styled.div`
     margin : 0px 32px 0px 0px;
 
+    cursor: pointer;
     color: ${Color.gray500};
     font-family: Pretendard;
     font-size: 16px;
@@ -27,9 +29,14 @@ const Page = styled.div`
 
 const PagenationBox = (props) => {
     const setCurrentPage = props.setCurrentPage;
+    const [currentStart, setCurrentStart] = useState(1);
+    const pages = document.getElementsByClassName("page");
+
+    useEffect(() => {
+        pages[0].style.color = Color.text2;
+    },[]);
 
     const pageClick = (event) => {
-        const pages = document.getElementsByClassName("page");
         Array.prototype.map.call(pages, (item) => {
             item.style.color = Color.gray500;
         });
@@ -38,15 +45,36 @@ const PagenationBox = (props) => {
         setCurrentPage(event.target.innerText);
     }
 
+    const clickPrev = (event) => {
+        if(currentStart != 1) {
+            setCurrentStart(currentStart - 5);
+            setCurrentPage(currentStart - 1);           
+            Array.prototype.map.call(pages, (item) => {
+                item.style.color = Color.gray500;
+            });
+            pages[4].style.color = Color.text2;
+        }
+    }
+
+    const clickNext = (event) => {
+        setCurrentStart(currentStart + 5);
+        setCurrentPage(currentStart + 5);
+        
+        Array.prototype.map.call(pages, (item) => {
+            item.style.color = Color.gray500;
+        });
+        pages[0].style.color = Color.text2;
+    }
+
     return (
         <Container>
-            <Button src={PrevSvg}></Button>
-            <Page className="page" onClick={pageClick}>1</Page>
-            <Page className="page" onClick={pageClick}>2</Page>
-            <Page className="page" onClick={pageClick}>3</Page>
-            <Page className="page" onClick={pageClick}>4</Page>
-            <Page className="page" onClick={pageClick}>5</Page>
-            <Button src={NextSvg}></Button>
+            <Button onClick={clickPrev} src={PrevSvg}></Button>
+            <Page className="page" onClick={pageClick}>{currentStart}</Page>
+            <Page className="page" onClick={pageClick}>{currentStart+1}</Page>
+            <Page className="page" onClick={pageClick}>{currentStart+2}</Page>
+            <Page className="page" onClick={pageClick}>{currentStart+3}</Page>
+            <Page className="page" onClick={pageClick}>{currentStart+4}</Page>
+            <Button onClick={clickNext} src={NextSvg}></Button>
         </Container>
     );
 }
