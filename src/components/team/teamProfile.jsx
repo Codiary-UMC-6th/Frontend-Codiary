@@ -2,22 +2,22 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import TeamMember from "./teamMember";
 import { useNavigate } from "react-router-dom";
+import { get } from "../../common/api";
 const TeamProfile = ({ isManager }) => {
   const [teamName, setTeamName] = useState("");
   const [teamUrl, setTeamUrl] = useState([]);
   const [teamDescription, setTeamDescription] = useState("");
   const [teamImage, setTeamImage] = useState("");
+  const [teamId, setTeamId] = useState(6);
+  const [teamData, setTeamData] = useState({});
 
   const isEdit = true;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setTeamName("Team Name");
-    setTeamDescription("Team Description");
-    setTeamUrl(["", "", "", ""]);
-    setTeamImage(`${process.env.PUBLIC_URL}/team_images/profile.png`);
-  }, []);
-
+  const getData = async () => {
+    const result = await get("/teams/6");
+    console.log(result);
+  };
   const onClickEdit = () => {
     navigate("/teamAdd", { state: { isEdit } });
   };

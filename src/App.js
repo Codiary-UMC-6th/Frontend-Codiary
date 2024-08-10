@@ -13,7 +13,6 @@ import DiaryDetails from "./pages/DiaryDetails";
 import DiaryRegister from "./components/diary/diary-register";
 import { LoginModal } from "./components/login/LoginModal";
 import "./App.css";
-import { useState } from "react";
 
 import { get, post, put, del } from "./common/api";
 import TeamAdd from "./components/team/teamAdd";

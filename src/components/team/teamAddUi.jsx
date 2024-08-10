@@ -14,11 +14,21 @@ const TeamAddUi = (props) => {
           onChange={props.onChangeName}
         />
         <CheckBtn>중복 확인</CheckBtn>
-        <Text>관리자 메일</Text>
-        <TeamInput placeholder={'input email = "manager email"'} />
-        <p />
+        {!props.isEdit && (
+          <>
+            <Text>관리자 메일</Text>
+            <TeamInput
+              placeholder={'input email = "manager email"'}
+              onChange={props.onChangeEmail}
+            />
+            <p />
+          </>
+        )}
         <Text>팀 소개</Text>
-        <TeamInput placeholder={'input info = "team information'} />
+        <TeamInput
+          placeholder={'input info = "team information'}
+          onChange={props.onChangeIntro}
+        />
         <p />
         <Text>소셜 계정</Text>
         <SocialDiv>
@@ -26,6 +36,7 @@ const TeamAddUi = (props) => {
           <TeamInput
             placeholder={'input github = "team github"'}
             width="280px"
+            onChange={props.onChangeGithub}
           />
         </SocialDiv>
         <p />
@@ -33,6 +44,7 @@ const TeamAddUi = (props) => {
         <SocialDiv>
           <SocialImg
             src={`${process.env.PUBLIC_URL}/team_images/discord.png`}
+            onChange={props.onChangeDiscord}
           />
           <TeamInput
             placeholder={'input discord = "team discord"'}
@@ -42,7 +54,10 @@ const TeamAddUi = (props) => {
         <p />
         <p />
         <SocialDiv>
-          <SocialImg src={`${process.env.PUBLIC_URL}/team_images/linked.png`} />
+          <SocialImg
+            src={`${process.env.PUBLIC_URL}/team_images/linked.png`}
+            onChange={props.onChangeLinked}
+          />
           <TeamInput
             placeholder={'input linkedin = "team linkedin"'}
             width="280px"
@@ -57,6 +72,7 @@ const TeamAddUi = (props) => {
           <TeamInput
             placeholder={'input instagram = "team instagram"'}
             width="280px"
+            onChange={props.onChangeInstagram}
           />
         </SocialDiv>
         <p />
