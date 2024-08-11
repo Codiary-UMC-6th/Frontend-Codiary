@@ -63,12 +63,10 @@ export const SignUp = () => {
         console.error('폼 형식이 알맞지 않습니다.');
         return;
       } else if (!isEmailChecked) {
-        newErrors.email = '이메일 중복 확인이 필요합니다.';
-        console.error('이메일 중복확인 필요');
+        alert('이메일 중복 확인이 필요합니다.');
         return;
       } else if (!isNicknameChecked) {
-        newErrors.nickname = '닉네임 중복 확인이 필요합니다.';
-        console.error('닉네임 중복확인 필요');
+        alert('닉네임 중복 확인이 필요합니다.');
         return;
       }
       const response = await post('/members/sign-up', signUpFormData);
