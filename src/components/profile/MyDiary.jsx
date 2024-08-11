@@ -1,7 +1,11 @@
+import react, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
 import * as Color from '../../common/Color';
 
 import Diary from './Diary';
+import PagenationBox from "./PagenationBox";
 
 const Container = styled.div`
 `
@@ -57,7 +61,22 @@ const DiaryBox = styled.div`
     margin : 64px 0px 0px 0px;
 `
 
-const MyDiary = () => {
+const MyDiary = (props) => {
+    const [diaryList, setDiaryList] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        const memberId = props.memberId;
+        axios.get(`/posts/member/${memberId}/paging?page=${currentPage-1}&size=5`)
+            .then((response) => {
+                console.log(response.data.result.posts);
+                setDiaryList(response.data.result.posts);
+            })
+            .catch((error) => {})
+        setDiaryList(diaryList);
+        console.log("Page updated. current page : " + currentPage);
+    }, [currentPage]);
+
     return (
         <Container>
             <Title>내 다이어리</Title>
@@ -66,9 +85,19 @@ const MyDiary = () => {
                 <AddBtn>+</AddBtn>
             </Category>
             <DiaryBox>
-                <Diary></Diary>
-                
+                {diaryList.map((diary)=> {
+                    return (
+                        <Diary
+                            key={diary.postId}
+                            postId={diary.postId} 
+                            postTitle={diary.postTitle} 
+                            postBody={diary.postBody} 
+                            createdAt={diary.createdAt}
+                        />
+                    );
+                })}
             </DiaryBox>
+            <PagenationBox setCurrentPage={setCurrentPage}/>
         </Container>
     );
 }

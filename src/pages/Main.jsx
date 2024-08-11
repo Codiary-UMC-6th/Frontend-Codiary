@@ -1,10 +1,10 @@
 import React from "react";
-import MockData from "../components/MockData";
-import Card from "../components/Card";
-import ViewBtn from "../components/ViewBtn";
+import MockData from "../components/main/MockData";
+import Card from "../components/main/Card";
+import ViewBtn from "../components/main/ViewBtn";
 import styled from "styled-components";
 import * as Color from '../common/Color';
-import CategoryBtn from "../components/CategoryBtn";
+import CategoryBtn from "../components/main/CategoryBtn";
 
 const Container = styled.div`
   background-color : ${Color.background};

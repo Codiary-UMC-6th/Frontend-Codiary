@@ -1,14 +1,15 @@
-const BASE_URL = "http://43.202.229.89:8080"; // 기본 API URL
+export const BASE_URL = "http://43.202.229.89:8080"; // 기본 API URL
 
 // 기본 설정을 사용하여 요청을 보내는 함수
 async function request(endpoint, method = "GET", data = null) {
-  const url = `${BASE_URL}${endpoint}`;
+  //const url = `${BASE_URL}${endpoint}`;
+  const token = sessionStorage.getItem("accessToken");
+  const url = `${endpoint}`;
   const options = {
     method,
     headers: {
       "Content-Type": "application/json",
-      //토큰 관련 추가 예정
-      //'Authorization': `Bearer ${token}`
+      Authorization: (token==null) ? null :`Bearer ${token}`,
     },
   };
 
@@ -51,4 +52,8 @@ export async function put(endpoint, data) {
 // DELETE 요청
 export async function del(endpoint) {
   return await request(endpoint, "DELETE");
+}
+
+export async function patch(endpoint, data) {
+  return await request(endpoint, "PATCH", data);
 }

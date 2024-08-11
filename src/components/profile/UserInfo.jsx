@@ -65,21 +65,28 @@ const Bottom = styled.div`
     margin : 27px 0px;
 `
 
-const UserInfo = () => {
+const UserInfo = (props) => {
+    const data = props.userInfoData;
     return (
         <Container>
             <Top>
                 <ImageBox>
                     <Image></Image>
                 </ImageBox>
-                <UserName>USER NAME</UserName>
+                <UserName>{data.userName}</UserName>
                 <LinkBox>
-                    <ProfileLink type={"Github"} svg={GithubSvg} link={"https://github.com/"}/>
-                    <ProfileLink type={"Discord"} svg={DiscordSvg} link={"https://discord.com/"}/>
-                    <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={"https://www.linkedin.com/"}/>
+                    <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`}/>
+                    <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`}/>
+                    <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={`https://www.linkedin.com/${data.linkedinUrl}`}/>
                 </LinkBox>
             </Top>
-            <Bio>소개를 입력해주세요.</Bio>
+            <Bio>
+                {data.introduction ? 
+                data.introduction
+                :
+                "소개를 입력해주세요."
+                }
+            </Bio>
             <Bottom>
                 <Techstack></Techstack>
                 <Team></Team>

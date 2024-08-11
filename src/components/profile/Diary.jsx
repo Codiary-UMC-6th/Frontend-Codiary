@@ -1,11 +1,17 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from '../../common/Color';
 
 import DefaultIMG from '../../assets/diary_default_img.png';
 import ProfileDefulat from '../../assets/user_profile_default.svg';
 
+const LinkStyle = styled(Link)`
+  text-decoration : none;
+`;
+
 const Container = styled.div`
     display : flex;
+    margin : 0px 0px 64px 0px;
 `
 
 const Img = styled.img`
@@ -64,22 +70,29 @@ const Date = styled.div`
     line-height: 24px;
 `
 
-const Diary = () => {
+const Diary = ( props ) => {
+    const createYear = props.createdAt.slice(0,4);
+    const createMonth = props.createdAt.slice(5,7);
+    const createDate = props.createdAt.slice(8,10);
+    const createdAt = createYear + "." + createMonth + "." + createDate;
+
     return (
-        <Container>
-            <div>
-                <Img src={DefaultIMG}></Img>
-            </div>
-            <div>
-                <Title>제목</Title>
-                <Content>내용</Content>
-                <Writer>
-                    <WriterImg src={ProfileDefulat}></WriterImg>
-                    <WriterName>Writer</WriterName>
-                </Writer>
-                <Date>YYYY.MM.DD</Date>
-            </div>
-        </Container>
+        <LinkStyle to={`/DiaryDetails/${props.postId}`}>
+            <Container>
+                <div>
+                    <Img src={DefaultIMG}></Img>
+                </div>
+                <div>
+                    <Title>{props.postTitle}</Title>
+                    <Content>{props.postBody}</Content>
+                    <Writer>
+                        <WriterImg src={ProfileDefulat}></WriterImg>
+                        <WriterName>Writer</WriterName>
+                    </Writer>
+                    <Date>{createdAt}</Date>
+                </div>
+            </Container>
+        </LinkStyle>
     );
 }
 

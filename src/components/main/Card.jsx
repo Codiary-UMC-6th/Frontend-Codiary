@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import * as Color from '../common/Color';
+import * as Color from '../../common/Color';
 
 const CardBox = styled.div`
     display: flex;
@@ -95,7 +95,7 @@ function Card(props) {
     const navigate = useNavigate();
 
     const onClickPostDetails = () => {
-        navigate(`/details/${props.id}`, { state: props });
+        navigate(`/DiaryDetails/${props.id}`, { state: props });
     }
 
     return (
