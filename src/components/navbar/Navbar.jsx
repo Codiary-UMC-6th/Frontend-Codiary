@@ -1,16 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
+
 import * as Color from '../../common/Color';
 
 import Dropdown from "./Dropdown";
 import SearchBox from "./SearchBox";
 import WriteBtn from "./WriteBtn";
 
-const buttonInfo = [
-  { name: "홈", link: "/" },
-  { name: "내 다이어리", link: "/profile" },
-  { name: "팀 홈", link: "/team" },
-];
+import { useLoginStore } from '../../store/LoginStore';
 
 const Container = styled.div`
   display : flex;
@@ -66,22 +63,73 @@ const NavStyle = styled(NavLink)`
   color : ${Color.text1};
 `;
 
+const LoginBtn = styled.button`
+  margin: 0px 0px 0px 20px;
+  cursor: pointer;
+  border: 0;
+  background-color: ${Color.primary_red};
+  width: 102px;
+  height: 40px;
+  
+  border-radius: 30px;
+  color: ${Color.text1};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+`
+
+const LogoutBtn = styled.button`
+  margin: 0px 0px 0px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  width: 102px;
+  height: 40px;
+
+  border: 1px solid ${Color.text5};
+  border-radius: 30px;
+  color: ${Color.text5};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+`
+
 const Navbar = () => {
+  const { isLogin, setLogin, setLogout } = useLoginStore();
+
   return (
     <Container>
       <Left>
         <LinkStyle to="/" >
-          <Typography>/*</Typography>
+          <Typography>{"/*"}</Typography>
           <Codiary>Codiary</Codiary>
           <Typography>*/</Typography>
         </LinkStyle>
+        {
+          isLogin ? 
+          <>
           <NavStyle to="/">홈</NavStyle>
           <NavStyle to="/profile">내 다이어리</NavStyle>
-          <Dropdown></Dropdown>
+          <Dropdown></Dropdown>          
+          </>
+          :
+          <></>
+        }
       </Left>
       <Right>
         <SearchBox />
-        <WriteBtn />
+        {
+          isLogin ?
+          <>
+          <WriteBtn />
+          <LogoutBtn onClick={setLogout}>로그아웃</LogoutBtn>          
+          </>
+          :
+          <LoginBtn onClick={setLogin}>로그인</LoginBtn>
+        }
       </Right>
     </Container>
   );

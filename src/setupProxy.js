@@ -2,6 +2,13 @@ const { legacyCreateProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
     app.use(
+        '/bookmarks',
+        legacyCreateProxyMiddleware({
+            target: 'http://43.202.229.89:8080',
+            changeOrigin: true,
+        })
+    );
+    app.use(
         '/posts',
         legacyCreateProxyMiddleware({
             target: 'http://43.202.229.89:8080',

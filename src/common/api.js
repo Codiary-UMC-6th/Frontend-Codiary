@@ -4,7 +4,7 @@ export const BASE_URL = "http://43.202.229.89:8080"; // 기본 API URL
 async function request(endpoint, method = "GET", data = null) {
   //const url = `${BASE_URL}${endpoint}`;
   const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6eGM1MzRAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoxLCJleHAiOjE3MjMyOTYzMTl9.uYN3kL521eiM26kRJF2NlQHLuIzHMgfoGaaOi8XhEuE";
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6eGM1MzRAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoxLCJleHAiOjE3MjM0Mjc2MzN9.9JviKJG5ggtC3T0UPmnGpiKlf3BocGteioS0AGDfoME";
   const url = `${endpoint}`;
   const options = {
     method,
