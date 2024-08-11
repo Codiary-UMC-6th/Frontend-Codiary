@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import * as Color from '../../common/Color';
+
 import Input from '../login/Input';
 import { SignUpInputTitle } from './SignUpInputTitle';
 import { CheckDuplicateBtn } from './CheckDuplicateBtn';
-import * as Color from '../../common/Color';
+
+import { get } from "../../common/api";
 
 export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden, onChange }) => {
   const [value, setValue] = useState('');
@@ -37,6 +40,32 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
     onChange(value, validationError);
   };
 
+  const checkRedundancyAPI = async () => {
+    console.log(value);
+    try {
+      const response = title === '이메일'
+        ? await get(`/members/sign-up/check-email?email=${value}`)
+        : await get(`/members/sign-up/check-nickname?nickname=${value}`);
+
+      console.log(response);
+
+      if (response.isSuccess) {
+        alert(`사용 가능한 ${title}입니다.`);
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {
+      if (!error.isSuccess) {
+        const errorMessage = title === '이메일'
+          ? '이미 가입된 이메일입니다.'
+          : '이미 존재하는 닉네임입니다.'
+        setError(errorMessage);
+      } else {
+        console.log('중복확인 실패', error);
+      }
+    }
+  }
+
   return (
     <St.SignUpInputContainerWrapper>
       <SignUpInputTitle title={title} essential={essential} />
@@ -51,7 +80,7 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
           />
           {error && <St.ErrorText>{error}</St.ErrorText>}
         </St.SignUpInputWrapper>
-        {!isButtonHidden && <CheckDuplicateBtn />}
+        {!isButtonHidden && <CheckDuplicateBtn onClick={checkRedundancyAPI} />}
       </St.InputAndButtonWrapper>
     </St.SignUpInputContainerWrapper>
   );
