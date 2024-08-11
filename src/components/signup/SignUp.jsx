@@ -8,7 +8,7 @@ import { SignUpInputContainer } from './SignUpInputContainer';
 import { SocialInputContainer } from './SocialInputContainer'
 import { SignUpBtnBox } from './SignUpBtnBox';
 
-import { get, post, put, del } from "../../common/api";
+import { post } from "../../common/api";
 
 export const SignUp = () => {
   const [signUpFormData, setSignUpFormData] = useState({
