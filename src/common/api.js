@@ -26,7 +26,7 @@ async function request(endpoint, method = "GET", data = null) {
       throw error;
     }
 
-    return await response.json();
+    return responseData;
   } catch (error) {
     console.error("API 요청 실패:", error);
     throw error;
