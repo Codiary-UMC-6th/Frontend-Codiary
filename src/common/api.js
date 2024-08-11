@@ -3,15 +3,13 @@ export const BASE_URL = "http://43.202.229.89:8080"; // 기본 API URL
 // 기본 설정을 사용하여 요청을 보내는 함수
 async function request(endpoint, method = "GET", data = null) {
   //const url = `${BASE_URL}${endpoint}`;
-  const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6eGM1MzRAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoxLCJleHAiOjE3MjM0Mjc2MzN9.9JviKJG5ggtC3T0UPmnGpiKlf3BocGteioS0AGDfoME";
+  const token = sessionStorage.getItem("accessToken");
   const url = `${endpoint}`;
   const options = {
     method,
     headers: {
       "Content-Type": "application/json",
-      //토큰 관련 추가 예정
-      Authorization: `Bearer ${token}`,
+      Authorization: (token==null) ? null :`Bearer ${token}`,
     },
   };
 
