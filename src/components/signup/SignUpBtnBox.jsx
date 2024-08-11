@@ -27,7 +27,6 @@ const St = {
     height: 56px;
     border: none;
     cursor: pointer;
-    background-color: ${Color.primary_blue};
     color: ${Color.text1};
     font-family: 'Pretendard';
     font-size: 20px;
@@ -36,7 +35,8 @@ const St = {
     text-align: center;
     margin-bottom: 24px;
     pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-  `,
+    background-color: ${(props) => (props.disabled ? Color.text5 : Color.primary_blue)};
+    `,
 
   BackButton: styled.button`
     height: 22px;
