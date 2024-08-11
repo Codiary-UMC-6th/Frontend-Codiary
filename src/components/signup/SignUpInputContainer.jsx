@@ -8,7 +8,7 @@ import { CheckDuplicateBtn } from './CheckDuplicateBtn';
 
 import { get } from "../../common/api";
 
-export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden, onChange }) => {
+export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden, onChange, onCheckDuplicate }) => {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
 
@@ -51,15 +51,13 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
 
       if (response.isSuccess) {
         alert(`사용 가능한 ${title}입니다.`);
+        onCheckDuplicate();
       } else {
         setError(response.message);
       }
     } catch (error) {
-      if (!error.isSuccess) {
-        const errorMessage = title === '이메일'
-          ? '이미 가입된 이메일입니다.'
-          : '이미 존재하는 닉네임입니다.'
-        setError(errorMessage);
+      if (!error.response.isSuccess) {
+        setError(error.response.message);
       } else {
         console.log('중복확인 실패', error);
       }
