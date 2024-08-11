@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components";
 import * as Color from '../../common/Color';
+import { post } from '../../common/api';
+import { useLoginStore } from '../../store/LoginStore';
 import NaverIcon from '../../assets/login/naverIcon.svg';
 import KakaorIcon from '../../assets/login/kakaoIcon.svg';
 import GoogleIcon from '../../assets/login/googleIcon.svg';
@@ -11,6 +13,28 @@ import CloseBtn from '../../assets/login/closeBtn.svg';
 
 export const LoginModal = ({ onClose }) => {
 
+  const { setLogin } = useLoginStore();
+
+  const [ userId, setUserId ] = useState("");
+  const [ password, setPassword ] = useState(""); 
+
+  const loginRequest = async () => {
+    const data = {
+      email: userId,
+      password: password
+    };
+  
+    try {
+      const result = await post('/members/login', data);
+      console.log('POST 요청 결과:', result);
+      sessionStorage.setItem("accessToken", result.result.tokenInfo.accessToken);
+      setLogin();
+      window.location.reload();
+    } catch (error) {
+      console.error('POST 요청 실패:', error);
+    }
+  }
+
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
@@ -19,10 +43,18 @@ export const LoginModal = ({ onClose }) => {
         <St.Input
           type="text"
           placeholder='input name = "userID"'
+          value={userId}
+          onChange={(event) => {
+            setUserId(event.target.value);
+          }}
         />
         <St.Input
           type="password"
           placeholder='input name = "Password"'
+          value={password}
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
         />
         <St.LoginSettingBox>
           <St.Checkbox />
@@ -32,7 +64,7 @@ export const LoginModal = ({ onClose }) => {
           회원이 아니신가요?
           <St.LinkText href="/signup">회원가입</St.LinkText>
         </St.LoginSettingBox>
-        <St.LoginButton title='로그인'>로그인</St.LoginButton>
+        <St.LoginButton title='로그인' onClick={loginRequest}>로그인</St.LoginButton>
         <St.ButtonContainer>
           <St.IconButton><img src={NaverIcon} alt="Naver" /></St.IconButton>
           <St.IconButton><img src={KakaorIcon} alt="Naver" /></St.IconButton>

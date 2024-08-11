@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,6 +7,7 @@ import * as Color from '../../common/Color';
 import Dropdown from "./Dropdown";
 import SearchBox from "./SearchBox";
 import WriteBtn from "./WriteBtn";
+import { LoginModal } from "../login/LoginModal";
 
 import { useLoginStore } from '../../store/LoginStore';
 
@@ -99,8 +101,27 @@ const LogoutBtn = styled.button`
 
 const Navbar = () => {
   const { isLogin, setLogin, setLogout } = useLoginStore();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const openLoginModal = () => setIsLoginModalOpen(true);
+  const closeLoginModal = () => setIsLoginModalOpen(false);
+
+  useEffect(() => {
+    if(sessionStorage.getItem("accessToken") == null) {
+      setLogout();
+    } else {
+      setLogin();
+    }
+  }, []);
+
+  const handleLogout = () => {
+    setLogout();
+    sessionStorage.removeItem("accessToken");
+    window.location.reload();
+  }
 
   return (
+    <>
     <Container>
       <Left>
         <LinkStyle to="/" >
@@ -112,7 +133,7 @@ const Navbar = () => {
           isLogin ? 
           <>
           <NavStyle to="/">홈</NavStyle>
-          <NavStyle to="/profile">내 다이어리</NavStyle>
+          <NavStyle to="/profile/1">내 다이어리</NavStyle>
           <Dropdown></Dropdown>          
           </>
           :
@@ -125,13 +146,15 @@ const Navbar = () => {
           isLogin ?
           <>
           <WriteBtn />
-          <LogoutBtn onClick={setLogout}>로그아웃</LogoutBtn>          
+          <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>          
           </>
           :
-          <LoginBtn onClick={setLogin}>로그인</LoginBtn>
+          <LoginBtn onClick={openLoginModal}>로그인</LoginBtn>
         }
       </Right>
     </Container>
+    {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
+    </>
   );
 };
 
