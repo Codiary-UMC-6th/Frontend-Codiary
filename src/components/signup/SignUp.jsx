@@ -18,7 +18,8 @@ export const SignUp = () => {
     "birth": '',
     "gender": 'Male',
     "github": '',
-    "linkedin": ''
+    "linkedin": '',
+    "discord": '',
   });
 
   const [errors, setErrors] = useState({
@@ -52,6 +53,7 @@ export const SignUp = () => {
       }
       const response = await post('/members/sign-up', signUpFormData);
       console.log('회원가입 성공', response);
+      console.log(signUpFormData);
       // 뷰 이동?
     } catch (error) {
       console.error('회원가입 실패', error);
@@ -115,7 +117,7 @@ export const SignUp = () => {
           onChange={(value, error) => handleChange('birth', value, error)}
         />
       </St.SignUpContainerWrapper>
-      <SocialInputContainer />
+      <SocialInputContainer handleChange={handleChange} />
       <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} />
     </St.SignUpWrapper>
   )
