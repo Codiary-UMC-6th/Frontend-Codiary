@@ -19,12 +19,15 @@ async function request(endpoint, method = "GET", data = null) {
 
   try {
     const response = await fetch(url, options);
+    const responseData = await response.json();
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const error = new Error(`HTTP error! Status: ${response.status}`);
+      error.response = responseData;
+      throw error;
     }
 
-    return await response.json();
+    return responseData;
   } catch (error) {
     console.error("API 요청 실패:", error);
     throw error;

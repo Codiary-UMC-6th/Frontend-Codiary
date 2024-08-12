@@ -2,10 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const CheckDuplicateBtn = () => {
+export const CheckDuplicateBtn = ({ onClick }) => {
   return (
     <St.StyledCheckDuplicateBtn
-      title='중복확인'>
+      title='중복확인'
+      onClick={onClick}
+    >
       중복확인
     </St.StyledCheckDuplicateBtn>
   )
