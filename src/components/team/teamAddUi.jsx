@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const TeamAddUi = (props) => {
   return (
-    <TeamForm>
+    <div>
       <Title>팀 정보</Title>
       <TeamContainer>
         <Text>팀 이름</Text>
@@ -77,40 +77,11 @@ const TeamAddUi = (props) => {
         </SocialDiv>
         <p />
       </TeamContainer>
-      {props.isEdit ? (
-        <SubmitBtn type="submit" onClick={props.onClickEdit}>
-          수정하기
-        </SubmitBtn>
-      ) : (
-        <SubmitBtn type="submit" onClick={props.onClickSave}>
-          저장하기
-        </SubmitBtn>
-      )}
-      <Link
-        to="/team"
-        style={{
-          textDecorationColor: "#888888",
-          color: "#888888",
-          fontSize: "14px",
-        }}
-      >
-        뒤로가기
-      </Link>
-    </TeamForm>
+    </div>
   );
 };
 
 export default TeamAddUi;
-
-const TeamForm = styled.div`
-  flex: 1;
-  display: flex;
-  background-color: #222222;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 50px;
-`;
 
 const TeamContainer = styled.form`
   width: 600px;
@@ -124,6 +95,7 @@ const Title = styled.p`
   color: white;
   font-size: 22px;
   margin: 40px;
+  text-align: center;
 `;
 
 const Text = styled.p`
