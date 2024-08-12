@@ -25,7 +25,7 @@ const DiaryCard = ({ data }) => {
         }}
       >
         <div style={{ fontSize: "25px", margin: "15px 15px 40px" }}>
-          {data.title}
+          {data.postTitle}
         </div>
         <div style={{ fontSize: "20px", margin: "15px" }}>{data.writer}</div>
         <div style={{ fontSize: "16px", margin: "15px", color: "#999999" }}>

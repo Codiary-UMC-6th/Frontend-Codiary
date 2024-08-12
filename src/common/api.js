@@ -9,7 +9,7 @@ async function request(endpoint, method = "GET", data = null) {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: (token==null) ? null :`Bearer ${token}`,
+      Authorization: token == null ? null : `Bearer ${token}`,
     },
   };
 
