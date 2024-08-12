@@ -24,14 +24,17 @@ export const LoginModal = ({ onClose }) => {
       password: password
     };
   
+    console.log(data);
     try {
       const result = await post('/members/login', data);
       console.log('POST 요청 결과:', result);
       sessionStorage.setItem("accessToken", result.result.tokenInfo.accessToken);
       setLogin();
       window.location.reload();
+      alert('로그인 되었습니다.');
     } catch (error) {
       console.error('POST 요청 실패:', error);
+      alert(`${error.response.message}`);
     }
   }
 
