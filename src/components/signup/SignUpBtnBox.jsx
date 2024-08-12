@@ -2,10 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const SignUpBtnBox = () => {
+export const SignUpBtnBox = ({ onSubmit, isDisabled }) => {
+  console.log(isDisabled);
   return (
     <St.SignUpBtnBoxWrapper>
-      <St.SignUpButton title='회원가입'>회원가입</St.SignUpButton>
+      <St.SignUpButton title='회원가입' onClick={onSubmit} disabled={isDisabled}>회원가입</St.SignUpButton>
       <St.BackButton title='뒤로가기'>뒤로가기</St.BackButton>
     </St.SignUpBtnBoxWrapper>
   )
@@ -26,7 +27,6 @@ const St = {
     height: 56px;
     border: none;
     cursor: pointer;
-    background-color: ${Color.primary_blue};
     color: ${Color.text1};
     font-family: 'Pretendard';
     font-size: 20px;
@@ -34,7 +34,9 @@ const St = {
     line-height: 32px;
     text-align: center;
     margin-bottom: 24px;
-  `,
+    pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+    background-color: ${(props) => (props.disabled ? Color.text5 : Color.primary_blue)};
+    `,
 
   BackButton: styled.button`
     height: 22px;
