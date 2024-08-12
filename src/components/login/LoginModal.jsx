@@ -62,7 +62,7 @@ export const LoginModal = ({ onClose }) => {
             로그인 유지하기
           </St.StayLoginLabel>
           회원이 아니신가요?
-          <St.LinkText href="/signup">회원가입</St.LinkText>
+          <St.LinkText href="/sign-up">회원가입</St.LinkText>
         </St.LoginSettingBox>
         <St.LoginButton title='로그인' onClick={loginRequest}>로그인</St.LoginButton>
         <St.ButtonContainer>
