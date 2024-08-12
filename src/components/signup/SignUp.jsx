@@ -32,8 +32,6 @@ export const SignUp = () => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
-  const newErrors = { ...errors };
-
   const handleChange = (name, value, error) => {
     if (name === 'birth') {
       value = birthFormatDate(value);
