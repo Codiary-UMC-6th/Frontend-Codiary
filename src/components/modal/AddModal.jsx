@@ -10,15 +10,15 @@ export const AddModal = ({ title, placeholder, onClose }) => {
       <St.ModalWrapper>
         <St.CloseButton onClick={onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
         <St.HeaderTitle>{title}</St.HeaderTitle>
-        <St.Input
+        <St.InputWrapper
           type="text"
           placeholder={placeholder}
         />
-        <St.AddButton />
+        <St.AddButton>추가하기</St.AddButton>
       </St.ModalWrapper>
     </St.AddModalBackground>
-  )
-}
+  );
+};
 
 const St = {
 
@@ -44,27 +44,28 @@ const St = {
     background-color: ${Color.backgroundBlur};
     width: 600px;
     height: 471px;
+    align-items: center;
   `,
 
   CloseButton: styled.button`
-    display: absolute;
+    position: absolute;
     top: 10px;
     right: 10px;
     background: none;
-    border none;
+    border: none;
     cursor: pointer;
   `,
 
   HeaderTitle: styled.h1`
     display: block;
-    padding-top: 96px 0 0 40px;
     color: ${Color.text1};
     font-size: 32px;
     font-weight: 600;
     line-height: 48px;
   `,
 
-  InputWrapper: styled.div`
+  InputWrapper: styled.input`
+    margin-top: 19px;
     background-color: ${Color.gray700};
     color: ${Color.gray300};
     width: 400px;
@@ -87,7 +88,7 @@ const St = {
     height: 48px;
     border: none;
     border-radius: 15px;
-    margin: 36px auto;
+    margin-top: 103px;
     background-color: ${Color.primary_blue};
     text-align: center;
     color: ${Color.text1};
