@@ -9,6 +9,8 @@ import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
 import CalendarLeft from "../components/calendar/CalendarLeft";
 
+import { AddModal } from "../components/modal/AddModal";
+
 const Container = styled.div`
   background-color: ${Color.background};
   display: flex;
@@ -34,6 +36,11 @@ const Profile = () => {
   // load member info
   const { memberId } = useParams();
   const [ userInfoData, setUserInfoData ] = useState({});
+
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+
+  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
+  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
   useEffect(() => {
     axios.get('/members/profile/1',{
@@ -83,6 +90,7 @@ const Profile = () => {
   };
 
   return (
+    <>
     <Container>
       <Top>
         <UserInfo userInfoData={userInfoData}/>
@@ -97,8 +105,16 @@ const Profile = () => {
           />
         </CalendarWrapper>
       </Top>
-      <MyDiary memberId={memberId}/>
+      <MyDiary memberId={memberId} onClick={openAddCategoryModal}/>
     </Container>
+            {isAddCategoryModalOpen && 
+              <AddModal
+                  title='프로젝트 추가하기'
+                  placeholder='input name = "project"'
+                  onClose={closeAddCategoryModal}
+              />
+          }
+          </>
   );
 };
 
