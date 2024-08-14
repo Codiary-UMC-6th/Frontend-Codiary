@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-
+import { get } from "../common/api.js";
+import { useParams } from "react-router-dom";
 import TeamProfile from "../components/team/teamProfile.jsx";
 import TeamDiary from "../components/team/teamDiary.jsx";
 const Team = () => {

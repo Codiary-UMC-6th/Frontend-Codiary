@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { post, patch } from "../../common/api";
 import TeamAddUi from "./teamAddUi";
 import styled from "styled-components";
-const TeamAdd = () => {
+import { Link } from "react-router-dom";
+const TeamEdit = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,32 +14,29 @@ const TeamAdd = () => {
   const [linked, setLinked] = useState("");
   const [instagram, setInstagram] = useState("");
 
-  const [teamId, setTeamId] = useState("6");
+  const { teamId } = useParams();
 
   const location = useLocation();
   const { isEdit } = location.state || false;
 
-  const addData = {
+  const editData = {
     name: name,
     intro: intro,
     github: github,
-    email: email,
     linkedIn: linked,
     discord: discord,
     instagram: instagram,
   };
 
-  const onClickSave = async () => {
+  const onClickEdit = async () => {
     try {
-      const response = await post("/teams", addData);
-      const teamId = response.result.teamId;
-      console.log(teamId);
+      const result = await patch(`/teams/profile/${teamId}`, editData);
+      console.log("PATCH 요청 결과:", result);
       navigate(`/team/${teamId}`);
     } catch (error) {
-      console.error("POST 요청 실패:", error);
+      console.error("PATCH 요청 실패:", error);
     }
   };
-
   return (
     <TeamForm>
       <TeamAddUi
@@ -49,10 +47,22 @@ const TeamAdd = () => {
         onChangeDiscord={(e) => setDiscord(e.target.value)}
         onChangeLinked={(e) => setLinked(e.target.value)}
         onChangeInstagram={(e) => setInstagram(e.target.value)}
+        isEdit={isEdit}
       />
-      <SubmitBtn type="submit" onClick={onClickSave}>
-        저장하기
+      <SubmitBtn type="submit" onClick={onClickEdit}>
+        수정하기
       </SubmitBtn>
+
+      <Link
+        to={`/team/${teamId}`}
+        style={{
+          textDecorationColor: "#888888",
+          color: "#888888",
+          fontSize: "14px",
+        }}
+      >
+        뒤로가기
+      </Link>
     </TeamForm>
   );
 };
@@ -74,7 +84,7 @@ const SubmitBtn = styled.button`
   background-color: #2d7295;
   border: none;
   font-size: 16px;
-  margin: 30px 0 20px;
+  margin-bottom: 20px;
   &:hover {
     opacity: 0.5;
     transition: 0.25s;
@@ -82,4 +92,4 @@ const SubmitBtn = styled.button`
   }
 `;
 
-export default TeamAdd;
+export default TeamEdit;

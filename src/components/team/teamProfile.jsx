@@ -1,29 +1,38 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import TeamMember from "./teamMember";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { get } from "../../common/api";
-const TeamProfile = ({ isManager }) => {
-  const [teamName, setTeamName] = useState("");
+const TeamProfile = (props) => {
+  const [teamName, setTeamName] = useState("Team Name");
   const [teamUrl, setTeamUrl] = useState([]);
-  const [teamDescription, setTeamDescription] = useState("");
-  const [teamImage, setTeamImage] = useState("");
-  const [teamId, setTeamId] = useState(6);
-  const [teamData, setTeamData] = useState({});
+  const [teamDescription, setTeamDescription] = useState("Team Introduce");
+  const [teamImage, setTeamImage] = useState(
+    `${process.env.PUBLIC_URL}/team_images/profile.png`
+  );
 
   const isEdit = true;
+  const { teamId } = useParams();
+  const [teamData, setTeamData] = useState(null);
+
+  const [isManager, setIsManager] = useState(true);
+
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      try {
+        const response = await get(`/teams/${teamId}`);
+        setTeamData(response.result);
+        console.log(response.result);
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    };
+    fetchTeamData();
+  }, []);
   const navigate = useNavigate();
 
-  const getData = async () => {
-    const result = await get("/teams/6");
-    console.log(result);
-  };
   const onClickEdit = () => {
-    navigate("/teamAdd", { state: { isEdit } });
-  };
-
-  const onClickMake = () => {
-    navigate("/teamAdd");
+    navigate(`/teamEdit/${teamId}`, { state: { isEdit } });
   };
 
   return (
@@ -31,7 +40,7 @@ const TeamProfile = ({ isManager }) => {
       {/* Name Container */}
       <NameContainer>
         <NameText>
-          {teamName}
+          {teamData?.name}
           <UrlContainer>
             <UrlImg src={`${process.env.PUBLIC_URL}/team_images/github.png`} />
             <UrlImg src={`${process.env.PUBLIC_URL}/team_images/discord.png`} />
@@ -41,10 +50,9 @@ const TeamProfile = ({ isManager }) => {
             />
           </UrlContainer>
         </NameText>
-        {isManager && (
+        {props.isManager && (
           <>
             <ProfileEditBtn onClick={onClickEdit}>프로필 수정</ProfileEditBtn>
-            <ProfileEditBtn onClick={onClickMake}>팀 생성</ProfileEditBtn>
           </>
         )}
       </NameContainer>
@@ -55,11 +63,11 @@ const TeamProfile = ({ isManager }) => {
           <IntroduceTitle>팀 소개</IntroduceTitle>
           <InfoContainer>
             <TeamImage src={teamImage} />
-            {teamDescription}
+            {teamData?.intro}
           </InfoContainer>
         </IntroduceLeft>
         <IntroduceRight>
-          <TeamMember isManager={isManager} />
+          <TeamMember isManager={props.isManager} />
         </IntroduceRight>
       </IntroduceContainer>
     </Container>
@@ -80,7 +88,7 @@ const NameText = styled.div`
   display: flex;
   margin-top: 20px;
   color: #e19e58;
-  font-size: 40px;
+  font-size: 36px;
   align-items: center;
 `;
 

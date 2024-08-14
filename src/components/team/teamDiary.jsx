@@ -2,10 +2,29 @@ import React, { useState, useEffect } from "react";
 import { boardData } from "../../pages/teamDataEx";
 import styled from "styled-components";
 import DiaryCard from "./diaryCard";
+import { get } from "../../common/api";
+import { useParams } from "react-router-dom";
 const TeamDiary = ({ isManager }) => {
   const [categoryList, setCategoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [boardList, setBoardList] = useState([]);
+  const { teamId } = useParams();
+
+  const size = 6;
+  useEffect(() => {
+    const fetchTeamDiary = async () => {
+      try {
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=${currentPage}&size=${size}`
+        );
+        setBoardList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    };
+    fetchTeamDiary();
+  }, [currentPage]);
 
   const addCategory = () => {
     setCategoryList([...categoryList, ""]);
@@ -20,6 +39,8 @@ const TeamDiary = ({ isManager }) => {
   useEffect(() => {
     setTotalPages(Math.ceil(boardData.length / 6));
   }, [boardData]);
+
+  const getDiary = async () => {};
 
   return (
     <Container>
@@ -39,7 +60,7 @@ const TeamDiary = ({ isManager }) => {
         )}
       </CategoryContainer>
       <DiaryContainer>
-        {boardData
+        {boardList
           .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
           .map((el) => (
             <DiaryCard key={el.id} data={el} />
