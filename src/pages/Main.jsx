@@ -43,10 +43,11 @@ const Main = () => {
             <CardsContainer>
                 {MockData.map(data => (
                     <Card
-                    id={data.id}
-                    title={data.title}
-                    author={data.author}
-                    details={data.details} />
+                        postId={data.postId}
+                        memberId={data.memberId}
+                        title={data.title}
+                        author={data.author}
+                        details={data.details} />
                     ))}
             </CardsContainer>
         </Container>

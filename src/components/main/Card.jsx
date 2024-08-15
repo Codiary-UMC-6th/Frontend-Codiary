@@ -95,7 +95,7 @@ function Card(props) {
     const navigate = useNavigate();
 
     const onClickPostDetails = () => {
-        navigate(`/DiaryDetails/${props.id}`, { state: props });
+        navigate(`/DiaryDetails/${props.postId}`, { state: props });
     }
 
     return (

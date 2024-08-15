@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import styled from "styled-components";
 
 import * as Color from '../common/Color';
+import { get } from '../common/api';
 import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
 import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
 import { ReactComponent as Kebab } from "../assets/symbols_kebab.svg";
@@ -167,6 +168,7 @@ const Code = styled.div`
 const DiaryDetails = () => {
     const { state } = useLocation();
     const [totalComments, setTotalComments] = useState(0);
+    const [memberId, setMemberId] = useState();
 
     const countComments = (comments) => {
         let count = 0;
@@ -178,16 +180,25 @@ const DiaryDetails = () => {
         });
         
         return count;
+    };
 
+    const getMemberId = async () => {
+        try {
+            const result = await get("/members/info");
+            setMemberId(result.result.memberId);    
+        } catch (error) {
+            console.error("사용자 정보 조회 실패:", error);
+        }
     };
   
     useEffect(() => {
-      setTotalComments(countComments(mockComments));
-    }, []);
+        setTotalComments(countComments(mockComments));
+        getMemberId();
+    }, [state.postId]);
 
     return (
         <Container>
-            <FAB />
+            <FAB postId={state.postId} memberId={memberId} />
             <CenterBox>
                 <Title>{state.title}</Title>
                 <CategoryChip />
@@ -209,7 +220,7 @@ const DiaryDetails = () => {
                 <CodeBox>
                     <Code>{state.details}</Code>
                 </CodeBox>
-                <ProfileCard />
+                <ProfileCard memberId={state.memberId} />
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
                 <CommentInput />
                 {mockComments.map((comment) => (
