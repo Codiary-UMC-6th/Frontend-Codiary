@@ -38,16 +38,17 @@ const AddBtn = styled.button`
     font-family: Pretendard;
     font-size: 40px;
     font-weight: 200;
+    cursor: pointer;
 `;
 
-function CategoryBtn() {
+const CategoryBtn = ({ onClick }) => {
 
     return (
         <Container>
             <Btn>전체</Btn>
-            <AddBtn>+</AddBtn>
+            <AddBtn onClick={onClick}>+</AddBtn>
         </Container>
-    )
+    );
 };
 
 export default CategoryBtn;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MockData from "../components/main/MockData";
 import Card from "../components/main/Card";
 import ViewBtn from "../components/main/ViewBtn";
@@ -6,8 +6,10 @@ import styled from "styled-components";
 import * as Color from '../common/Color';
 import CategoryBtn from "../components/main/CategoryBtn";
 
+import { AddModal } from "../components/modal/AddModal";
+
 const Container = styled.div`
-  background-color : ${Color.background};
+    background-color : ${Color.background};
 `;
 
 const Banner = styled.img`
@@ -27,12 +29,17 @@ const CardsContainer = styled.div`
 `;
 
 const Main = () => {
+    const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+
+    const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
+    const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
     return (
+        <>
         <Container>
             <Banner />
             <ViewBtn />
-            <CategoryBtn />
+            <CategoryBtn onClick={openAddCategoryModal}/>
             <CardsContainer>
                 {MockData.map(data => (
                     <Card
@@ -43,6 +50,14 @@ const Main = () => {
                     ))}
             </CardsContainer>
         </Container>
+        {isAddCategoryModalOpen && 
+        <AddModal 
+            title='카테고리 추가하기'
+            placeholder='input name = "interest"'
+            onClose={closeAddCategoryModal} 
+        />
+        }
+        </>
     );
 }
 

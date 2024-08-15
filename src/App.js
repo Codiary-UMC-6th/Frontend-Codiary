@@ -11,6 +11,7 @@ import Calendar from "./pages/Calendar";
 import Diary from "./pages/Diary";
 import DiaryDetails from "./pages/DiaryDetails";
 import DiaryRegister from "./components/diary/diary-register";
+import { SignUp } from "./components/signup/SignUp";
 
 import "./App.css";
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/diary" element={<Diary />} />
           <Route path="/DiaryDetails/:id" element={<DiaryDetails />} />
           <Route path="/diary-register" element={<DiaryRegister />} />
+          <Route path="sign-up" element={<SignUp />} />
           <Route path="*" element={"404 not found"} />
         </Routes>
       </div>

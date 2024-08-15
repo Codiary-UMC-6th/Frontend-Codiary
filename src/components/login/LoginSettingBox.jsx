@@ -7,7 +7,7 @@ const LoginSettingBox = () => (
     <Checkbox />
     <StayLoginLabel>로그인 유지하기</StayLoginLabel>
     회원이 아니신가요?
-    <LinkText href="/signup">회원가입</LinkText>
+    <LinkText>회원가입</LinkText>
   </StyledLoginSettingBox>
 );
 
@@ -28,7 +28,8 @@ const StyledLoginSettingBox = styled.div`
 const StayLoginLabel = styled.div`
   margin-right: 76px;
   cursor: pointer;
-  font-family: Pretendard;
+  font-family: Prete
+  ndard;
 `;
 
 const Checkbox = styled.input.attrs({ type: 'checkbox' })`
