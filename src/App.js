@@ -31,7 +31,7 @@ function App() {
           <Route path="teamEdit/:teamId" element={<TeamEdit />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/diary" element={<Diary />} />
-          <Route path="/DiaryDetails/:id" element={<DiaryDetails />} />
+          <Route path="/DiaryDetails/:postId" element={<DiaryDetails />} />
           <Route path="/diary-register" element={<DiaryRegister />} />
           <Route path="sign-up" element={<SignUp />} />
           <Route path="*" element={"404 not found"} />

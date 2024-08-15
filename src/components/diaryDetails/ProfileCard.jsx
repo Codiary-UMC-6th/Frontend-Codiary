@@ -1,6 +1,7 @@
 import React from "react";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
+import FollowBtn from "./FollowBtn";
 
 const Container = styled.div`
     display: flex;
@@ -56,25 +57,9 @@ const Text = styled.div`
     line-height: 24px;
 `;
 
-const FollowBtn = styled.button`
-    color: ${Color.text1};
-    width: 79px;
-    height: 34px;
-
-    display: flex;
-    padding: 4px 16px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    border-radius: 18px;
-    border: 0px;
-    background: var(--Primary-Blue, #2D7295);
-`;
 
 
-
-const ProfileCard = () => {
+const ProfileCard = ({ memberId }) => {
 
     return (
         <Container>
@@ -85,7 +70,7 @@ const ProfileCard = () => {
                     <Text>text</Text>
                 </TextBox>
             </UserBox>
-            <FollowBtn>팔로우</FollowBtn>
+            <FollowBtn memberId={memberId} />
         </Container>
     );
 }
