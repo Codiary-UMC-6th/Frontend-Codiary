@@ -9,11 +9,15 @@ import GoogleIcon from '../../assets/login/googleIcon.svg';
 import GithubIcon from '../../assets/login/githubIcon.svg';
 import EmailIcon from '../../assets/login/mailIcon.svg';
 import CloseBtn from '../../assets/login/closeBtn.svg';
+import { useStore } from 'zustand';
 
 
 export const LoginModal = ({ onClose }) => {
 
   const { setLogin } = useLoginStore();
+  const setEmail = useStore((state) => state.setEmail);
+  const setNickname = useStore((state) => state.setNickname);
+  const setMemberId = useStore((state) => state.setMemberId);
 
   const [ userId, setUserId ] = useState("");
   const [ password, setPassword ] = useState(""); 
@@ -26,10 +30,14 @@ export const LoginModal = ({ onClose }) => {
   
     console.log(data);
     try {
-      const result = await post('/members/login', data);
-      console.log('POST 요청 결과:', result);
-      sessionStorage.setItem("accessToken", result.result.tokenInfo.accessToken);
+      const response = await post('/members/login', data);
+      console.log('POST 요청 결과:', response);
+      sessionStorage.setItem("accessToken", response.result.tokenInfo.accessToken);
       setLogin();
+      setEmail(response.response.email);
+      setNickname(response.response.nickname);
+      setMemberId(response.response.memberId);
+
       window.location.reload();
       alert('로그인 되었습니다.');
     } catch (error) {
