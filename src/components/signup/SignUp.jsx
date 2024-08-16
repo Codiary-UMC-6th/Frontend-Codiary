@@ -15,7 +15,7 @@ export const SignUp = () => {
     "email": '',
     "password": '',
     "nickname": '',
-    "birth": '2024-08-12',
+    "birth": '0000-00-00',
     "gender": 'Male',
     "github": '',
     "linkedin": '',
