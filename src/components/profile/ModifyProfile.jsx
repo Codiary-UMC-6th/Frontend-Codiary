@@ -10,6 +10,7 @@ import { SignUpBtnBox } from '../signup/SignUpBtnBox';
 
 import { get, post } from "../../common/api";
 import { useLoginStore } from "../../store/LoginStore";
+import { IntroduceInputContainer } from '../signup/IntroduceInputContainer';
 
 
 export const ModifyProfile = () => {
@@ -24,6 +25,7 @@ export const ModifyProfile = () => {
     "github": '',
     "linkedin": '',
     "discord": '',
+    introduction: '',
   });
 
   const [changeFormData, setChangeFormData] = useState({
@@ -48,6 +50,7 @@ export const ModifyProfile = () => {
           github: userData.githubUrl || '',
           linkedin: userData.linkedinUrl || '',
           discord: userData.discordUrl || '',
+          introduction: userData.introduction || '',
         });
 
         if (userData.birth === '1000-01-01') {
@@ -173,6 +176,9 @@ export const ModifyProfile = () => {
           onChange={(value, error) => handleChange('birth', value, error)}
         />
       </St.SignUpContainerWrapper>
+      <IntroduceInputContainer 
+        value={profileFormData.introduction}
+      />
       <SocialInputContainer 
         handleChange={handleChange} 
         github={profileFormData.github}
