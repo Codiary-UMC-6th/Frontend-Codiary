@@ -3,21 +3,20 @@ import styled from "styled-components";
 import * as Color from '../../common/Color';
 import { post } from '../../common/api';
 import { useLoginStore } from '../../store/LoginStore';
+
 import NaverIcon from '../../assets/login/naverIcon.svg';
 import KakaorIcon from '../../assets/login/kakaoIcon.svg';
 import GoogleIcon from '../../assets/login/googleIcon.svg';
 import GithubIcon from '../../assets/login/githubIcon.svg';
 import EmailIcon from '../../assets/login/mailIcon.svg';
 import CloseBtn from '../../assets/login/closeBtn.svg';
-import { useStore } from 'zustand';
-
 
 export const LoginModal = ({ onClose }) => {
 
   const { setLogin } = useLoginStore();
-  const setEmail = useStore((state) => state.setEmail);
-  const setNickname = useStore((state) => state.setNickname);
-  const setMemberId = useStore((state) => state.setMemberId);
+  const setEmail = useLoginStore((state) => state.setEmail);
+  const setNickname = useLoginStore((state) => state.setNickname);
+  const setMemberId = useLoginStore((state) => state.setMemberId);
 
   const [ userId, setUserId ] = useState("");
   const [ password, setPassword ] = useState(""); 
@@ -34,15 +33,15 @@ export const LoginModal = ({ onClose }) => {
       console.log('POST 요청 결과:', response);
       sessionStorage.setItem("accessToken", response.result.tokenInfo.accessToken);
       setLogin();
-      setEmail(response.response.email);
-      setNickname(response.response.nickname);
-      setMemberId(response.response.memberId);
+      setEmail(response.result.email);
+      setNickname(response.result.nickname);
+      setMemberId(response.result.memberId);
 
       window.location.reload();
       alert('로그인 되었습니다.');
     } catch (error) {
       console.error('POST 요청 실패:', error);
-      alert(`${error.response.message}`);
+      alert(`${error.response}`);
     }
   }
 

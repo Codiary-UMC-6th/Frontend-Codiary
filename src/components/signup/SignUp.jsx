@@ -15,7 +15,7 @@ export const SignUp = () => {
     "email": '',
     "password": '',
     "nickname": '',
-    "birth": '0000-00-00',
+    "birth": '1000-01-01',
     "gender": 'Male',
     "github": '',
     "linkedin": '',
@@ -70,10 +70,12 @@ export const SignUp = () => {
       const response = await post('/members/sign-up', signUpFormData);
       console.log('회원가입 성공', response);
       console.log(signUpFormData);
+      alert('회원가입 성공');
       // 뷰 이동?
     } catch (error) {
-      console.error('회원가입 실패', error);
+      console.error('회원가입 실패', error.response);
       console.log(signUpFormData);
+      alert('회원가입 실패');
     }
   }
 
