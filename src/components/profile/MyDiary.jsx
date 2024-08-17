@@ -6,6 +6,7 @@ import * as Color from '../../common/Color';
 
 import Diary from './Diary';
 import PagenationBox from "./PagenationBox";
+import { AddModal } from "../modal/AddModal";
 
 const Container = styled.div`
 `
@@ -55,6 +56,7 @@ const AddBtn = styled.button`
     font-family: Pretendard;
     font-size: 40px;
     font-weight: 200;
+    cursor: pointer;
 `;
 
 const DiaryBox = styled.div`
@@ -82,7 +84,7 @@ const MyDiary = (props) => {
             <Title>내 다이어리</Title>
             <Category>
                 <Btn>전체</Btn>
-                <AddBtn>+</AddBtn>
+                <AddBtn onClick={props.onClick}>+</AddBtn>
             </Category>
             <DiaryBox>
                 {diaryList.map((diary)=> {

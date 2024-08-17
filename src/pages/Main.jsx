@@ -8,7 +8,11 @@ import CategoryBtn from "../components/main/CategoryBtn";
 import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
+import { AddModal } from "../components/modal/AddModal";
+
 const Container = styled.div`
+  background-color: ${Color.background};
+
   background-color: ${Color.background};
 `;
 
@@ -49,33 +53,65 @@ const Main = () => {
       console.error("Get(Popular-List) 요청 실패:", error);
     }
   };
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
-  const { searchResults } = useSearchStore();
+  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
+  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
-  useEffect(() => {
-    onClickPopular();
-  }, []);
-
-  useEffect(() => {
-    if (searchResults) setDiaryData(searchResults);
-  }, [searchResults]);
   return (
-    <Container>
-      <Banner />
-      <ViewBtn onClickPopular={onClickPopular} onClickLatest={onClickLatest} />
-      <CategoryBtn />
-      <CardsContainer>
-        {diaryData.map((data) => (
-          <Card
-            id={data.id}
-            title={data.postTitle}
-            author={data.nickname}
-            details={data.postBody}
-          />
-        ))}
-      </CardsContainer>
-    </Container>
+    <>
+      <Container>
+        <Banner />
+        <ViewBtn />
+        <CategoryBtn onClick={openAddCategoryModal} />
+        <CardsContainer>
+          {MockData.map((data) => (
+            <Card
+              postId={data.postId}
+              memberId={data.memberId}
+              title={data.title}
+              author={data.author}
+              details={data.details}
+            />
+          ))}
+        </CardsContainer>
+      </Container>
+      {isAddCategoryModalOpen && (
+        <AddModal
+          title="카테고리 추가하기"
+          placeholder='input name = "interest"'
+          onClose={closeAddCategoryModal}
+        />
+      )}
+    </>
   );
 };
+
+const { searchResults } = useSearchStore();
+
+useEffect(() => {
+  onClickPopular();
+}, []);
+
+useEffect(() => {
+  if (searchResults) setDiaryData(searchResults);
+}, [searchResults]);
+return (
+  <Container>
+    <Banner />
+    <ViewBtn onClickPopular={onClickPopular} onClickLatest={onClickLatest} />
+    <CategoryBtn />
+    <CardsContainer>
+      {diaryData.map((data) => (
+        <Card
+          id={data.id}
+          title={data.postTitle}
+          author={data.nickname}
+          details={data.postBody}
+        />
+      ))}
+    </CardsContainer>
+  </Container>
+);
 
 export default Main;

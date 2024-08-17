@@ -15,7 +15,7 @@ export const SignUp = () => {
     "email": '',
     "password": '',
     "nickname": '',
-    "birth": '',
+    "birth": '2024-08-12',
     "gender": 'Male',
     "github": '',
     "linkedin": '',
@@ -31,8 +31,6 @@ export const SignUp = () => {
 
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-
-  const newErrors = { ...errors };
 
   const handleChange = (name, value, error) => {
     if (name === 'birth') {
@@ -126,7 +124,7 @@ export const SignUp = () => {
           placeholder='사용자 닉네임을 입력해주세요.'
           isButtonHidden={Boolean(false)}
           onChange={(value, error) => handleChange('nickname', value, error)}
-          onCheckDuplicate={() => setIsEmailChecked(true)}
+          onCheckDuplicate={() => setIsNicknameChecked(true)}
         />
         <SignUpInputContainer
           title='생년월일'
