@@ -6,7 +6,7 @@ import linkedInIcon from '../../assets/signUp/linkedin.svg'
 import discordIcon from '../../assets/signUp/discord.svg'
 import { SignUpInputTitle } from './SignUpInputTitle'
 
-export const SocialInputContainer = ({ handleChange }) => {
+export const SocialInputContainer = (props) => {
   return (
     <>
       <St.SocialInputContainerWrapper>
@@ -17,21 +17,24 @@ export const SocialInputContainer = ({ handleChange }) => {
         <SocialInputBox
           image={<img src={githubIcon} alt="Github" />}
           placeholder='id를 입력해주세요.'
-          onChange={(value) => handleChange('github', value, '')}
+          value={props.github}
+          onChange={(value) => props.handleChange('github', value, '')}
         />
       </St.SocialInputContainerWrapper>
       <St.SocialInputWithoutTitleWrapper>
         <SocialInputBox
           image={<img src={linkedInIcon} alt="linkedIn" />}
           placeholder='id를 입력해주세요.'
-          onChange={(value) => handleChange('linkedin', value, '')}
+          value={props.linkedIn}
+          onChange={(value) => props.handleChange('linkedin', value, '')}
         />
       </St.SocialInputWithoutTitleWrapper>
       <St.SocialInputWithoutTitleWrapper>
         <SocialInputBox
           image={<img src={discordIcon} alt="discord" />}
           placeholder='id를 입력해주세요.'
-          onChange={(value) => handleChange('discord', value, '')}
+          value={props.discord}
+          onChange={(value) => props.handleChange('discord', value, '')}
         />
       </St.SocialInputWithoutTitleWrapper>
     </>
