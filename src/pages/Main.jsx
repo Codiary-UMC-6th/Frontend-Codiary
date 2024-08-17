@@ -58,20 +58,33 @@ const Main = () => {
   const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
   const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
+  const { searchResults } = useSearchStore();
+
+  useEffect(() => {
+    onClickPopular();
+  }, []);
+
+  useEffect(() => {
+    if (searchResults) setDiaryData(searchResults);
+  }, [searchResults]);
+
   return (
     <>
       <Container>
         <Banner />
-        <ViewBtn />
+        <ViewBtn
+          onClickPopular={onClickPopular}
+          onClickLatest={onClickLatest}
+        />
+
         <CategoryBtn onClick={openAddCategoryModal} />
         <CardsContainer>
-          {MockData.map((data) => (
+          {diaryData.map((data) => (
             <Card
-              postId={data.postId}
-              memberId={data.memberId}
-              title={data.title}
-              author={data.author}
-              details={data.details}
+              id={data.id}
+              title={data.postTitle}
+              author={data.nickname}
+              details={data.postBody}
             />
           ))}
         </CardsContainer>
@@ -86,32 +99,5 @@ const Main = () => {
     </>
   );
 };
-
-const { searchResults } = useSearchStore();
-
-useEffect(() => {
-  onClickPopular();
-}, []);
-
-useEffect(() => {
-  if (searchResults) setDiaryData(searchResults);
-}, [searchResults]);
-return (
-  <Container>
-    <Banner />
-    <ViewBtn onClickPopular={onClickPopular} onClickLatest={onClickLatest} />
-    <CategoryBtn />
-    <CardsContainer>
-      {diaryData.map((data) => (
-        <Card
-          id={data.id}
-          title={data.postTitle}
-          author={data.nickname}
-          details={data.postBody}
-        />
-      ))}
-    </CardsContainer>
-  </Container>
-);
 
 export default Main;
