@@ -81,7 +81,7 @@ const Main = () => {
         <CardsContainer>
           {diaryData.map((data) => (
             <Card
-              id={data.id}
+              postId={data.postId}
               title={data.postTitle}
               author={data.nickname}
               details={data.postBody}
