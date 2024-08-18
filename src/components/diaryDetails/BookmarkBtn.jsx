@@ -97,10 +97,6 @@ const BookmarkBtn = ({ postId, memberId }) => {
                 break;
             }
         }
-
-        if (!isBookmarked) {
-            console.log("북마크 못찾음");
-        }
     }
 
     //컴포넌트가 마운트될 때 북마크 상태를 가져옴
