@@ -85,6 +85,7 @@ const Main = () => {
               title={data.postTitle}
               author={data.nickname}
               details={data.postBody}
+              createdAt={data.createdAt}
             />
           ))}
         </CardsContainer>
