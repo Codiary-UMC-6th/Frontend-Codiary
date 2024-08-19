@@ -8,16 +8,16 @@ import { CheckDuplicateBtn } from './CheckDuplicateBtn';
 
 import { get } from "../../common/api";
 
-export const SignUpInputContainer = ({ title, essential, type, placeholder, isButtonHidden, onChange, onCheckDuplicate }) => {
+export const SignUpInputContainer = (props) => {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
 
   const validateInput = (value) => {
-    if (essential && !value) {
+    if (props.essential && !value) {
       return '필수 입력 항목입니다.';
     }
 
-    switch (title) {
+    switch (props.title) {
       case '이메일':
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(value) ? '' : '올바른 형식이 아닙니다';
@@ -37,21 +37,21 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
     setValue(value);
     const validationError = validateInput(value);
     setError(validationError);
-    onChange(value, validationError);
+    props.onChange(value, validationError);
   };
 
   const checkRedundancyAPI = async () => {
     console.log(value);
     try {
-      const response = title === '이메일'
+      const response = props.title === '이메일'
         ? await get(`/members/sign-up/check-email?email=${value}`)
         : await get(`/members/sign-up/check-nickname?nickname=${value}`);
 
       console.log(response);
 
       if (response.isSuccess) {
-        alert(`사용 가능한 ${title}입니다.`);
-        onCheckDuplicate();
+        alert(`사용 가능한 ${props.title}입니다.`);
+        props.onCheckDuplicate();
       } else {
         setError(response.message);
       }
@@ -66,19 +66,20 @@ export const SignUpInputContainer = ({ title, essential, type, placeholder, isBu
 
   return (
     <St.SignUpInputContainerWrapper>
-      <SignUpInputTitle title={title} essential={essential} />
+      <SignUpInputTitle title={props.title} essential={props.essential} />
       <St.InputAndButtonWrapper>
         <St.SignUpInputWrapper>
           <Input
-            type={type}
-            placeholder={placeholder}
-            value={value}
+            type={props.type}
+            placeholder={props.placeholder}
+            value={props.value}
             onChange={handleChange}
             hasError={!!error}
+            disable={props.disable || false}
           />
           {error && <St.ErrorText>{error}</St.ErrorText>}
         </St.SignUpInputWrapper>
-        {!isButtonHidden && <CheckDuplicateBtn onClick={checkRedundancyAPI} />}
+        {!props.isButtonHidden && <CheckDuplicateBtn onClick={checkRedundancyAPI} />}
       </St.InputAndButtonWrapper>
     </St.SignUpInputContainerWrapper>
   );
