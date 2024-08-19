@@ -35,15 +35,21 @@ const CalendarWrapper = styled.div`
 const Profile = () => {
   // load member info
   const { memberId } = useParams();
-  const [ userInfoData, setUserInfoData ] = useState({});
+  const [userInfoData, setUserInfoData] = useState({});
 
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
   const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
   const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
+
+  const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
+
+  const openTechStackModal = () => setIsTechStackModalOpen(true);
+  const closeTechStackModal = () => setIsTechStackModalOpen(false);
+
   useEffect(() => {
-    async function getUserInfo(){
+    async function getUserInfo() {
       try {
         const result = await get(`/members/profile/${memberId}`);
         //console.log('GET 요청 결과:', result);
@@ -91,30 +97,37 @@ const Profile = () => {
 
   return (
     <>
-    <Container>
-      <Top>
-        <UserInfo userInfoData={userInfoData}/>
-        <CalendarWrapper onClick={() => navigate("/calendar")}>
-          <CalendarLeft
-            currentMonth={currentMonth}
-            days={days}
-            selectedDay={selectedDay}
-            handlePreviousMonth={handlePreviousMonth}
-            handleNextMonth={handleNextMonth}
-            handleDayClick={handleDayClick}
-          />
-        </CalendarWrapper>
-      </Top>
-      <MyDiary memberId={memberId} onClick={openAddCategoryModal}/>
-    </Container>
-            {isAddCategoryModalOpen && 
-              <AddModal
-                  title='프로젝트 추가하기'
-                  placeholder='input name = "project"'
-                  onClose={closeAddCategoryModal}
-              />
-          }
-          </>
+      <Container>
+        <Top>
+          <UserInfo userInfoData={userInfoData} onClick={openTechStackModal} />
+          <CalendarWrapper onClick={() => navigate("/calendar")}>
+            <CalendarLeft
+              currentMonth={currentMonth}
+              days={days}
+              selectedDay={selectedDay}
+              handlePreviousMonth={handlePreviousMonth}
+              handleNextMonth={handleNextMonth}
+              handleDayClick={handleDayClick}
+            />
+          </CalendarWrapper>
+        </Top>
+        <MyDiary memberId={memberId} onClick={openAddCategoryModal} />
+      </Container>
+      {isAddCategoryModalOpen &&
+        <AddModal
+          title='프로젝트 추가하기'
+          placeholder='input name = "project"'
+          onClose={closeAddCategoryModal}
+        />
+      }
+      {isTechStackModalOpen &&
+        <AddModal
+          title='TECH STACK 추가하기'
+          placeholder='input name = "tech_stack"'
+          onClose={closeTechStackModal}
+        />
+      }
+    </>
   );
 };
 

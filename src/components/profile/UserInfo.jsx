@@ -75,20 +75,20 @@ const UserInfo = (props) => {
                 </ImageBox>
                 <UserName>{data.userName}</UserName>
                 <LinkBox>
-                    <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`}/>
-                    <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`}/>
-                    <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={`https://www.linkedin.com/${data.linkedinUrl}`}/>
+                    <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`} />
+                    <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`} />
+                    <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={`https://www.linkedin.com/${data.linkedinUrl}`} />
                 </LinkBox>
             </Top>
             <Bio>
-                {data.introduction ? 
-                data.introduction
-                :
-                "소개를 입력해주세요."
+                {data.introduction ?
+                    data.introduction
+                    :
+                    "소개를 입력해주세요."
                 }
             </Bio>
             <Bottom>
-                <Techstack></Techstack>
+                <Techstack onClick={props.onClick}></Techstack>
                 <Team></Team>
             </Bottom>
         </Container>

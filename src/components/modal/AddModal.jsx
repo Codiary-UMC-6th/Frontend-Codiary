@@ -4,15 +4,15 @@ import * as Color from '../../common/Color';
 
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
-export const AddModal = ({ title, placeholder, onClose }) => {
+export const AddModal = (props) => {
   return (
     <St.AddModalBackground>
       <St.ModalWrapper>
-        <St.CloseButton onClick={onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
-        <St.HeaderTitle>{title}</St.HeaderTitle>
+        <St.CloseButton onClick={props.onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
+        <St.HeaderTitle>{props.title}</St.HeaderTitle>
         <St.InputWrapper
           type="text"
-          placeholder={placeholder}
+          placeholder={props.placeholder}
         />
         <St.AddButton>추가하기</St.AddButton>
       </St.ModalWrapper>
