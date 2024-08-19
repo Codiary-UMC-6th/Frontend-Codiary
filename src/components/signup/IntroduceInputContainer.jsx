@@ -3,12 +3,14 @@ import styled, { css } from 'styled-components';
 import * as Color from '../../common/Color';
 
 export const IntroduceInputContainer = (props) => {
+
     return (
         <St.IntroduceConatinerWrapper>
             <St.IntroduceTitle>내 소개</St.IntroduceTitle>
             <St.IntroduceInput
                 placeholder='소개글'
                 value={props.value}
+                onChange={(e) => props.handleChange("introduction", e.target.value, '')}
             />
         </St.IntroduceConatinerWrapper>
     );

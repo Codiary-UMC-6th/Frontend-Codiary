@@ -24,7 +24,7 @@ export const ModifyProfile = () => {
     "github": '',
     "linkedin": '',
     "discord": '',
-    introduction: '',
+    "introduction": '',
   });
 
       // 유저 정보 get api
@@ -182,6 +182,7 @@ export const ModifyProfile = () => {
       </St.SignUpContainerWrapper>
       <IntroduceInputContainer 
         value={profileFormData.introduction}
+        handleChange={handleChange}
       />
       <SocialInputContainer 
         handleChange={handleChange} 
@@ -189,7 +190,11 @@ export const ModifyProfile = () => {
         linkedIn={profileFormData.linkedin}
         discord={profileFormData.discord}  
       />
-      <SignUpBtnBox onSubmit={putUserInfo} title='저장하기' isDisable={false} />
+      <SignUpBtnBox 
+        onSubmit={putUserInfo} 
+        title='저장하기' 
+        isDisable={false} 
+      />
     </St.SignUpWrapper>
   )
 }
