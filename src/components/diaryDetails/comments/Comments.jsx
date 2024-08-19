@@ -1,33 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import * as Color from '../../../common/Color';
+import ReplyInput from './ReplyInput';
+import { formatDate } from './formatDate';
 import { ReactComponent as Kebab } from "../../../assets/symbols_kebab.svg";
 import { ReactComponent as Reply } from "../../../assets/symbols_reply.svg";
 
 const Container = styled.div`
     margin-bottom: 40px;
-`;
-
-const Input = styled.input`
-    display: flex;
-    width: 746px;
-    height: 46px;
-    padding: 16px;
-    align-items: flex-start;
-    margin: 16px 0px;
-
-    border: 1px solid ${Color.background2};
-    background: ${Color.background3};
-
-    color: ${Color.text2};
-    text-align: justify;
-
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
 `;
 
 const Box = styled.div`
@@ -79,36 +60,6 @@ const CommentContent = styled.div`
     line-height: 24px;
 `;
 
-const ReplyContainer = styled.div`
-    border-bottom: 1px solid ${Color.divider};
-`;
-
-const ReplyBtn = styled.button`
-    border: 0;
-    width: 780px;
-    background-color: transparent;
-    cursor: pointer;
-
-    padding: 16px 0px;
-    display: flex;
-    align-items: center;
-`;
-
-const ReplyText = styled.span`
-    color: ${Color.text5};
-    text-align: justify;
-    margin-left: 8px;
-
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-
-    &:hover {
-        color: ${Color.text4};
-`;
-
 const ReplyList = styled.div`
     padding-left: 48px;
 `;
@@ -117,104 +68,47 @@ const ReplyItem = styled.div`
     padding: 16px 0px;
 `;
 
-const CancelBtn = styled.button`
-    border-radius: 10px;
-    border: 1px solid ${Color.primary_red};
-    background: transparent;
-    width: 83px;
-    height: 40px;
-    cursor: pointer;
-    margin-right: 8px;
 
-    color: ${Color.primary_red};
-    font-family: Pretendard;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px;
-`;
-
-const RegistrationBtn = styled.button`
-    border-radius: 10px;
-    background: ${Color.primary_red};
-    width: 83px;
-    height: 40px;
-    cursor: pointer;
-    border: none;
-
-    color: ${Color.text1};
-    font-family: Pretendard;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px;
-`;
-
-const ToggleReply = () => {
-    const [showReplyInput, setShowReplyInput] = useState(false);
-
-    const toggleReplyInput = () => {
-        setShowReplyInput(preShowReplyInput => !preShowReplyInput);
-    }
-
-    return (
-        <ReplyContainer>
-            <ReplyBtn onClick={toggleReplyInput}>
-                <Reply />
-                <ReplyText>답글 달기</ReplyText>
-            </ReplyBtn>
-            {showReplyInput && (
-                <div style={{margin: "16px 0px"}}>
-                    <Input placeholder='답글을 작성하세요.'/>
-                    <Box style={{justifyContent: "flex-end"}}>
-                        <CancelBtn onClick={toggleReplyInput}>취소</CancelBtn>
-                        <RegistrationBtn>등록</RegistrationBtn>
-                    </Box>
-                </div>
-            )}
-        </ReplyContainer>
-    );
-
-}
-
-const Comments = ({ comment }) => {
+const Comments = ({ comment, postId, memberId }) => {
 
     return (
         <Container>
             <Box>
                 <Box>
                     <UserImg />
-                    <Author>{comment.author}</Author>
+                    <Author>{comment.nickname}</Author>
                 </Box>
                 <Box>
-                    <Date>{comment.createdAt}</Date>
+                    <Date>{formatDate(comment.createdAt)}</Date>
                     <Kebab />
                 </Box>
             </Box>
             
-            <CommentContent>{comment.content}</CommentContent>
-            {comment.replies && comment.replies.length > 0 && (
+            <CommentContent>{comment.commentBody}</CommentContent>
+
+            {comment.childCommentList && comment.childCommentList.length > 0 && (
                 <ReplyList>
-                    {comment.replies.map((reply) => (
-                        <ReplyItem key={reply.id}>
+                    {comment.childCommentList.map((reply) => (
+                        <ReplyItem key={reply.commentId}>
                             <Box>
                                 <Box>
                                     <Reply />
                                     <UserImg style={{marginLeft: "12px"}}/>
-                                    <Author>{reply.author}</Author>
+                                    <Author>{reply.nickname}</Author>
                                 </Box>
                                 <Box>
-                                    <Date>{reply.createdAt}</Date>
+                                    <Date>{formatDate(reply.createdAt)}</Date>
                                     <Kebab />
                                 </Box>
                             </Box>
-                            <CommentContent style={{marginLeft: "36px"}}>{reply.content}</CommentContent>
+                            <CommentContent style={{marginLeft: "36px"}}>{reply.commentBody}</CommentContent>
 
                         </ReplyItem>
                     ))}
                 </ReplyList>
             )}
-            <ToggleReply />
+
+            <ReplyInput postId={postId} memberId={memberId} parentId={comment.commentId} />
         </Container>
     );
   
