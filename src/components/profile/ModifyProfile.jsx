@@ -27,14 +27,6 @@ export const ModifyProfile = () => {
     introduction: '',
   });
 
-  const [changeFormData, setChangeFormData] = useState({
-    "birth": "",
-    "introduction": "",
-    "github": "",
-    "linkedin": "",
-    "discord": ""
-  });
-
       // 유저 정보 get api
     const getUserInfo = async () => {
       try {
@@ -52,23 +44,22 @@ export const ModifyProfile = () => {
           introduction: userData.introduction || '',
         });
 
-        changeFormData({
-          birth: userData.birth === '1000-01-01'? '' : userData.birth.replaceAll('-', ''),
-          introduction: userData.introduction || '',
-          github: userData.githubUrl || '',
-          linkedin: userData.linkedinUrl || '',
-          discord: userData.discordUrl || '',
-        })
-
         if (userData.birth === '1000-01-01') {
           setProfileFormData({birth: ''});
-          setChangeFormData({birth: ''});
         }
         console.log(profileFormData);
       } catch (error) {
         console.error('회원 정보 가져오기 실패', error);
       }
     }
+
+    const [changeFormData, setChangeFormData] = useState({
+      "birth": profileFormData.birth,
+      "introduction": profileFormData.introduction,
+      "github": profileFormData.github,
+      "linkedin": profileFormData.linkedin,
+      "discord": profileFormData.discord,
+    });
 
     useEffect(() => {
       console.log(memberId);
@@ -108,7 +99,7 @@ export const ModifyProfile = () => {
     }
 
     setChangeFormData({
-      ...changeFormData,
+      ...profileFormData,
       [name]: value,
     });
   };
