@@ -42,7 +42,6 @@ const Profile = () => {
   const openAddProjectModal = () => setIsAddProjectModalOpen(true);
   const closeAddProjectModal = () => setIsAddProjectModalOpen(false);
 
-
   const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
 
   const openTechStackModal = () => setIsTechStackModalOpen(true);
@@ -100,6 +99,7 @@ const Profile = () => {
       const response = await post(`/members/techstack/${value}`);
       alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
       console.log(response);
+      closeTechStackModal();
     } catch (error) {
       alert('TECH STACK 추가를 실패했습니다.');
       console.error(error);
@@ -111,6 +111,7 @@ const Profile = () => {
       const response = await post(`/members/project/${value}`);
       alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
       console.log(response);
+      closeAddProjectModal();
     } catch (error) {
       alert('프로젝트 추가를 실패했습니다.');
       console.error(error);
