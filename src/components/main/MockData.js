@@ -1,54 +1,63 @@
 const MockData = [
     {
-      id: 1,
+      postId: 1,
+      memberId: 1,
       title: "HTML",
       author: "Kim",
       details:"HTML HTML HTML HTML HTML HTML HTML HTML HTML HTML HTML HTML HTML "
     },
     {
-      id: 2,
+      postId: 2,
+      memberId: 2,
       title: "CSS",
       author: "Lee",
       details:"CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS "
     },
     {
-      id: 3,
+      postId: 3,
+      memberId: 2,
       title: "JavaScript",
-      author: "Park",
+      author: "Lee",
       details:"JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript JavaScript "
     },
     {
-      id: 4,
+      postId: 4,
+      memberId: 3,
       title: "React",
       author: "Mark",
       details:"React React React React React React React React React React React React "
     },
     {
-      id: 5,
+      postId: 5,
+      memberId: 4,
       title: "React Native",
       author: "123go",
       details:"React Native React Native React Native React Native React Native React Native React Native React Native React Native "
     },
     {
-      id: 6,
+      postId: 6,
+      memberId: 5,
       title: "Angular",
       author: "Jo",
       details:""
     },
     {
-      id: 7,
+      postId: 7,
+      memberId: 6,
       title: "Vue",
       author: "Alice",
       details:"Vue Vue Vue Vue Vue Vue Vue Vue Vue Vue Vue Vue Vue Vue "
     },
     {
-      id: 8,
+      postId: 8,
+      memberId: 7,
       title: "Redux",
       author: "August",
       details:""
     },
     {
-      id: 9,
+      postId: 9,
+      memberId: 8,
       title: "TypeScript",
       author: "Ru",
       details:"TypeScript TypeScript TypeScript TypeScript TypeScript TypeScript TypeScript TypeScript "

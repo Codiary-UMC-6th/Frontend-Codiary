@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 
 import * as Color from "../common/Color";
+import { get } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
@@ -43,16 +43,16 @@ const Profile = () => {
   const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
   useEffect(() => {
-    axios.get('/members/profile/1',{
-      headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6eGM1MzRAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoxLCJleHAiOjE3MjMyOTYzMTl9.uYN3kL521eiM26kRJF2NlQHLuIzHMgfoGaaOi8XhEuE'
+    async function getUserInfo(){
+      try {
+        const result = await get(`/members/profile/${memberId}`);
+        //console.log('GET 요청 결과:', result);
+        setUserInfoData(result.result);
+      } catch (error) {
+        console.error('GET 요청 실패:', error);
       }
-    })
-      .then((Response) => {
-        //console.log(Response.data.result);
-        setUserInfoData(Response.data.result);
-      }) 
-      .catch((Error) => {console.log(Error)})
+    }
+    getUserInfo();
   }, [memberId]);
 
   // Calendar

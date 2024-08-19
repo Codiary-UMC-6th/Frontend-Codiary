@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import styled from "styled-components";
 
 import * as Color from '../common/Color';
+import { get } from '../common/api';
 import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
 import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
 import { ReactComponent as Kebab } from "../assets/symbols_kebab.svg";
@@ -166,7 +167,9 @@ const Code = styled.div`
 
 const DiaryDetails = () => {
     const { state } = useLocation();
+    const [bookmarkCount, setBookmarkCount] = useState(0);
     const [totalComments, setTotalComments] = useState(0);
+    const [memberId, setMemberId] = useState(null);
 
     const countComments = (comments) => {
         let count = 0;
@@ -178,16 +181,45 @@ const DiaryDetails = () => {
         });
         
         return count;
+    };
 
+    const getMemberId = async () => {
+        try {
+            const result = await get("/members/info");
+            console.log("사용자 정보 조회 성공: ", result.result.memberId);
+            setMemberId(result.result.memberId);
+        } catch (error) {
+            console.error("사용자 정보 조회 실패:", error);
+        }
+
+    };
+
+    const getBookmarkCount = async () => {
+        try {
+            const result = await get(`/bookmarks/count/${state.postId}`);
+            console.log("북마크 개수 조회 결과:", result);
+            setBookmarkCount(result.result.countBookmark);
+        } catch (error) {
+            console.error("북마크 개수 조회 실패:", error);
+        }
     };
   
     useEffect(() => {
-      setTotalComments(countComments(mockComments));
+        getMemberId();
+        getBookmarkCount();
+        setTotalComments(countComments(mockComments));
     }, []);
+
+    useEffect(() => {
+        if (memberId !== null) {
+            console.log("memberId: ", memberId);
+        }
+    }, [memberId]);
+
 
     return (
         <Container>
-            <FAB />
+            <FAB postId={state.postId} memberId={memberId} />
             <CenterBox>
                 <Title>{state.title}</Title>
                 <CategoryChip />
@@ -196,9 +228,9 @@ const DiaryDetails = () => {
                         <UserName>{state.author}</UserName>
                         <Details>
                             <Scrap />
-                            <ScrapCount>n</ScrapCount>
+                            <ScrapCount>{bookmarkCount}</ScrapCount>
                             <CommentIcon />
-                            <CommentCount>n</CommentCount>
+                            <CommentCount>{totalComments}</CommentCount>
                             <Kebab />
                         </Details>
                     </NameBox>
@@ -209,7 +241,7 @@ const DiaryDetails = () => {
                 <CodeBox>
                     <Code>{state.details}</Code>
                 </CodeBox>
-                <ProfileCard />
+                <ProfileCard memberId={memberId} />
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
                 <CommentInput />
                 {mockComments.map((comment) => (
