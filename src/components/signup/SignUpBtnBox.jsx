@@ -2,11 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const SignUpBtnBox = ({ onSubmit, isDisabled }) => {
-  console.log(isDisabled);
+export const SignUpBtnBox = (props) => {
   return (
     <St.SignUpBtnBoxWrapper>
-      <St.SignUpButton title='회원가입' onClick={onSubmit} disabled={isDisabled}>회원가입</St.SignUpButton>
+      <St.SignUpButton onClick={props.onSubmit} disabled={props.isDisabled}>{props.title}</St.SignUpButton>
       <St.BackButton title='뒤로가기'>뒤로가기</St.BackButton>
     </St.SignUpBtnBoxWrapper>
   )

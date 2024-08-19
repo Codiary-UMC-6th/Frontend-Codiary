@@ -138,7 +138,7 @@ export const SignUp = () => {
         />
       </St.SignUpContainerWrapper>
       <SocialInputContainer handleChange={handleChange} />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} />
+      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} title='회원가입'/>
     </St.SignUpWrapper>
   )
 }

@@ -8,13 +8,12 @@ import { SignUpInputContainer } from '../signup/SignUpInputContainer';
 import { SocialInputContainer } from '../signup/SocialInputContainer';
 import { SignUpBtnBox } from '../signup/SignUpBtnBox';
 
-import { get, post } from "../../common/api";
+import { get, put } from "../../common/api";
 import { useLoginStore } from "../../store/LoginStore";
 import { IntroduceInputContainer } from '../signup/IntroduceInputContainer';
 
-
 export const ModifyProfile = () => {
-
+  
   const memberId = useLoginStore((state) => state.memberId);
 
   const [profileFormData, setProfileFormData] = useState({
@@ -53,8 +52,17 @@ export const ModifyProfile = () => {
           introduction: userData.introduction || '',
         });
 
+        changeFormData({
+          birth: userData.birth === '1000-01-01'? '' : userData.birth.replaceAll('-', ''),
+          introduction: userData.introduction || '',
+          github: userData.githubUrl || '',
+          linkedin: userData.linkedinUrl || '',
+          discord: userData.discordUrl || '',
+        })
+
         if (userData.birth === '1000-01-01') {
           setProfileFormData({birth: ''});
+          setChangeFormData({birth: ''});
         }
         console.log(profileFormData);
       } catch (error) {
@@ -74,17 +82,21 @@ export const ModifyProfile = () => {
     birth: ''
   });
 
-  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(true);
 
   const handleChange = (name, value, error) => {
     if (name === 'birth') {
-      value = birthFormatDate(value);
+      setProfileFormData({
+        ...profileFormData,
+        birth: value,
+      });
+    } else {
+      setProfileFormData({
+        ...profileFormData,
+        [name]: value,
+      });
     }
 
-    setProfileFormData({
-      ...profileFormData,
-      [name]: value,
-    });
     setErrors({
       ...errors,
       [name]: error,
@@ -94,10 +106,23 @@ export const ModifyProfile = () => {
     if (name === 'nickname') {
       setIsNicknameChecked(false);
     }
+
+    setChangeFormData({
+      ...changeFormData,
+      [name]: value,
+    });
   };
 
-    // 유저 정보 수정 api
-  const handleSubmit = async () => {
+      // 생년월일 포맷
+      const birthFormatDate = (date) => {
+        const year = date.slice(0, 4);
+        const month = date.slice(4, 6);
+        const day = date.slice(6, 8);
+    
+        return `${year}-${month}-${day}`;
+      }
+
+  const putUserInfo = async () => {
     try {
       if (Object.values(errors).some(error => error)) {
         console.error('폼 형식이 알맞지 않습니다.');
@@ -106,33 +131,21 @@ export const ModifyProfile = () => {
         alert('닉네임 중복 확인이 필요합니다.');
         return;
       }
-      const response = await post('/members/sign-up', profileFormData);
-      console.log('회원가입 성공', response);
-      console.log(profileFormData);
+      
+      const formattedData = {
+        ...changeFormData,
+        birth: birthFormatDate(changeFormData.birth),
+      };
+
+      const response = await put('/members/info', formattedData);
+      alert(response.message);
+      console.log('프로필 수정 성공', response);
+      console.log(changeFormData);
     } catch (error) {
-      console.error('회원가입 실패', error);
-      console.log(profileFormData);
+      console.error('프로필 수정 실패', error);
+      console.log(changeFormData);
     }
-  }
-
-    // 생년월일 포맷
-  const birthFormatDate = (date) => {
-    const year = date.slice(0, 4);
-    const month = date.slice(4, 6);
-    const day = date.slice(6, 8);
-
-    return `${year}-${month}-${day}`;
-  }
-
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  useEffect(() => {
-    const hasErrors = Object.values(errors).some(error => error);
-    const requiredFields = ['email', 'password', 'nickname'];
-    const hasEmptyFields = requiredFields.some(field => !profileFormData[field]);
-    const disable = hasErrors || hasEmptyFields;
-    setIsDisabled(disable);
-  }, [profileFormData, errors]);
+  };
 
   return (
     <St.SignUpWrapper>
@@ -185,7 +198,7 @@ export const ModifyProfile = () => {
         linkedIn={profileFormData.linkedin}
         discord={profileFormData.discord}  
       />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} />
+      <SignUpBtnBox onSubmit={putUserInfo} title='저장하기' isDisable={false} />
     </St.SignUpWrapper>
   )
 }
