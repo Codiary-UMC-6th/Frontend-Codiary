@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../common/Color";
-import { get } from "../common/api";
+import { get, post } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
@@ -37,10 +37,10 @@ const Profile = () => {
   const { memberId } = useParams();
   const [userInfoData, setUserInfoData] = useState({});
 
-  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
-  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
-  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
+  const openAddProjectModal = () => setIsAddProjectModalOpen(true);
+  const closeAddProjectModal = () => setIsAddProjectModalOpen(false);
 
 
   const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
@@ -95,6 +95,28 @@ const Profile = () => {
     }
   };
 
+  const postAddTechStack = async (value) => {
+    try {
+      const response = await post(`/members/techstack/${value}`);
+      alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+    } catch (error) {
+      alert('TECH STACK 추가를 실패했습니다.');
+      console.error(error);
+    }
+  };
+
+  const postAddProject = async (value) => {
+    try {
+      const response = await post(`/members/project/${value}`);
+      alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+    } catch (error) {
+      alert('프로젝트 추가를 실패했습니다.');
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <Container>
@@ -111,19 +133,21 @@ const Profile = () => {
             />
           </CalendarWrapper>
         </Top>
-        <MyDiary memberId={memberId} onClick={openAddCategoryModal} />
+        <MyDiary memberId={memberId} onClick={openAddProjectModal} />
       </Container>
-      {isAddCategoryModalOpen &&
+      {isAddProjectModalOpen &&
         <AddModal
           title='프로젝트 추가하기'
           placeholder='input name = "project"'
-          onClose={closeAddCategoryModal}
+          onAdd={postAddProject}
+          onClose={closeAddProjectModal}
         />
       }
       {isTechStackModalOpen &&
         <AddModal
           title='TECH STACK 추가하기'
           placeholder='input name = "tech_stack"'
+          onAdd={postAddTechStack}
           onClose={closeTechStackModal}
         />
       }

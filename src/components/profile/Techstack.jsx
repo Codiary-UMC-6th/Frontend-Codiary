@@ -16,9 +16,6 @@ const Container = styled.div`
 `;
 
 const Techstack = (props) => {
-  const OpenModal = () => {
-    console.log("Techstack Plus Clicked");
-  };
 
   return (
     <Container>

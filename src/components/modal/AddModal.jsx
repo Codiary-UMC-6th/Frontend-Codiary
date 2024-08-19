@@ -1,20 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
 export const AddModal = (props) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value); // 입력 값 업데이트
+  };
+
+  const handleAddClick = () => {
+    props.onAdd(inputValue);
+  };
+
   return (
     <St.AddModalBackground>
       <St.ModalWrapper>
-        <St.CloseButton onClick={props.onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
+        <St.CloseButton
+          onClick={props.onClose}>
+          <img src={CloseBtn} alt="Close" />
+        </St.CloseButton>
         <St.HeaderTitle>{props.title}</St.HeaderTitle>
         <St.InputWrapper
           type="text"
           placeholder={props.placeholder}
+          value={inputValue}
+          onChange={handleInputChange}
         />
-        <St.AddButton>추가하기</St.AddButton>
+        <St.AddButton onClick={handleAddClick}>추가하기</St.AddButton>
       </St.ModalWrapper>
     </St.AddModalBackground>
   );
