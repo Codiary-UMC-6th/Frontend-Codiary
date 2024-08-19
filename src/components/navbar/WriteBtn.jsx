@@ -1,4 +1,6 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import * as Color from '../../common/Color';
 
 import SymbolSvg from '../../assets/symbols_write.svg'
@@ -29,11 +31,14 @@ const WriteSymbol = styled.img`
     height : 24px;
 `
 
-const btnClick = () => {
-    console.log("btn clicked");
-}
-
 const WriteBtn = () => {
+    const navigate = useNavigate();
+
+    
+    const btnClick = () => {
+        navigate("/diary");
+    }
+
     return (
         <Btn onClick = {btnClick}>
             글쓰기
