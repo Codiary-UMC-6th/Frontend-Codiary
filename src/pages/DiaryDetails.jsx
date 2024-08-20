@@ -217,23 +217,13 @@ const DiaryDetails = () => {
   
     useEffect(() => {
         getMemberId();
-        //getCommentsData();
         getCommentsCount();
-      
-        //setTotalComments(countComments(mockComments));
+        getCommentsData();
+        getBookmarkCount();
+
         console.log(state.details);
         setContent(state.details);
-      
     }, []);
-
-    useEffect(() => {
-        getBookmarkCount();
-    }, [bookmarkCount])
-
-    useEffect(() => {
-        getCommentsData();
-       //getCommentsCount();
-    }, [commentsData])
 
 
     return (

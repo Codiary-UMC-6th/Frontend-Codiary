@@ -57,6 +57,7 @@ const CommentInput = ({ postId, memberId }) => {
 
     const handleClick = () => {
         setCommentBody(inputValue);
+        window.location.reload();
     }
 
     useEffect(() => {
