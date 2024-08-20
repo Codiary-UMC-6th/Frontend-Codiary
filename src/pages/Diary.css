@@ -1,0 +1,16 @@
+.block {
+    border-radius: 4px;
+}
+
+.block:hover {
+    outline: 1px solid #999999;
+}
+
+.block:focus {
+    box-shadow: none;
+    outline: 1.5px solid white
+}
+
+.selected {
+    outline: 1.5px solid white
+}

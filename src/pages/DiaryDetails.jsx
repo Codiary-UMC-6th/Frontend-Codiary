@@ -170,6 +170,7 @@ const DiaryDetails = () => {
     const [bookmarkCount, setBookmarkCount] = useState(0);
     const [totalComments, setTotalComments] = useState(0);
     const [memberId, setMemberId] = useState(null);
+    const [content, setContent] = useState();
 
     const countComments = (comments) => {
         let count = 0;
@@ -208,6 +209,8 @@ const DiaryDetails = () => {
         getMemberId();
         getBookmarkCount();
         setTotalComments(countComments(mockComments));
+        console.log(state.details);
+        setContent(state.details);
     }, []);
 
     useEffect(() => {
@@ -236,11 +239,10 @@ const DiaryDetails = () => {
                     </NameBox>
                     <PostInfo>최초 등록일 YYYY.MM.DD 최종 수정일 YYYY.MM.DD</PostInfo>
                 </DiaryInfo>
-                <Subtitle>Subtitle</Subtitle>
-                <Text>{state.details}</Text>
-                <CodeBox>
+                <Text dangerouslySetInnerHTML={{ __html: state.details }}></Text>
+                {/*<CodeBox>
                     <Code>{state.details}</Code>
-                </CodeBox>
+                </CodeBox>*/}
                 <ProfileCard memberId={memberId} />
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
                 <CommentInput />
