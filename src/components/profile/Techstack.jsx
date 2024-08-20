@@ -15,16 +15,13 @@ const Container = styled.div`
   border-style: solid;
 `;
 
-const Techstack = () => {
-  const OpenModal = () => {
-    console.log("Techstack Plus Clicked");
-  };
+const Techstack = (props) => {
 
   return (
     <Container>
       <Head>
         <Infotype>TECH STACK</Infotype>
-        <Add onClick={OpenModal} src={PlusSvg}></Add>
+        <Add onClick={props.onClick} src={PlusSvg}></Add>
       </Head>
       <Content>기술 스택을 등록해주세요</Content>
     </Container>

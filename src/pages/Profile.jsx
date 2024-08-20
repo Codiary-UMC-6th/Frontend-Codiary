@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../common/Color";
-import { get } from "../common/api";
+import { get, post } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
@@ -35,15 +35,20 @@ const CalendarWrapper = styled.div`
 const Profile = () => {
   // load member info
   const { memberId } = useParams();
-  const [ userInfoData, setUserInfoData ] = useState({});
+  const [userInfoData, setUserInfoData] = useState({});
 
-  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
-  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
-  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
+  const openAddProjectModal = () => setIsAddProjectModalOpen(true);
+  const closeAddProjectModal = () => setIsAddProjectModalOpen(false);
+
+  const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
+
+  const openTechStackModal = () => setIsTechStackModalOpen(true);
+  const closeTechStackModal = () => setIsTechStackModalOpen(false);
 
   useEffect(() => {
-    async function getUserInfo(){
+    async function getUserInfo() {
       try {
         const result = await get(`/members/profile/${memberId}`);
         //console.log('GET 요청 결과:', result);
@@ -89,32 +94,65 @@ const Profile = () => {
     }
   };
 
+  const postAddTechStack = async (value) => {
+    try {
+      const response = await post(`/members/techstack/${value}`);
+      alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+      closeTechStackModal();
+    } catch (error) {
+      alert('TECH STACK 추가를 실패했습니다.');
+      console.error(error);
+    }
+  };
+
+  const postAddProject = async (value) => {
+    try {
+      const response = await post(`/members/project/${value}`);
+      alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+      closeAddProjectModal();
+    } catch (error) {
+      alert('프로젝트 추가를 실패했습니다.');
+      console.error(error);
+    }
+  };
+
   return (
     <>
-    <Container>
-      <Top>
-        <UserInfo userInfoData={userInfoData}/>
-        <CalendarWrapper onClick={() => navigate("/calendar")}>
-          <CalendarLeft
-            currentMonth={currentMonth}
-            days={days}
-            selectedDay={selectedDay}
-            handlePreviousMonth={handlePreviousMonth}
-            handleNextMonth={handleNextMonth}
-            handleDayClick={handleDayClick}
-          />
-        </CalendarWrapper>
-      </Top>
-      <MyDiary memberId={memberId} onClick={openAddCategoryModal}/>
-    </Container>
-            {isAddCategoryModalOpen && 
-              <AddModal
-                  title='프로젝트 추가하기'
-                  placeholder='input name = "project"'
-                  onClose={closeAddCategoryModal}
-              />
-          }
-          </>
+      <Container>
+        <Top>
+          <UserInfo userInfoData={userInfoData} onClick={openTechStackModal} />
+          <CalendarWrapper onClick={() => navigate("/calendar")}>
+            <CalendarLeft
+              currentMonth={currentMonth}
+              days={days}
+              selectedDay={selectedDay}
+              handlePreviousMonth={handlePreviousMonth}
+              handleNextMonth={handleNextMonth}
+              handleDayClick={handleDayClick}
+            />
+          </CalendarWrapper>
+        </Top>
+        <MyDiary memberId={memberId} onClick={openAddProjectModal} />
+      </Container>
+      {isAddProjectModalOpen &&
+        <AddModal
+          title='프로젝트 추가하기'
+          placeholder='input name = "project"'
+          onAdd={postAddProject}
+          onClose={closeAddProjectModal}
+        />
+      }
+      {isTechStackModalOpen &&
+        <AddModal
+          title='TECH STACK 추가하기'
+          placeholder='input name = "tech_stack"'
+          onAdd={postAddTechStack}
+          onClose={closeTechStackModal}
+        />
+      }
+    </>
   );
 };
 
