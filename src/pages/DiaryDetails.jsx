@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import * as Color from '../common/Color';
 import { get } from '../common/api';
+import { formatDateTime } from "../components/diaryDetails/comments/formatDate";
 import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
 import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
 import { ReactComponent as Kebab } from "../assets/symbols_kebab.svg";
@@ -12,7 +13,6 @@ import FAB from "../components/diaryDetails/FAB";
 import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
 import Comments from "../components/diaryDetails/comments/Comments";
-import mockComments from "../components/diaryDetails/comments/MockComments";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
@@ -167,26 +167,17 @@ const Code = styled.div`
 
 const DiaryDetails = () => {
     const { state } = useLocation();
+    const [memberId, setMemberId] = useState(null);
     const [bookmarkCount, setBookmarkCount] = useState(0);
     const [totalComments, setTotalComments] = useState(0);
     const [memberId, setMemberId] = useState(null);
-
-    const countComments = (comments) => {
-        let count = 0;
-        comments.forEach(comment => {
-            count += 1; // 현재 댓글 추가
-            if (comment.replies) {
-                count += comment.replies.length; // 대댓글 개수 추가
-            }
-        });
-        
-        return count;
-    };
+    const [content, setContent] = useState();
+    const [commentsData, setCommentsData] = useState([]);
 
     const getMemberId = async () => {
         try {
             const result = await get("/members/info");
-            console.log("사용자 정보 조회 성공: ", result.result.memberId);
+            //console.log("사용자 정보 조회 성공: ", result.result.memberId);
             setMemberId(result.result.memberId);
         } catch (error) {
             console.error("사용자 정보 조회 실패:", error);
@@ -197,24 +188,48 @@ const DiaryDetails = () => {
     const getBookmarkCount = async () => {
         try {
             const result = await get(`/bookmarks/count/${state.postId}`);
-            console.log("북마크 개수 조회 결과:", result);
+            //console.log("북마크 개수 조회 결과:", result);
             setBookmarkCount(result.result.countBookmark);
         } catch (error) {
             console.error("북마크 개수 조회 실패:", error);
         }
     };
+
+    const getCommentsCount = async () => {
+        try {
+            const result = await get(`/comments/count/${state.postId}`);
+            console.log("댓글 개수 조회 결과:", result);
+            setTotalComments(result.result.countComments);
+        } catch (error) {
+            console.error("댓글 개수 조회 실패:", error);
+        }
+    };
+
+    const getCommentsData = async () => {
+        try {
+            const result = await get(`/posts/comments/list/${state.postId}`);
+            //console.log("댓글 조회 성공: ", result);
+            setCommentsData(result.result);
+        } catch (error) {
+            console.error("댓글 조회 실패: ", error);
+        }
+    }
+
   
     useEffect(() => {
         getMemberId();
         getBookmarkCount();
+        getCommentsCount();
+      
         setTotalComments(countComments(mockComments));
+        console.log(state.details);
+        setContent(state.details);
+      
     }, []);
 
     useEffect(() => {
-        if (memberId !== null) {
-            console.log("memberId: ", memberId);
-        }
-    }, [memberId]);
+        getCommentsData();
+    }, [commentsData])
 
 
     return (
@@ -234,18 +249,17 @@ const DiaryDetails = () => {
                             <Kebab />
                         </Details>
                     </NameBox>
-                    <PostInfo>최초 등록일 YYYY.MM.DD 최종 수정일 YYYY.MM.DD</PostInfo>
+                    <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
                 </DiaryInfo>
-                <Subtitle>Subtitle</Subtitle>
-                <Text>{state.details}</Text>
-                <CodeBox>
+                <Text dangerouslySetInnerHTML={{ __html: state.details }}></Text>
+                {/*<CodeBox>
                     <Code>{state.details}</Code>
-                </CodeBox>
+                </CodeBox>*/}
                 <ProfileCard memberId={memberId} />
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
-                <CommentInput />
-                {mockComments.map((comment) => (
-                    <Comments key={comment.id} comment={comment} />
+                <CommentInput postId={state.postId} memberId={memberId} />
+                {commentsData.map((data) => (
+                    <Comments comment={data} postId={state.postId} memberId={memberId} />
                 ))}
             </CenterBox>
             <OtherCards />

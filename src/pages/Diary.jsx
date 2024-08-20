@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import "./Diary.css";
 
 import EditMenu from "../components/diary/EditMenu";
 
 const DiaryEditor = () => {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
 
   const handleSave = () => {
     // Save the diary entry
-    console.log("Diary saved:", { title, content });
+    const area = document.getElementById("area");
+    sessionStorage.setItem("diary-title", title);
+    sessionStorage.setItem("diary-content", area.innerHTML);
     navigate("/diary-register"); // "작성하기" 버튼을 눌렀을 때 이동
   };
 
@@ -31,19 +34,17 @@ const DiaryEditor = () => {
 
   const headSelected = (type) => {
     const headTypes = ["h1", "h2", "h3"];
-    
     headTypes.forEach((item) => {
-      console.log(item);
       selected.innerHTML = selected.innerHTML.replace(`<${item}>`, '');
       selected.innerHTML = selected.innerHTML.replace(`<${item}>`, '');
-    })
-
-    selected.innerHTML = `<${type}>` + selected.innerHTML + `</${type}>`;  
+    });
+    selected.innerHTML = `<${type}>` + selected.innerHTML + `</${type}>`;
   }
 
   const createBlock = () => {
     const area = document.getElementById("area");
     const block = document.createElement("div");
+    block.className = "block";
     block.contentEditable = true;
     block.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
@@ -65,18 +66,29 @@ const DiaryEditor = () => {
         selection.addRange(range);
       }
     });
-    block.addEventListener('click', (event) => {
-      var target = event.target;
-      while(target.tagName.toLowerCase() !== "div"){
-        console.log("not div");
-        target = target.parentNode;
-      }
-      setSelected(target);
-    });
+
     area.appendChild(block);
     block.focus();
     setSelected(block);
   }
+
+  useEffect(() => {
+    console.log(document.getElementById("area").childNodes);
+    if (document.getElementById("area").childNodes.length === 0) {
+      createBlock();
+    }
+    window.addEventListener('focusin', (event) => {
+      var target = event.target;
+      while(target.className !== "block"){
+        target = target.parentNode;
+        if (target === null) { break; }
+      }
+      setSelected(target);
+      console.log("focus in");
+    });
+
+    document.getElementById("title").focus();
+  }, [])
 
   return (
     <Container>
@@ -85,6 +97,7 @@ const DiaryEditor = () => {
         <SubmitButton onClick={handleSave}>작성하기</SubmitButton>
       </Header>
       <TitleInput
+        id="title"
         type="text"
         placeholder="제목을 입력하세요"
         value={title}
@@ -96,11 +109,18 @@ const DiaryEditor = () => {
         <div id="area"></div>
         <button onClick={createBlock}>+</button>
       </ContentInput>
-      <EditMenu
+      {
+        selected === null ?
+        <></>
+        :
+        <EditMenu
         decoSelected={decoSelected}
         colorSelected={colorSelected}
         headSelected={headSelected}
-      />
+        selected={selected}
+        setSelected={setSelected}
+        />
+      }
     </Container>
   );
 };
@@ -131,16 +151,17 @@ const TitleInput = styled.input`
   margin-bottom: 20px;
   font-size: 24px;
   border: none;
-  border-bottom: 1px solid #888;
+
   background: none;
   color: white;
   outline: none;
+  border-bottom: 1px solid #888;
 `;
 
 const ContentInput = styled.div`
   width: 100%;
   max-width: 800px;
-  height: 400px;
+  min-height: 400px;
   padding: 10px;
   font-size: 18px;
   border: none;
@@ -175,5 +196,6 @@ const SubmitButton = styled(Button)`
   color: white;
   margin-left: 10px; /* 간격 추가 */
 `;
+
 
 export default DiaryEditor;

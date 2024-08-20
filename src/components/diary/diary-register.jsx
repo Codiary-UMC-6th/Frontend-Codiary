@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
-import * as Color from "../../common/Color"; // 경로 수정
-import Card from "../main/Card"; // 경로 수정
+import * as Color from "../../common/Color";
+import { post } from "../../common/api";
+
+import Card from "../main/Card";
 
 const Container = styled.div`
   display: flex;
@@ -121,16 +123,45 @@ const DiaryRegister = () => {
   const [categories, setCategories] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSave = () => {
+  const fileInputRef = useRef(null);
+
+  const handleSave = async () => {
     // Save the diary entry
-    console.log("Diary saved:", {
-      title,
-      content,
-      isPublic,
-      coAuthors,
-      projectName,
-      categories,
-    });
+
+    const formData = new FormData();
+    formData.append('teamId', '');
+    formData.append('projectId', '');
+    formData.append('postTitle', sessionStorage.getItem('diary-title'));
+    const content = sessionStorage.getItem('diary-content');
+    const modified_content = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '').toString();
+    formData.append('postBody', modified_content);
+    formData.append('postStatus', 'true');
+    formData.append('postAccess', 'ENTIRE');
+    formData.append('thumbnailImageName', '');
+    const fileInput = fileInputRef.current;
+    if (fileInput.files.length > 0) {
+      formData.append('postFiles', fileInput.files[0]); // 첫 번째 파일을 선택
+    }
+
+    try {
+      const response = await fetch('/posts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
+          'accept': '*/*'
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response:', data);
+      } else {
+        console.error('Error uploading post:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error uploading post:', error);
+    }
   };
 
   const handleAddCoAuthor = (author) => {
@@ -148,6 +179,7 @@ const DiaryRegister = () => {
 
   return (
     <Container>
+      <input type="file" ref={fileInputRef} />
       <LeftSection>
         <CloseButton>&times;</CloseButton>
         <DiaryPreview>

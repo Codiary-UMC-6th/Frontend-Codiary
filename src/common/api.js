@@ -16,7 +16,7 @@ async function request(endpoint, method = "GET", data = null) {
   if (data) {
     options.body = JSON.stringify(data);
   }
-
+  console.log("options", options);
   try {
     const response = await fetch(url, options);
     const responseData = await response.json();
@@ -32,6 +32,7 @@ async function request(endpoint, method = "GET", data = null) {
     console.error("API 요청 실패:", error);
     throw error;
   }
+
 }
 
 // GET 요청
