@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import * as Color from '../../common/Color';
 import Card from "../main/Card";
+import { get } from '../../common/api';
 
 const Container = styled.div`
     display: flex;
@@ -34,7 +35,20 @@ const Text = styled.div`
     line-height: 36px;
 `;
 
-const OtherCards = () => {
+const OtherCards = ({ postId }) => {
+
+    const getadjacent = async () => {
+        try {
+            const result = await get(`/posts/${postId}/adjacent`);
+            console.log("인접 다이어리 조회 성공: ", result);
+        } catch (error) {
+            console.error("인접 다이어리 조회 실패: ", error);
+        }
+    }
+
+    useEffect(() => {
+        getadjacent();
+    }, []);
 
     return(
         <Container>

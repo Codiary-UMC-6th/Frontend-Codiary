@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MockData from "../components/main/MockData";
 import Card from "../components/main/Card";
 import ViewBtn from "../components/main/ViewBtn";
 import styled from "styled-components";
@@ -86,6 +85,7 @@ const Main = () => {
               author={data.nickname}
               details={data.postBody}
               createdAt={data.createdAt}
+              authorId={data.memberId}
             />
           ))}
         </CardsContainer>
