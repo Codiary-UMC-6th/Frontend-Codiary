@@ -55,6 +55,10 @@ export async function del(endpoint) {
   return await request(endpoint, "DELETE");
 }
 
+export async function del2(endpoint, data) {
+  return await request(endpoint, "DELETE", data);
+}
+
 export async function patch(endpoint, data) {
   return await request(endpoint, "PATCH", data);
 }

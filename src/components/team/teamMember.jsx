@@ -1,11 +1,26 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
-import { memberData } from "../../pages/teamDataEx";
+import { get } from "../../common/api";
 import MemberAdd from "./memberAdd";
+import { useParams } from "react-router-dom";
 
 const TeamMember = ({ isManager }) => {
   const [memberIndex, setMemberIndex] = useState(0);
   const [isPop, setIsPop] = useState(false);
+  const [memberData, setMemberData] = useState([]);
+  const { teamId } = useParams();
+  useEffect(() => {
+    const getTeamInfo = async () => {
+      try {
+        const result = await get(`/teams/${teamId}`);
+        setMemberData(result?.result.members);
+        console.log(result?.result.members);
+      } catch (error) {
+        console.log("Error fetching team info:", error);
+      }
+    };
+    getTeamInfo();
+  }, []);
 
   const nextMember = () => {
     if (memberIndex + 3 < memberData.length) {
@@ -52,7 +67,7 @@ const TeamMember = ({ isManager }) => {
           <MemberCard key={el.id}>
             <MemberImage src={el.profileImg} alt={el.userName} />
             <MemberName>{el.userName}</MemberName>
-            <MemberRole>{el.role}</MemberRole>
+            <MemberRole>{el.memberRole}</MemberRole>
           </MemberCard>
         ))}
 
