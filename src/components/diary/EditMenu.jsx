@@ -1,4 +1,4 @@
-import {react, useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef} from "react";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
@@ -17,13 +17,29 @@ const EditMenu = (props) => {
     const colorSelected = props.colorSelected;
     const headSelected = props.headSelected;
     
+    const selected = props.selected;
+
+    useEffect(() => {
+        const container = document.getElementById("container");
+        const rect = selected.getBoundingClientRect();
+        container.style.left = `${rect.left + window.scrollX}px`;
+        container.style.top = `${rect.top - 44}px`;
+        //container.style.top = `${rect.top + window.scrollY + 30}px`;
+    }, [selected]);
+
     const [textDropIsOpen, setTextDropIsOpen] = useState(false);
     const [colorDropIsOpen, setColorDropIsOpen] = useState(false);
 
     useEffect(() => {
         setTextDropIsOpen(false);
         setColorDropIsOpen(false);
-    }, [])
+
+        const container = document.getElementById("container");
+        container.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            selected.focus();
+        })
+    }, [selected]);
 
     const dropdownRef = useRef(null);
     const handleClickOutside = (event) => {
@@ -42,10 +58,10 @@ const EditMenu = (props) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-      }, [textDropIsOpen, colorDropIsOpen]);
+    }, [textDropIsOpen, colorDropIsOpen]);
 
     return (
-        <Container>
+        <Container onClick={() => {console.log("menu clicked")}} id="container">
             <TextDrop onClick={() => {
                 setTextDropIsOpen(!textDropIsOpen);
                 setColorDropIsOpen(false);
@@ -104,7 +120,9 @@ const EditMenu = (props) => {
 
 const Container = styled.div`
     display: flex;
-    background-color : ${Color.background3}
+    background-color : ${Color.background3};
+    position: absolute;
+    width: 405px;
 `
 
 const TextDrop = styled.div`
