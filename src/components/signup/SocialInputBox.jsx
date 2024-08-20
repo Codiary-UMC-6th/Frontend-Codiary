@@ -2,16 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color'
 
-export const SocialInputBox = ({ image, placeholder, onChange }) => {
+export const SocialInputBox = (props) => {
   const handleInputChange = (event) => {
-    onChange(event.target.value);
+    props.onChange(event.target.value);
   };
 
   return (
     <St.SocialInputWrapper>
-      <St.SocialInputIcon>{image}</St.SocialInputIcon>
+      <St.SocialInputIcon>{props.image}</St.SocialInputIcon>
       <St.SocialInput
-        placeholder={placeholder}
+        placeholder={props.placeholder}
+        value={props.value}
         onChange={handleInputChange}
       />
     </St.SocialInputWrapper>

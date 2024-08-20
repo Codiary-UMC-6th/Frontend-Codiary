@@ -2,14 +2,15 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import * as Color from '../../common/Color';
 
-const Input = ({ type, placeholder, value, onChange, hasError }) => {
+const Input = (props) => {
   return (
     <StyledInput
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      hasError={hasError}
+      type={props.type}
+      placeholder={props.placeholder}
+      value={props.value}
+      onChange={props.onChange}
+      hasError={props.hasError}
+      disabled={props.disable}
     />
   );
 };
