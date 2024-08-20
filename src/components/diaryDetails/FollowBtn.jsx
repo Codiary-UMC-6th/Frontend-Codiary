@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 
-import { post } from "../../common/api";
+import { get, post } from "../../common/api";
 
 const Button = styled.button`
     border: 0;
@@ -12,8 +12,8 @@ const Button = styled.button`
 
 const Follow = styled.div`
     color: ${Color.text1};
-    width: 79px;
-    height: 34px;
+    width: 47px;
+    height: 26px;
     font-family: Pretendard;
     font-size: 17px;
     font-style: normal;
@@ -38,8 +38,8 @@ const Follow = styled.div`
 
 const Following = styled.div`
     color: ${Color.primary_blue};
-    width: 79px;
-    height: 34px;
+    width: 47px;
+    height: 26px;
     font-family: Pretendard;
     font-size: 17px;
     font-style: normal;
@@ -63,24 +63,38 @@ const Following = styled.div`
     }
 `;
 
-const FollowBtn = ({ memberId }) => {
+const FollowBtn = ({ authorId }) => {
     const [isFollowed, setisFollowed] = useState(false);
 
-    async function handleFollow() {
-        const endpoint = `/members/follow/${memberId}`;
-
+    const handleFollow = async () => {
         try {
-            const result = await post(endpoint);
-            console.log("팔로우 결과:", result);
-            setisFollowed(true);
+            const result = await post(`/members/follow/${authorId}`);
+            //console.log("팔로우 결과:", result);
+            setisFollowed(pre => ! pre);
         } catch (error) {
             console.error("팔로우 실패:", error);
         }
     }
 
+    const getIsFollowed = async() => {
+        try {
+            const result = await get(`/members/follow/${authorId}`);
+            //console.log("팔로우 조회 결과: ", result);
+            if (result.result == true) {
+                setisFollowed(true);
+            }
+        } catch (error) {
+            console.error("팔로우 조회 실패:", error);
+        }
+    }
+
+    useEffect(() => {
+        getIsFollowed();
+    }, [])
+
     return(
         <Button onClick={handleFollow}>
-            {(isFollowed==true) ?
+            {(isFollowed == false) ?
                 <Follow>팔로우</Follow> :
                 <Following>팔로잉</Following>
             }

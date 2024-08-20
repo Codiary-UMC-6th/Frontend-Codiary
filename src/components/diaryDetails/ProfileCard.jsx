@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 import FollowBtn from "./FollowBtn";
+import { BigProfileImg } from "./ProfileImg";
+import { get } from "../../common/api";
 
 const Container = styled.div`
     display: flex;
@@ -59,18 +61,36 @@ const Text = styled.div`
 
 
 
-const ProfileCard = ({ memberId }) => {
+const ProfileCard = ({ authorId, author, memberId }) => {
+    const [introduction, setIntroduction] = useState('소개가 없습니다.');
+
+    const getAuthorInfo = async () => {
+        try {
+            const result = await get(`/members/profile/${authorId}`);
+            if (result.result.introduction != null) {
+                setIntroduction(result.result.introduction);
+            }
+        } catch (error) {
+            console.error("작성자 정보 조회 실패: ", error);
+        }
+    }
+
+    useEffect(() => {
+        getAuthorInfo();
+    }, []);
 
     return (
         <Container>
             <UserBox>
-                <UserImg />
+                <BigProfileImg memberId={authorId} />
                 <TextBox>
-                    <UserName>USER NAME</UserName>
-                    <Text>text</Text>
+                    <UserName>{author}</UserName>
+                    <Text>{introduction}</Text>
                 </TextBox>
             </UserBox>
-            <FollowBtn memberId={memberId} />
+            {authorId == memberId ?
+            <></> : 
+            <FollowBtn authorId={authorId} /> }
         </Container>
     );
 }

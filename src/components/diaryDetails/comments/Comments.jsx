@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import * as Color from '../../../common/Color';
 import ReplyInput from './ReplyInput';
+import KebabModal from '../KebabModal';
+import { SmallProfileImg } from '../ProfileImg';
 import { formatDate } from './formatDate';
-import { ReactComponent as Kebab } from "../../../assets/symbols_kebab.svg";
 import { ReactComponent as Reply } from "../../../assets/symbols_reply.svg";
 
 const Container = styled.div`
@@ -75,12 +76,12 @@ const Comments = ({ comment, postId, memberId }) => {
         <Container>
             <Box>
                 <Box>
-                    <UserImg />
+                    <SmallProfileImg memberId={comment.memberId} />
                     <Author>{comment.nickname}</Author>
                 </Box>
                 <Box>
                     <Date>{formatDate(comment.createdAt)}</Date>
-                    <Kebab />
+                    <KebabModal memberId={memberId} authorId={comment.memberId} commentId={comment.commentId} />
                 </Box>
             </Box>
             
@@ -92,13 +93,13 @@ const Comments = ({ comment, postId, memberId }) => {
                         <ReplyItem key={reply.commentId}>
                             <Box>
                                 <Box>
-                                    <Reply />
-                                    <UserImg style={{marginLeft: "12px"}}/>
+                                    <Reply style={{marginRight: "12px"}} />
+                                    <SmallProfileImg memberId={comment.memberId} />
                                     <Author>{reply.nickname}</Author>
                                 </Box>
                                 <Box>
                                     <Date>{formatDate(reply.createdAt)}</Date>
-                                    <Kebab />
+                                    <KebabModal memberId={memberId} authorId={reply.memberId} commentId={reply.commentId} />
                                 </Box>
                             </Box>
                             <CommentContent style={{marginLeft: "36px"}}>{reply.commentBody}</CommentContent>
