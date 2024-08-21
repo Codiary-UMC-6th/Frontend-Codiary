@@ -5,7 +5,6 @@ import { get, post } from "../../common/api";
 import { useParams } from "react-router-dom";
 import { AddModal } from "../modal/AddModal";
 const TeamDiary = ({ isManager }) => {
-  const [categoryList, setCategoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [diaryList, setDiaryList] = useState([]);
@@ -53,24 +52,48 @@ const TeamDiary = ({ isManager }) => {
     }
   };
 
-  const handleCategoryChange = (index, value) => {
-    const newCategoryList = [...categoryList];
-    newCategoryList[index] = value;
-    setCategoryList(newCategoryList);
-  };
-
   useEffect(() => {
     setTotalPages(Math.ceil(diaryList.length / 6));
   }, [diaryList]);
+
+  const handleCategoryClick = async (projectId) => {
+    if (projectId == -1) {
+      try {
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=0&size=6`
+        );
+
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    } else {
+      try {
+        const response = await get(
+          `/posts/project/${projectId}/team/${teamId}/paging?page=0&size=6`
+        );
+        console.log("Response:", response);
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+        setDiaryList([]);
+      }
+    }
+  };
 
   return (
     <>
       <Container>
         <Title>팀 다이어리</Title>
         <CategoryContainer>
-          <Category>전체</Category>
+          <Category onClick={() => handleCategoryClick(-1)}>전체</Category>
           {teamProject.map((el, index) => (
-            <Category key={index}>{el.projectName}</Category>
+            <Category
+              onClick={() => handleCategoryClick(el.projectId)}
+              key={index}
+            >
+              {el.projectName}
+            </Category>
           ))}
           {isManager && (
             <AddCategoryButton onClick={openAddCategoryModal}>
@@ -138,6 +161,12 @@ const Category = styled.div`
   color: white;
   margin-right: 10px;
   font-size: 15px;
+
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const AddCategoryButton = styled.div`
