@@ -116,8 +116,6 @@ const Button = styled.button`
 `;
 
 const DiaryRegister = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [coAuthors, setCoAuthors] = useState([]);
   const [projectName, setProjectName] = useState("");
@@ -126,22 +124,38 @@ const DiaryRegister = () => {
 
   const navigate = useNavigate();
 
-  const { file } = useFileStore();
+  const { files } = useFileStore();
   const handleSave = async () => {
     // Save the diary entry
+
+    const modifyContent = (content) => {
+      var string = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '');
+      string = string.replace(new RegExp("class=\"block\"", 'g'), '');
+
+      const regex = /<img.*?src="[^"]*".*?>/g;
+      var i=0;
+      string = string.replace(regex, function(match) {
+        const replacedString = match.replace(/<img/, `<img id="${i}"`);
+        i += 1;
+        return replacedString;
+      });
+      return string.toString();
+    }
 
     const formData = new FormData();
     formData.append('teamId', '');
     formData.append('projectId', '');
     formData.append('postTitle', sessionStorage.getItem('diary-title'));
     const content = sessionStorage.getItem('diary-content');
-    const modified_content = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '').replace(new RegExp("class=\"block\"", 'g'), '').toString();
+    const modified_content = modifyContent(content);
     formData.append('postBody', modified_content);
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
     formData.append('thumbnailImageName', '');
-    formData.append('postFiles', file);
-    console.log(file);
+    files.forEach((file) => {
+      formData.append('postFiles', file);
+      console.log("file", file);  
+    })
 
     try {
       const response = await fetch('/posts', {
@@ -187,9 +201,9 @@ const DiaryRegister = () => {
         <DiaryPreview>
           <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
           <Card
-            title={title}
+            title={sessionStorage.getItem("diary-title")}
             author="Writer"
-            details={content.split("\n").slice(0, 4).join("\n")}
+            details={"내용 미리보기"}
           />
         </DiaryPreview>
       </LeftSection>

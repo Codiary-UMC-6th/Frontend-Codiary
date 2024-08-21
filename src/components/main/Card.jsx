@@ -18,7 +18,7 @@ const Img = styled.img`
     width: 360px;
     height: 202px;
     background-color: rgb(200, 200, 200);
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 10px 10px 0px 0px;
 `;
 

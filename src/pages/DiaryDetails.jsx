@@ -236,15 +236,23 @@ const DiaryDetails = () => {
         getCommentsData();
         getBookmarkCount();
 
-        console.log(state.details);
+        console.log("state", state);
         setContent(state.details);
     }, []);
+
+    const stringModifyForImg = (content) => {
+        const regex = /<img\s+id="(\w+)">/g;
+        const modified_content = content.replace(regex, (match, p1) => `<img src=${state.postFileList[p1].url}>`);
+
+        console.log("변경된 문자열:", content);
+
+        return modified_content
+    }
 
     if (loading || !post) {
         return null;
     }
-
-
+  
     return (
         <Container>
             <FAB postId={state.postId} memberId={memberId} />
@@ -264,7 +272,7 @@ const DiaryDetails = () => {
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
                 </DiaryInfo>
-                <Text dangerouslySetInnerHTML={{ __html: state.details }}></Text>
+                <Text dangerouslySetInnerHTML={{ __html: stringModifyForImg(state.details) }}></Text>
                 {/*<CodeBox>
                     <Code>{state.details}</Code>
                 </CodeBox>*/}

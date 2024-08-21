@@ -102,6 +102,7 @@ const Main = () => {
               createdAt={data.createdAt}
               authorId={data.memberId}
               thumbnailImageUrl={data.thumbnailImageUrl?data.thumbnailImageUrl:""}
+              postFileList={data.postFileList.postFileList}
             />
           ))}
         </CardsContainer>

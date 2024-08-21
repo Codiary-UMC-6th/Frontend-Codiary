@@ -21,7 +21,9 @@ const Diary = ( props ) => {
 
     return (
         <Container onClick={handleDiaryClick}>
-                <Img src={props.thumbnailImageUrl}></Img>
+            <div>
+                <Img src={props.thumbnailImageUrl}></Img>               
+            </div>
             <div>
                 <Title>{props.title}</Title>
                 <Content>{props.details}</Content>
@@ -51,7 +53,7 @@ const Img = styled.img`
     height: 180px;
     border-radius : 5px;
     margin : 0px 24px 0px 0px;
-    object-fit: contain;
+    object-fit: cover;
     background-color: ${Color.divider};
 `
 
