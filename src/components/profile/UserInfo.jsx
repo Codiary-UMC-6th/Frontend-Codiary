@@ -122,7 +122,7 @@ const UserInfo = (props) => {
                 }
             </Bio>
             <Bottom>
-                <Techstack onClick={props.onClick}></Techstack>
+                <Techstack onClick={props.onClick} techStackList={props.techStackList}></Techstack>
                 <Team></Team>
             </Bottom>
         </Container>
