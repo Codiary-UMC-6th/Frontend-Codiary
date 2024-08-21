@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
+import { get } from "../../common/api.js";
 
 import EnabledSvg from "../../assets/dropdown-enabled.svg";
 import DisabledSvg from "../../assets/dropdown-disabled.svg";
@@ -51,8 +52,10 @@ const Create = styled.div`
 
 const Dropdown = () => {
   const [visibility, setVisibility] = useState(false);
-  const [teamList, setTeamList] = useState([]);
   const navigate = useNavigate();
+
+  const [teamList, setTeamList] = useState([]);
+
 
   const toggleDropdown = () => {
     setVisibility(!visibility);
@@ -61,6 +64,21 @@ const Dropdown = () => {
   const createTeam = () => {
     navigate("/teamAdd");
   };
+
+  const getTeamList = async () => {
+    try {
+      const response = await get(`/teams/list`);
+      const teamList = response.result.teams;
+      console.log('팀 리스트 가져오기 성공', teamList);
+      setTeamList(teamList);
+    } catch (error) {
+      console.error('팀 리스트 가져오기 실패', error);
+    }
+  }
+
+  useEffect(() => {
+    getTeamList();
+  }, []);
 
   return (
     <Container>
