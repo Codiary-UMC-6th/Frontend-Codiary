@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 import FollowBtn from "./FollowBtn";
@@ -16,6 +17,7 @@ const Container = styled.div`
 
     border-radius: 15px;
     border: 1px solid var(--Gray-500, #999);
+    cursor: pointer;
 `;
 
 const UserBox = styled.div`
@@ -62,6 +64,7 @@ const Text = styled.div`
 
 
 const ProfileCard = ({ authorId, author, memberId }) => {
+    const navigate = useNavigate();
     const [introduction, setIntroduction] = useState('소개가 없습니다.');
 
     const getAuthorInfo = async () => {
@@ -80,7 +83,7 @@ const ProfileCard = ({ authorId, author, memberId }) => {
     }, []);
 
     return (
-        <Container>
+        <Container onClick={() => navigate(`/profile/${authorId}`)}>
             <UserBox>
                 <BigProfileImg memberId={authorId} />
                 <TextBox>
