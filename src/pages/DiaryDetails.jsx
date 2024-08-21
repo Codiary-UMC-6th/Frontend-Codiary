@@ -215,25 +215,13 @@ const DiaryDetails = () => {
   
     useEffect(() => {
         getMemberId();
-        //getCommentsData();
         getCommentsCount();
-      
-        //setTotalComments(countComments(mockComments));      
-    }, []);
+        getCommentsData();
+        getBookmarkCount();
 
-    useEffect(() => {
         console.log(state.details);
         setContent(state.details);
-    }, [state])
-
-    useEffect(() => {
-        getBookmarkCount();
-    }, [bookmarkCount])
-
-    useEffect(() => {
-        getCommentsData();
-       //getCommentsCount();
-    }, [commentsData])
+    }, []);
 
 
     return (

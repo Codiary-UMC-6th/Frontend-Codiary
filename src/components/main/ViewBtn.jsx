@@ -11,7 +11,7 @@ const Btn = styled.button`
   background: none;
   border: none;
   color: ${(props) => (props.active ? "#FFFFFF" : "#999999")};
-  textdecoration: none;
+  text-decoration: none;
   padding-right: 60px;
   cursor: pointer;
 

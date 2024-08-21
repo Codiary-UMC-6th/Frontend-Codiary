@@ -8,6 +8,7 @@ import Team from "./Team";
 import GithubSvg from '../../assets/profile/github.svg'
 import DiscordSvg from '../../assets/profile/discord.svg'
 import LinkedinSvg from '../../assets/profile/linkedin.svg'
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     display : flex;
@@ -18,7 +19,6 @@ const Container = styled.div`
 
 const Top = styled.div`
     display : flex;
-    align-items : center;
     margin : 0px 0px 36px 0px;
 `
 
@@ -38,11 +38,14 @@ const UserName = styled.div`
     font-size: 42px;
     font-style: normal;
     font-weight: 600;
-    margin: 0px 29px 0px 34px;
+    margin: 72px 34px 0 29px;
+    height: 60px;
+    padding-top: 8px;
 `
 
 const LinkBox = styled.div`
     display : flex;
+    margin-top: 72px;
 `
 
 const Bio = styled.div`
@@ -65,15 +68,46 @@ const Bottom = styled.div`
     margin : 27px 0px;
 `
 
+const ModifyProfileButton = styled.button`
+    display: absolute;
+    width: 115px;
+    height: 42px;
+    background-color: ${Color.background};
+    border-radius: 10px;
+    border: 1px solid ${Color.gray500};
+    color: ${Color.gray500};
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 18px;
+    weight: 400;
+    line-height: 26px;
+    padding: 8px 15px 8px 15px;
+    margin-left: 29px;
+    cursor: pointer;
+`
+
+const UserInfoWrapper = styled.div`
+    width: 237px;
+`
+
 const UserInfo = (props) => {
     const data = props.userInfoData;
+    const navigate = useNavigate();
+
+    const modifyProfileButtonClicked = () => {
+        navigate("/modify-profile");
+        console.log("Modify profile button clicked");
+    }
     return (
         <Container>
             <Top>
                 <ImageBox>
                     <Image></Image>
                 </ImageBox>
-                <UserName>{data.userName}</UserName>
+                <UserInfoWrapper>
+                    <UserName>{data.userName}</UserName>
+                    <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
+                </UserInfoWrapper>
                 <LinkBox>
                     <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`} />
                     <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`} />
@@ -88,8 +122,8 @@ const UserInfo = (props) => {
                 }
             </Bio>
             <Bottom>
-                <Techstack onClick={props.onClick}></Techstack>
-                <Team></Team>
+                <Techstack onClick={props.onClick} techStackList={props.techStackList}></Techstack>
+                <Team teamList={props.teamList}></Team>
             </Bottom>
         </Container>
     );

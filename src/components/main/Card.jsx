@@ -97,6 +97,8 @@ function Card(props) {
 
     const onClickPostDetails = () => {
         navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        window.scrollTo(0, 0);
+        window.location.reload();
     }
 
     return (

@@ -1,12 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
+import { useNavigate } from 'react-router-dom';
 
 export const SignUpBtnBox = (props) => {
+  const navigate = useNavigate();
+  const handleBackButton = () => {
+    navigate(-1);
+  }
+
   return (
     <St.SignUpBtnBoxWrapper>
       <St.SignUpButton onClick={props.onSubmit} disabled={props.isDisabled}>{props.title}</St.SignUpButton>
-      <St.BackButton title='뒤로가기'>뒤로가기</St.BackButton>
+      <St.BackButton title='뒤로가기' onClick={handleBackButton}>뒤로가기</St.BackButton>
     </St.SignUpBtnBoxWrapper>
   )
 }
