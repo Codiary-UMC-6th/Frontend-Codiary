@@ -6,6 +6,7 @@ export const Head = styled.div`
     display : flex;
     justify-content : center;
     align-items : center;
+    cursor: pointer;
 `;
 
 export const Infotype = styled.div`

@@ -101,8 +101,12 @@ const Profile = () => {
       console.log(response);
       closeTechStackModal();
     } catch (error) {
-      alert('TECH STACK 추가를 실패했습니다.');
-      console.error(error);
+      if (error.response.status == 400) {
+        alert('TECH STACK은 JAVA, SPRING, JAVA_SCRIPT, REACT, CSS, HTML, NODE_JS만 입력 가능합니다.')
+      } else {
+        alert('TECH STACK 추가를 실패했습니다.');
+        console.error(error.response);
+      }
     }
   };
 

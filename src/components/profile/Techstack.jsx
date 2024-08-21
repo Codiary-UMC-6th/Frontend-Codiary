@@ -19,9 +19,9 @@ const Techstack = (props) => {
 
   return (
     <Container>
-      <Head>
-        <Infotype>TECH STACK</Infotype>
-        <Add onClick={props.onClick} src={PlusSvg}></Add>
+      <Head onClick={props.onClick} >
+        <Infotype >TECH STACK</Infotype>
+        <Add src={PlusSvg}></Add>
       </Head>
       <Content>기술 스택을 등록해주세요</Content>
     </Container>
