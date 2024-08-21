@@ -1,24 +1,58 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from '../../common/Color';
 
 import DefaultIMG from '../../assets/diary_default_img.png';
 import ProfileDefulat from '../../assets/user_profile_default.svg';
 
-const LinkStyle = styled(Link)`
-  text-decoration : none;
-`;
+const Diary = ( props ) => {
+    const createYear = props.createdAt.slice(0,4);
+    const createMonth = props.createdAt.slice(5,7);
+    const createDate = props.createdAt.slice(8,10);
+    const createdAt = createYear + "." + createMonth + "." + createDate;
+
+    const navigate = useNavigate();
+    
+    const handleDiaryClick = () => {
+        navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        window.scrollTo(0, 0);
+        window.location.reload();
+    }
+
+    return (
+        <Container onClick={handleDiaryClick}>
+                <Img src={props.thumbnailImageUrl}></Img>
+            <div>
+                <Title>{props.title}</Title>
+                <Content>{props.details}</Content>
+                <Writer>
+                    <WriterImg src={ProfileDefulat}></WriterImg>
+                    <WriterName>{props.author}</WriterName>
+                </Writer>
+                <Date>{createdAt}</Date>
+            </div>
+        </Container>
+    );
+}
 
 const Container = styled.div`
     display : flex;
     margin : 0px 0px 64px 0px;
+    cursor : pointer;
+    border : 1px solid ${Color.background};
+    border-radius : 5px;
+    &:hover {
+        border : 1px solid ${Color.divider}
+    }
 `
 
 const Img = styled.img`
     width: 321px;
     height: 180px;
-    border-radius : 5;
+    border-radius : 5px;
     margin : 0px 24px 0px 0px;
+    object-fit: contain;
+    background-color: ${Color.divider};
 `
 
 const Title = styled.div`
@@ -70,30 +104,5 @@ const Date = styled.div`
     line-height: 24px;
 `
 
-const Diary = ( props ) => {
-    const createYear = props.createdAt.slice(0,4);
-    const createMonth = props.createdAt.slice(5,7);
-    const createDate = props.createdAt.slice(8,10);
-    const createdAt = createYear + "." + createMonth + "." + createDate;
-
-    return (
-        <LinkStyle to={`/DiaryDetails/${props.postId}`}>
-            <Container>
-                <div>
-                    <Img src={DefaultIMG}></Img>
-                </div>
-                <div>
-                    <Title>{props.postTitle}</Title>
-                    <Content>{props.postBody}</Content>
-                    <Writer>
-                        <WriterImg src={ProfileDefulat}></WriterImg>
-                        <WriterName>Writer</WriterName>
-                    </Writer>
-                    <Date>{createdAt}</Date>
-                </div>
-            </Container>
-        </LinkStyle>
-    );
-}
 
 export default Diary;
