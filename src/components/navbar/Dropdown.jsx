@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
 import { get } from "../../common/api.js";
@@ -44,13 +45,14 @@ const TeamBox = styled.div`
   margin-bottom: 10px;
 `;
 
-const TeamListWrapper = styled.div`
+const TeamListWrapper = styled(Link)`
   display: flex;
   align-items: center;
   padding: 8px 10px;
   background-color: ${Color.backgroundBlur};
   border-radius: 4px;
   cursor: pointer;
+  text-decoration: none;
 `;
 
 const TeamName = styled.div`
@@ -122,7 +124,11 @@ const Dropdown = () => {
             <>
               <TeamBox>
                 {teamList.map((team) => (
-                  <TeamListWrapper key={team.teamId}>
+                  <TeamListWrapper
+                    to={`/team/${team.teamId}`}
+                    key={team.teamId}
+                    onClick={() => setVisibility(false)}
+                  >
                     <TeamColor />
                     <TeamName>{team.teamName}</TeamName>
                   </TeamListWrapper>
@@ -138,8 +144,9 @@ const Dropdown = () => {
             </Create>
           )}
         </DropdownBox>
-      )}
-    </Container>
+      )
+      }
+    </Container >
   );
 };
 
