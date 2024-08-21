@@ -1,15 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import "./Diary.css";
 
+import { useFileStore } from "../store/FileStore";
 import EditMenu from "../components/diary/EditMenu";
 
 const DiaryEditor = () => {
   const [title, setTitle] = useState("");
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
+
+  const [preview, setPreview] = useState(null);
+  const { file, setFile } = useFileStore();
+  const fileInputRef = useRef(null);
+  const handleFileChange = () => {
+    if (fileInputRef.current.files.length > 0) {
+      setFile(fileInputRef.current.files[0]); // 첫 번째 파일을 상태로 저장
+      
+      const imageUrl = URL.createObjectURL(fileInputRef.current.files[0]);
+      setPreview(imageUrl);
+      console.log("file", file);
+      console.log("url", imageUrl);
+    }
+  };
 
   const handleSave = () => {
     // Save the diary entry
@@ -121,6 +136,14 @@ const DiaryEditor = () => {
         setSelected={setSelected}
         />
       }
+
+      <Preview src={preview?preview:null}></Preview>
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
     </Container>
   );
 };
@@ -197,5 +220,10 @@ const SubmitButton = styled(Button)`
   margin-left: 10px; /* 간격 추가 */
 `;
 
+const Preview = styled.img`
+  width: 400px;
+  height: 400px;
+  background-color: white;
+`
 
 export default DiaryEditor;

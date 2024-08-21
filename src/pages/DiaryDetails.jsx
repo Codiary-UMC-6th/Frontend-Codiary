@@ -181,7 +181,6 @@ const DiaryDetails = () => {
         } catch (error) {
             console.error("사용자 정보 조회 실패:", error);
         }
-
     };
 
     const getBookmarkCount = async () => {
@@ -213,18 +212,19 @@ const DiaryDetails = () => {
             console.error("댓글 조회 실패: ", error);
         }
     }
-
   
     useEffect(() => {
         getMemberId();
         //getCommentsData();
         getCommentsCount();
       
-        //setTotalComments(countComments(mockComments));
+        //setTotalComments(countComments(mockComments));      
+    }, []);
+
+    useEffect(() => {
         console.log(state.details);
         setContent(state.details);
-      
-    }, []);
+    }, [state])
 
     useEffect(() => {
         getBookmarkCount();
