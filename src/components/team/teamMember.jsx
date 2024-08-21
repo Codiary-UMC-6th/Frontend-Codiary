@@ -20,7 +20,7 @@ const TeamMember = ({ isManager }) => {
       }
     };
     getTeamInfo();
-  }, []);
+  }, [isPop]);
 
   const nextMember = () => {
     if (memberIndex + 3 < memberData.length) {
@@ -65,9 +65,14 @@ const TeamMember = ({ isManager }) => {
 
         {memberData.slice(memberIndex, memberIndex + 3).map((el) => (
           <MemberCard key={el.id}>
-            <MemberImage src={el.profileImg} alt={el.userName} />
-            <MemberName>{el.userName}</MemberName>
-            <MemberRole>{el.memberRole}</MemberRole>
+            <MemberImage
+              src={`${process.env.PUBLIC_URL}/team_images/profile.png`}
+              alt={el.nickname}
+            />
+            <MemberName>{el.nickname}</MemberName>
+            <MemberRole>
+              {el.memberRole === "ADMIN" ? el.memberRole : el.memberPosition}
+            </MemberRole>
           </MemberCard>
         ))}
 

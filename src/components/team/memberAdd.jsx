@@ -15,7 +15,8 @@ const MemberAdd = ({ isPop, onClose }) => {
     const addData = {
       teamId: teamId,
       memberId: memberId,
-      memberRole: memberRole,
+      memberRole: "MEMBER",
+      memberPosition: memberRole,
     };
     console.log(addData);
     try {
@@ -140,19 +141,16 @@ const MemberAdd = ({ isPop, onClose }) => {
         </FollowerContainer>
 
         {showRolePopup && (
-          <div className="popup">
-            <div className="popup-inner">
-              <h3>Enter Role for Member</h3>
-              <input
-                type="text"
-                value={memberRole}
-                onChange={(e) => setRole(e.target.value)}
-                placeholder="Enter role"
-              />
-              <button onClick={handleAddMember}>Add Member</button>
-              <button onClick={() => setShowRolePopup(false)}>Cancel</button>
-            </div>
-          </div>
+          <RoleContainer>
+            <RoleInput
+              type="text"
+              value={memberRole}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="사용자의 역할을 추가해주세요."
+            />
+            <RoleBtn onClick={handleAddMember}>추가</RoleBtn>
+            <RoleBtn onClick={() => setShowRolePopup(false)}>취소</RoleBtn>
+          </RoleContainer>
         )}
       </MemberContainer>
     </Container>
@@ -225,6 +223,36 @@ const FollowerBtn = styled.button`
     opacity: 0.5;
     cursor: pointer;
     transition: all.5s;
+  }
+`;
+
+const RoleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 40px;
+`;
+
+const RoleInput = styled.input`
+  border-radius: 5px;
+  border: none;
+  background-color: #222222;
+  padding: 10px;
+  width: 60%;
+  color: white;
+`;
+
+const RoleBtn = styled.button`
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2d7295;
+  color: white;
+  &:hover {
+    opacity: 0.5;
+    transition: all.5s;
+    cursor: pointer;
   }
 `;
 export default MemberAdd;
