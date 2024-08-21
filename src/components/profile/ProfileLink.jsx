@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 const Img = styled.div`
+    cursor: pointer;
 `
 
-const ProfileLink = ({ type, svg, link}) => {
+const ProfileLink = ({ type, svg, link }) => {
 
     const OpenOuterProfilePage = () => {
         window.open(link)

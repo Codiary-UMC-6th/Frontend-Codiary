@@ -14,3 +14,9 @@
 .selected {
     outline: 1.5px solid white
 }
+
+.preview {
+    width: 517px;
+    height: 290px;
+    object-fit: contain;
+}

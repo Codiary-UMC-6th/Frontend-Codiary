@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import SignUpTitle from './SignUpTitle';
 import { SignUpInputContainer } from './SignUpInputContainer';
@@ -11,6 +12,7 @@ import { SignUpBtnBox } from './SignUpBtnBox';
 import { post } from "../../common/api";
 
 export const SignUp = () => {
+  const navigate = useNavigate();
   const [signUpFormData, setSignUpFormData] = useState({
     "email": '',
     "password": '',
@@ -71,7 +73,7 @@ export const SignUp = () => {
       console.log('회원가입 성공', response);
       console.log(signUpFormData);
       alert('회원가입 성공');
-      // 뷰 이동?
+      navigate(-1);
     } catch (error) {
       console.error('회원가입 실패', error.response);
       console.log(signUpFormData);
@@ -138,7 +140,7 @@ export const SignUp = () => {
         />
       </St.SignUpContainerWrapper>
       <SocialInputContainer handleChange={handleChange} />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} title='회원가입'/>
+      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} title='회원가입' />
     </St.SignUpWrapper>
   )
 }

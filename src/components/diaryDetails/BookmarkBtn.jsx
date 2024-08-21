@@ -120,6 +120,7 @@ const BookmarkBtn = ({ postId, memberId }) => {
         } else {
             postBookmark();
         }
+        window.location.reload();
 
     };
 

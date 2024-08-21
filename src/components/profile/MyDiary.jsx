@@ -8,6 +8,52 @@ import Diary from './Diary';
 import PagenationBox from "./PagenationBox";
 import { AddModal } from "../modal/AddModal";
 
+const MyDiary = (props) => {
+    const [diaryList, setDiaryList] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        const memberId = props.memberId;
+        axios.get(`/posts/member/${memberId}/paging?page=${currentPage-1}&size=5`)
+            .then((response) => {
+                console.log(response.data.result.posts);
+                setDiaryList(response.data.result.posts);
+            })
+            .catch((error) => {})
+        setDiaryList(diaryList);
+        console.log("Page updated. current page : " + currentPage);
+    }, [currentPage]);
+
+    return (
+        <Container>
+            <Title>내 다이어리</Title>
+            <Category>
+                <Btn>전체</Btn>
+                <AddBtn onClick={props.onClick}>+</AddBtn>
+            </Category>
+            <DiaryBox>
+                {diaryList.map((diary)=> {
+                    return (
+                        <Diary
+                            key={diary.postId}
+                            postId={diary.postId} 
+                            title={diary.postTitle} 
+                            author={"Writer"}
+                            details={diary.postBody} 
+                            createdAt={diary.createdAt}
+                            authorId={diary.memberId}
+                            postCategory={diary.postCategory}
+                            thumbnailImageUrl={diary.thumbnailImageUrl}
+                            postFileList={diary.postFileList.postFileList}
+                        />
+                    );
+                })}
+            </DiaryBox>
+            <PagenationBox setCurrentPage={setCurrentPage}/>
+        </Container>
+    );
+}
+
 const Container = styled.div`
 `
 
@@ -62,46 +108,5 @@ const AddBtn = styled.button`
 const DiaryBox = styled.div`
     margin : 64px 0px 0px 0px;
 `
-
-const MyDiary = (props) => {
-    const [diaryList, setDiaryList] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-
-    useEffect(() => {
-        const memberId = props.memberId;
-        axios.get(`/posts/member/${memberId}/paging?page=${currentPage-1}&size=5`)
-            .then((response) => {
-                console.log(response.data.result.posts);
-                setDiaryList(response.data.result.posts);
-            })
-            .catch((error) => {})
-        setDiaryList(diaryList);
-        console.log("Page updated. current page : " + currentPage);
-    }, [currentPage]);
-
-    return (
-        <Container>
-            <Title>내 다이어리</Title>
-            <Category>
-                <Btn>전체</Btn>
-                <AddBtn onClick={props.onClick}>+</AddBtn>
-            </Category>
-            <DiaryBox>
-                {diaryList.map((diary)=> {
-                    return (
-                        <Diary
-                            key={diary.postId}
-                            postId={diary.postId} 
-                            postTitle={diary.postTitle} 
-                            postBody={diary.postBody} 
-                            createdAt={diary.createdAt}
-                        />
-                    );
-                })}
-            </DiaryBox>
-            <PagenationBox setCurrentPage={setCurrentPage}/>
-        </Container>
-    );
-}
 
 export default MyDiary;

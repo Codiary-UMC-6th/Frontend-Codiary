@@ -1,7 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
-import { post } from "../../common/api";
+import { useFileStore } from "../../store/FileStore";
+import { useLoginStore } from "../../store/LoginStore";
+
+import { patch } from "../../common/api";
 
 import Card from "../main/Card";
 
@@ -29,6 +33,7 @@ const RightSection = styled.div`
 
 const Divider = styled.div`
   width: 2px;
+  height: 600px;
   background-color: #ccc;
   margin: 0 20px; /* 좌우 여백 추가 */
 `;
@@ -47,6 +52,7 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   margin-bottom: 8px;
+  margin-top: 20px;
 `;
 
 const Input = styled.input`
@@ -110,38 +116,76 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
-  background: var(--Primary-Red, #ae5257); /* 스타일 수정 */
-  color: white; /* 스타일 수정 */
+  background: ${Color.primary_red};
+  color: ${Color.text1};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px; 
+  width: 147px;
+  height: 56px;
 `;
 
+const CategoryBox = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Category = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${Color.background3};
+  color: ${Color.text1};
+  width: 78px;
+  height: 32px;
+  padding: 4px;
+  border-radius: 4px;
+  margin: 8px 10px;
+`
+
 const DiaryRegister = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const { teamList } = useLoginStore();
+
   const [isPublic, setIsPublic] = useState(true);
   const [coAuthors, setCoAuthors] = useState([]);
-  const [projectName, setProjectName] = useState("");
+  const [teamId, setTeamId] = useState("");
+  const [projectId, setProjectId] = useState("");
+  const [projectList, setProjectList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
+  const { files } = useFileStore();
   const handleSave = async () => {
     // Save the diary entry
 
+    const modifyContent = (content) => {
+      var string = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '');
+      string = string.replace(new RegExp("class=\"block\"", 'g'), '');
+
+      let idCounter = 0;
+      string = string.replace(/<img[^>]*>/g, function() {
+        return `<img id="${idCounter++}">`;
+      });
+      return string.toString();
+    }
+
     const formData = new FormData();
-    formData.append('teamId', '');
-    formData.append('projectId', '');
+    formData.append('teamId', teamId);
+    formData.append('projectId', projectId);
     formData.append('postTitle', sessionStorage.getItem('diary-title'));
     const content = sessionStorage.getItem('diary-content');
-    const modified_content = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '').toString();
+    const modified_content = modifyContent(content);
     formData.append('postBody', modified_content);
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
     formData.append('thumbnailImageName', '');
-    const fileInput = fileInputRef.current;
-    if (fileInput.files.length > 0) {
-      formData.append('postFiles', fileInput.files[0]); // 첫 번째 파일을 선택
-    }
+    files.forEach((file) => {
+      formData.append('postFiles', file);
+    })
 
     try {
       const response = await fetch('/posts', {
@@ -156,13 +200,27 @@ const DiaryRegister = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('Response:', data);
+        categoryPatch(data.result.postId);
+        alert("다이어리 등록을 성공하였습니다.");
+        navigate('/');
       } else {
         console.error('Error uploading post:', response.statusText);
       }
     } catch (error) {
       console.error('Error uploading post:', error);
+      alert("다이어리 등록을 실패하였습니다.");
     }
   };
+
+  const categoryPatch = async (postId) => {
+    try {
+      const response= await patch(`/posts/categories/${postId}`, categories);
+      console.log("카테고리 요청 성공", response);
+    } catch (error) {
+      console.error("카테고리 요청 실패", error);
+    }
+    
+  }
 
   const handleAddCoAuthor = (author) => {
     if (!author) {
@@ -173,21 +231,43 @@ const DiaryRegister = () => {
     }
   };
 
-  const handleAddCategory = (category) => {
-    setCategories([...categories, category]);
+  const handleAddCategory = (e) => {
+    if((e.key === 'Enter')&&(e.target.value)){
+      setCategories([...categories, e.target.value]);
+      e.target.value = "";
+    }
   };
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('http://43.202.229.89:8080/projects/list', {
+          method: 'GET',
+          headers: {
+            'Accept': '*/*',
+          },
+        });
+        const data = await response.json();
+        console.log(data);
+        setProjectList(data.result.projects);
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    };
+
+    fetchProjects();
+  }, [])
 
   return (
     <Container>
-      <input type="file" ref={fileInputRef} />
       <LeftSection>
         <CloseButton>&times;</CloseButton>
         <DiaryPreview>
           <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
           <Card
-            title={title}
+            title={sessionStorage.getItem("diary-title")}
             author="Writer"
-            details={content.split("\n").slice(0, 4).join("\n")}
+            details={"내용 미리보기"}
           />
         </DiaryPreview>
       </LeftSection>
@@ -218,6 +298,7 @@ const DiaryRegister = () => {
             </div>
             <Label>공동 저자 추가</Label>
             <Input
+              disabled={true}
               type="text"
               placeholder="공동 저자 아이디를 검색하세요."
               onBlur={(e) => handleAddCoAuthor(e.target.value)}
@@ -228,29 +309,41 @@ const DiaryRegister = () => {
                 <span key={index}>{author}</span>
               ))}
             </div>
+            <Label>팀명</Label>
+            <Select
+              value={teamId}
+              onChange={(e) => setTeamId(e.target.value)}
+            >
+              <Option value="">-</Option>
+              {
+                teamList.map((team) => (
+                  <Option value={team.teamId}>{team.teamName}</Option>
+                ))
+              }
+            </Select>
             <Label>프로젝트명</Label>
             <Select
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              value={projectId}
+              onChange={(e) => setProjectId(e.target.value)}
             >
-              <Option value="">프로젝트</Option>
-              <Option value="Option 1">Option 1</Option>
-              <Option value="Option 2">Option 2</Option>
-              <Option value="Option 3">Option 3</Option>
-              <Option value="Option 4">Option 4</Option>
-              <Option value="Option 5">Option 5</Option>
+              <Option value="">-</Option>
+              {
+                projectList.map((project) => (
+                  <Option value={project.projectId}>{project.projectName}</Option>
+                ))
+              }
             </Select>
-            <Label>카테고리 설정</Label>
+            <Label>카테고리 추가</Label>
             <Input
               type="text"
               placeholder="카테고리를 입력하세요. (최대 7개)"
-              onBlur={(e) => handleAddCategory(e.target.value)}
+              onKeyDown={(e) => {handleAddCategory(e)}}
             />
-            <div>
+            <CategoryBox>
               {categories.map((category, index) => (
-                <span key={index}>{category}</span>
+                <Category key={index}>{category}</Category>
               ))}
-            </div>
+            </CategoryBox>
           </FormGroup>
         </FormSection>
         <Button onClick={handleSave}>작성 완료</Button>

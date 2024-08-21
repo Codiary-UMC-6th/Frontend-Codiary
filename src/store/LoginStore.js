@@ -21,7 +21,10 @@ export const useLoginStore = create(
             setMemberId: (id) => {
                 const memberId = String(id);
                 set({ memberId });
-                console.log(memberId); }
+                console.log(memberId); },
+
+            teamList: [],
+            setTeamList: (list) => set({ teamList: list }),
             }),
             {
                 name: "userInfoStorage",

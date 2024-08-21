@@ -172,6 +172,22 @@ const DiaryDetails = () => {
     const [totalComments, setTotalComments] = useState(0);
     const [content, setContent] = useState();
     const [commentsData, setCommentsData] = useState([]);
+    const [category, setCategory] = useState('');
+    const [post, setPost] = useState();
+    const [loading, setLoading] = useState(true);
+
+    const getPost = async () => {
+        try {
+            const result = await get(`/posts/${state.postId}`);
+            //console.log("다이어리 조회 성공: ", result);
+            setPost(result.result);
+            setCategory(result.result.postCategory);
+            setLoading(false);
+        } catch (error) {
+            console.error("다이어리 조회 실패: ", error);
+            setLoading(false);
+        }
+    }
 
     const getMemberId = async () => {
         try {
@@ -181,7 +197,6 @@ const DiaryDetails = () => {
         } catch (error) {
             console.error("사용자 정보 조회 실패:", error);
         }
-
     };
 
     const getBookmarkCount = async () => {
@@ -213,35 +228,42 @@ const DiaryDetails = () => {
             console.error("댓글 조회 실패: ", error);
         }
     }
-
   
     useEffect(() => {
+        getPost();
         getMemberId();
-        //getCommentsData();
         getCommentsCount();
-      
-        //setTotalComments(countComments(mockComments));
-        console.log(state.details);
+        getCommentsData();
+        getBookmarkCount();
+
+        console.log("state", state);
         setContent(state.details);
-      
     }, []);
 
-    useEffect(() => {
-        getBookmarkCount();
-    }, [bookmarkCount])
+    const stringModifyForImg = (content) => {
+        const regex = /<img\s+id="(\w+)">/g;
+        var string = content;
+        var i = 0;
+        string = string.replace(regex, function(match) {
+            const replacedString = match.replace(/<img/, `<img src=${state.postFileList[i].url}`);
+            i += 1;
+            console.log("replacedString", replacedString);
+            return replacedString;
+        });
 
-    useEffect(() => {
-        getCommentsData();
-       //getCommentsCount();
-    }, [commentsData])
-
-
+        return string;
+    }
+    /*
+    if (loading || !post) {
+        return null;
+    }
+    */
     return (
         <Container>
             <FAB postId={state.postId} memberId={memberId} />
             <CenterBox>
                 <Title>{state.title}</Title>
-                <CategoryChip />
+                <CategoryChip postId={state.postId} category={category} />
                 <DiaryInfo>
                     <NameBox>
                         <UserName>{state.author}</UserName>
@@ -255,7 +277,7 @@ const DiaryDetails = () => {
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
                 </DiaryInfo>
-                <Text dangerouslySetInnerHTML={{ __html: state.details }}></Text>
+                <Text dangerouslySetInnerHTML={{ __html: stringModifyForImg(state.details) }}></Text>
                 {/*<CodeBox>
                     <Code>{state.details}</Code>
                 </CodeBox>*/}

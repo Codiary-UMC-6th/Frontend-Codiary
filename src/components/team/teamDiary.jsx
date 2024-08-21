@@ -1,134 +1,148 @@
 import React, { useState, useEffect } from "react";
-import { boardData } from "../../pages/teamDataEx";
 import styled from "styled-components";
-import DiaryCard from "./diaryCard";
-import { get } from "../../common/api";
+import { get, post } from "../../common/api";
 import { useParams } from "react-router-dom";
+import { AddModal } from "../modal/AddModal";
+import Card from "../main/Card";
+
 const TeamDiary = ({ isManager }) => {
-  const [categoryList, setCategoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [diaryList, setDiaryList] = useState([]);
   const { teamId } = useParams();
+  const [teamProject, setTeamProject] = useState([]);
 
-  // const [totalSize, setTotalSize] = useState(null);
-  const fetchTeamDiary = async () => {
-    try {
-      // 처음 요청에서 totalElements 값을 얻기 위해 초기 size를 1로 설정
-      const initialResponse = await get(
-        `/posts/team/${teamId}/paging?page=${currentPage}&size=1`
-      );
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
-      const totalElements = initialResponse.result.totalElements;
-
-      // 얻은 totalElements 값을 새로운 size로 설정하고 다시 요청
-      const finalResponse = await get(
-        `/posts/team/${teamId}/paging?page=${currentPage}&size=${totalElements}`
-      );
-
-      // 다이어리 리스트를 setDiaryList에 설정
-      setDiaryList(finalResponse.result.content);
-    } catch (error) {
-      console.error("Error fetching team data:", error);
-    }
-  };
+  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
+  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
   useEffect(() => {
     const fetchTeamDiary = async () => {
       try {
-        // 처음 요청에서 totalElements 값을 얻기 위해 초기 size를 1로 설정
-        const initialResponse = await get(
-          `/posts/team/${teamId}/paging?page=${currentPage}&size=1`
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=0&size=6`
         );
 
-        const totalElements = initialResponse?.result.totalElements;
-        console.log(totalElements);
-
-        // 얻은 totalElements 값을 새로운 size로 설정하고 다시 요청
-        const finalResponse = await get(
-          `/posts/team/${teamId}/paging?page=1&size=3`
-        );
-
-        // 다이어리 리스트를 setDiaryList에 설정
-        console.log("final", finalResponse?.result.posts);
-        setDiaryList(finalResponse?.result.posts);
+        setDiaryList(response?.result.posts);
       } catch (error) {
         console.error("Error fetching team data:", error);
       }
     };
+    const getTeamInfo = async () => {
+      try {
+        const result = await get(`/teams/${teamId}`);
+        setTeamProject(result?.result.projects);
+        console.log("fetch team in diary", result?.result);
+      } catch (error) {
+        console.log("Error fetching team info:", error);
+      }
+    };
+
+    getTeamInfo();
     fetchTeamDiary();
-  }, []);
+  }, [isAddCategoryModalOpen]);
 
-  // useEffect(() => {
-  //   const fetchProjectList = async () => {
-  //     try {
-  //       const response = await get("/projects/list");
-  //       console.log(response?.result);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   // fetchProjectList();
-  // }, []);
-
-  // useEffect(() => {
-  //   const tSize = fetchTeamDiary("1")?.result.totalElements;
-  //   console.log(tSize);
-  //   fetchTeamDiary(tSize);
-  // }, []);
-
-  const addCategory = () => {
-    setCategoryList([...categoryList, ""]);
-  };
-
-  const handleCategoryChange = (index, value) => {
-    const newCategoryList = [...categoryList];
-    newCategoryList[index] = value;
-    setCategoryList(newCategoryList);
+  const addCategory = async (value) => {
+    try {
+      const result = await post(`/teams/${teamId}/project`, {
+        projectName: value,
+      });
+    } catch (error) {
+      console.log("post project error", error);
+    }
   };
 
   useEffect(() => {
     setTotalPages(Math.ceil(diaryList.length / 6));
   }, [diaryList]);
 
-  const getDiary = async () => {};
+  const handleCategoryClick = async (projectId) => {
+    if (projectId == -1) {
+      try {
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=0&size=6`
+        );
+
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    } else {
+      try {
+        const response = await get(
+          `/posts/project/${projectId}/team/${teamId}/paging?page=0&size=6`
+        );
+        console.log("Response:", response);
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+        setDiaryList([]);
+      }
+    }
+  };
 
   return (
-    <Container>
-      <Title>팀 다이어리</Title>
-      <CategoryContainer>
-        <Category>전체</Category>
-        {categoryList.map((el, index) => (
-          <CategoryInput
-            key={index}
-            type="text"
-            value={el}
-            onChange={(e) => handleCategoryChange(index, e.target.value)}
-          />
-        ))}
-        {isManager && (
-          <AddCategoryButton onClick={addCategory}>+</AddCategoryButton>
-        )}
-      </CategoryContainer>
-      <DiaryContainer>
-        {diaryList
-          .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
-          .map((el) => (
-            <DiaryCard key={el.id} data={el} />
+    <>
+      <Container>
+        <Title>팀 다이어리</Title>
+        <CategoryContainer>
+          <Category onClick={() => handleCategoryClick(-1)}>전체</Category>
+          {teamProject.map((el, index) => (
+            <Category
+              onClick={() => handleCategoryClick(el.projectId)}
+              key={index}
+            >
+              {el.projectName}
+            </Category>
           ))}
-      </DiaryContainer>
-      <Pagination>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <PageNum
-            key={index + 1}
-            isActive={currentPage === index + 1}
-            onClick={() => setCurrentPage(index + 1)}
-          >
-            {index + 1}
-          </PageNum>
-        ))}
-      </Pagination>
-    </Container>
+          {isManager && (
+            <AddCategoryButton onClick={openAddCategoryModal}>
+              +
+            </AddCategoryButton>
+          )}
+        </CategoryContainer>
+        <DiaryContainer>
+          {diaryList &&
+            diaryList
+              .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
+              .map((data) => (
+                <Card
+                  key={data.postId}
+                  postId={data.postId}
+                  title={data.postTitle}
+                  author={data.nickname}
+                  details={data.postBody}
+                  createdAt={data.createdAt}
+                  authorId={data.memberId}
+                  thumbnailImageUrl={
+                    data.thumbnailImageUrl ? data.thumbnailImageUrl : ""
+                  }
+                />
+              ))}
+        </DiaryContainer>
+
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PageNum
+              key={index + 1}
+              isActive={currentPage === index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </PageNum>
+          ))}
+        </Pagination>
+      </Container>
+      {isAddCategoryModalOpen && (
+        <AddModal
+          title="카테고리 추가하기"
+          placeholder='input name = "interest"'
+          onClose={closeAddCategoryModal}
+          onAdd={addCategory}
+        />
+      )}
+    </>
   );
 };
 
@@ -161,20 +175,12 @@ const Category = styled.div`
   color: white;
   margin-right: 10px;
   font-size: 15px;
-`;
 
-const CategoryInput = styled.input`
-  width: 90px;
-  height: 45px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background-color: #2d7295;
-  color: white;
-  margin-right: 10px;
-  border: none;
-  padding: 0;
-  text-align: center;
-  font-size: 15px;
+  &:hover {
+    opacity: 0.5;
+    transition: 0.5s;
+    cursor: pointer;
+  }
 `;
 
 const AddCategoryButton = styled.div`

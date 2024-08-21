@@ -1,15 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import "./Diary.css";
 
+import { useFileStore } from "../store/FileStore";
 import EditMenu from "../components/diary/EditMenu";
+import MediaDefaultImg from "../assets/media_default_img.png";
 
 const DiaryEditor = () => {
   const [title, setTitle] = useState("");
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
+
+  const [imgCount, setImageCount] = useState(0);
+
+  //const [preview, setPreview] = useState([]);
+  const { appendFile, clearFiles } = useFileStore();
+  const fileInputRef = useRef(null);
+  const handleFileChange = (event) => {
+    if (fileInputRef.current.files.length > 0) {
+      appendFile(fileInputRef.current.files[0]); // 첫 번째 파일을 상태로 저장
+      
+      const imageUrl = URL.createObjectURL(fileInputRef.current.files[0]);
+      //setPreview([...preview, imageUrl]);
+
+      const area = document.getElementById("area");
+      const preview = document.createElement("img");
+      preview.className = "preview";
+      preview.src = imageUrl;
+
+      area.appendChild(preview);
+      createBlock();
+    }
+  };
 
   const handleSave = () => {
     // Save the diary entry
@@ -47,23 +71,23 @@ const DiaryEditor = () => {
     block.className = "block";
     block.contentEditable = true;
     block.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
+      if ((event.key === 'Enter')&&(!event.shiftKey)) {
         event.preventDefault();
+        createBlock();
+        /*
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
-
         // <br> 태그 생성 및 삽입
         const br = document.createElement('br');
         range.insertNode(br);
         range.insertNode(document.createElement('br'));
-
         // <br> 태그 뒤로 커서 이동
         range.setStartAfter(br);
         range.setEndAfter(br);
-
         // 선택된 영역 갱신
         selection.removeAllRanges();
         selection.addRange(range);
+        */
       }
     });
 
@@ -72,6 +96,22 @@ const DiaryEditor = () => {
     setSelected(block);
   }
 
+  const newImgAdd = () => {
+    const input = document.getElementById("img_input");
+    input.click();
+  }
+
+  /*
+  const ImgInput = () => {
+    return (
+      <>
+        <Preview src={preview?preview:MediaDefaultImg}></Preview>
+      </>
+    );
+  }
+  */
+
+  
   useEffect(() => {
     console.log(document.getElementById("area").childNodes);
     if (document.getElementById("area").childNodes.length === 0) {
@@ -84,10 +124,12 @@ const DiaryEditor = () => {
         if (target === null) { break; }
       }
       setSelected(target);
-      console.log("focus in");
+      //console.log("focus in");
     });
 
     document.getElementById("title").focus();
+
+    clearFiles();
   }, [])
 
   return (
@@ -107,7 +149,7 @@ const DiaryEditor = () => {
         placeholder="명령어는 '/'를 입력하세요."
       > 
         <div id="area"></div>
-        <button onClick={createBlock}>+</button>
+        <CreateBtn onClick={newImgAdd}>이미지 추가</CreateBtn>
       </ContentInput>
       {
         selected === null ?
@@ -121,6 +163,12 @@ const DiaryEditor = () => {
         setSelected={setSelected}
         />
       }
+      <ImgInput
+        id="img_input"
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
     </Container>
   );
 };
@@ -184,6 +232,11 @@ const Button = styled.button`
   font-size: 16px;
 `;
 
+const CreateBtn = styled.button`
+  width: 300px;
+  background-color:
+`
+
 const TempSaveButton = styled(Button)`
   border-radius: 30px; /* 스타일 수정 */
   border: 2px solid var(--Primary-Red, #ae5257); /* 스타일 수정 */
@@ -197,5 +250,8 @@ const SubmitButton = styled(Button)`
   margin-left: 10px; /* 간격 추가 */
 `;
 
+const ImgInput = styled.input`
+  visibility: hidden
+`
 
 export default DiaryEditor;

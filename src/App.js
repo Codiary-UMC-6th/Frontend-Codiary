@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
 
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/Footer";
@@ -12,6 +11,7 @@ import Diary from "./pages/Diary";
 import DiaryDetails from "./pages/DiaryDetails";
 import DiaryRegister from "./components/diary/diary-register";
 import { SignUp } from "./components/signup/SignUp";
+import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
 
 import "./App.css";
 
@@ -33,7 +33,8 @@ function App() {
           <Route path="/diary" element={<Diary />} />
           <Route path="/DiaryDetails/:postId" element={<DiaryDetails />} />
           <Route path="/diary-register" element={<DiaryRegister />} />
-          <Route path="sign-up" element={<SignUp />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/modify-profile" element={<ModifyProfile />} />
           <Route path="*" element={"404 not found"} />
         </Routes>
       </div>

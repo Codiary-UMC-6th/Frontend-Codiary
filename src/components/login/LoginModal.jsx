@@ -18,15 +18,15 @@ export const LoginModal = ({ onClose }) => {
   const setNickname = useLoginStore((state) => state.setNickname);
   const setMemberId = useLoginStore((state) => state.setMemberId);
 
-  const [ userId, setUserId ] = useState("");
-  const [ password, setPassword ] = useState(""); 
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
 
   const loginRequest = async () => {
     const data = {
       email: userId,
       password: password
     };
-  
+
     console.log(data);
     try {
       const response = await post('/members/login', data);

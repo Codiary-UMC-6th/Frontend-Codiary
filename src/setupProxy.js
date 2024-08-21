@@ -30,7 +30,7 @@ module.exports = function (app) {
     })
   );
   app.use(
-    "/calendar",
+    "/projects",
     legacyCreateProxyMiddleware({
       target: "http://43.202.229.89:8080",
       changeOrigin: true,

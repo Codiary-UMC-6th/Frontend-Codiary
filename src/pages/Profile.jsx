@@ -36,6 +36,8 @@ const Profile = () => {
   // load member info
   const { memberId } = useParams();
   const [userInfoData, setUserInfoData] = useState({});
+  const [techStackList, setTechStackList] = useState([]);
+  const [teamList, setTeamList] = useState([]);
 
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
@@ -51,8 +53,11 @@ const Profile = () => {
     async function getUserInfo() {
       try {
         const result = await get(`/members/profile/${memberId}`);
-        //console.log('GET 요청 결과:', result);
+        console.log('GET 요청 결과:', result);
         setUserInfoData(result.result);
+        setTechStackList(result.result.techStacksList);
+        setTeamList(result.result.teamList);
+        console.log(techStackList);
       } catch (error) {
         console.error('GET 요청 실패:', error);
       }
@@ -100,9 +105,14 @@ const Profile = () => {
       alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
       console.log(response);
       closeTechStackModal();
+      window.location.reload();
     } catch (error) {
-      alert('TECH STACK 추가를 실패했습니다.');
-      console.error(error);
+      if (error.response.status === 400) {
+        alert('TECH STACK은 JAVA, SPRING, JAVA_SCRIPT, REACT, CSS, HTML, NODE_JS만 입력 가능합니다.')
+      } else {
+        alert('TECH STACK 추가를 실패했습니다.');
+        console.error(error.response);
+      }
     }
   };
 
@@ -122,7 +132,11 @@ const Profile = () => {
     <>
       <Container>
         <Top>
-          <UserInfo userInfoData={userInfoData} onClick={openTechStackModal} />
+          <UserInfo userInfoData={userInfoData}
+            onClick={openTechStackModal}
+            techStackList={techStackList}
+            teamList={teamList}
+          />
           <CalendarWrapper onClick={() => navigate("/calendar")}>
             <CalendarLeft
               currentMonth={currentMonth}
