@@ -123,7 +123,7 @@ const UserInfo = (props) => {
             </Bio>
             <Bottom>
                 <Techstack onClick={props.onClick} techStackList={props.techStackList}></Techstack>
-                <Team></Team>
+                <Team teamList={props.teamList}></Team>
             </Bottom>
         </Container>
     );
