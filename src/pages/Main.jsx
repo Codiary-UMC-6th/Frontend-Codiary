@@ -8,11 +8,10 @@ import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
 import { AddModal } from "../components/modal/AddModal";
+import Pagenation from "../components/main/Pagenation";
 import banner from "../assets/diary/banner.png";
 
 const Container = styled.div`
-  background-color: ${Color.background};
-
   background-color: ${Color.background};
 `;
 
@@ -30,15 +29,19 @@ const CardsContainer = styled.div`
   display: flex;
   gap: 50px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 
 const Main = () => {
   const [diaryData, setDiaryData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const onClickPopular = async () => {
     try {
-      const response = await get("/posts/poplular/list?page=1");
+
+      const response = await get(`/posts/poplular/list?page=${currentPage}`);
       console.log("response", response?.result.postPopularList);
+
       setDiaryData(response?.result.postPopularList);
     } catch (error) {
       console.error("Get(Popular-List) 요청 실패:", error);
@@ -47,7 +50,7 @@ const Main = () => {
 
   const onClickLatest = async () => {
     try {
-      const response = await get("/posts/latest/list?page=1");
+      const response = await get(`/posts/latest/list?page=${currentPage}`);
       console.log(response?.result.postLatestList);
       setDiaryData(response?.result.postLatestList);
     } catch (error) {
@@ -63,7 +66,7 @@ const Main = () => {
 
   useEffect(() => {
     onClickPopular();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     if (searchResults) setDiaryData(searchResults);
@@ -73,6 +76,10 @@ const Main = () => {
     alert('카테고리가 추가되었습니다');
     closeAddCategoryModal();
   }
+
+  useEffect(() => {
+    console.log(currentPage);
+  }, [currentPage])
 
   return (
     <>
@@ -107,6 +114,8 @@ const Main = () => {
           onAdd={postAddCategory}
         />
       )}
+      <Pagenation setCurrentPage={setCurrentPage}/>
+
     </>
   );
 };
