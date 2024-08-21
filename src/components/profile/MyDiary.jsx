@@ -44,6 +44,7 @@ const MyDiary = (props) => {
                             authorId={diary.memberId}
                             postCategory={diary.postCategory}
                             thumbnailImageUrl={diary.thumbnailImageUrl}
+                            postFileList={diary.postFileList.postFileList}
                         />
                     );
                 })}
