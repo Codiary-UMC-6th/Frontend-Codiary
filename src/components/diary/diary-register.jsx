@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
-import { post } from "../../common/api";
+import { useFileStore } from "../../store/FileStore";
 
 import Card from "../main/Card";
 
@@ -123,8 +123,7 @@ const DiaryRegister = () => {
   const [categories, setCategories] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const fileInputRef = useRef(null);
-
+  const { file } = useFileStore();
   const handleSave = async () => {
     // Save the diary entry
 
@@ -138,10 +137,8 @@ const DiaryRegister = () => {
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
     formData.append('thumbnailImageName', '');
-    const fileInput = fileInputRef.current;
-    if (fileInput.files.length > 0) {
-      formData.append('postFiles', fileInput.files[0]); // 첫 번째 파일을 선택
-    }
+    formData.append('postFiles', file);
+    console.log(file);
 
     try {
       const response = await fetch('/posts', {
@@ -179,7 +176,6 @@ const DiaryRegister = () => {
 
   return (
     <Container>
-      <input type="file" ref={fileInputRef} />
       <LeftSection>
         <CloseButton>&times;</CloseButton>
         <DiaryPreview>
