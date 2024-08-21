@@ -77,10 +77,6 @@ const Main = () => {
     closeAddCategoryModal();
   }
 
-  useEffect(() => {
-    console.log(currentPage);
-  }, [currentPage])
-
   return (
     <>
       <Container>

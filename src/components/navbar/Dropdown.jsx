@@ -13,8 +13,6 @@ const Dropdown = () => {
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
 
-  const [teamList, setTeamList] = useState([]);
-
   const toggleDropdown = () => {
     setVisibility(!visibility);
   };
@@ -29,13 +27,13 @@ const Dropdown = () => {
     window.location.reload();
   };
 
-  const { memberId } = useLoginStore(); 
+  const { memberId, teamList, setTeamList } = useLoginStore(); 
   const getTeamList = async () => {
     try {
       const response = await get(`/members/profile/${memberId}`);
-      const teamList = response.result.teamList;
-      console.log("팀 리스트 가져오기 성공", teamList);
-      setTeamList(teamList);
+      const data = response.result.teamList;
+      console.log("팀 리스트 가져오기 성공", data);
+      setTeamList(data);
     } catch (error) {
       console.error("팀 리스트 가져오기 실패", error);
     }

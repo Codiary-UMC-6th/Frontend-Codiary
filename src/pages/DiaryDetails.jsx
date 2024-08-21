@@ -242,17 +242,22 @@ const DiaryDetails = () => {
 
     const stringModifyForImg = (content) => {
         const regex = /<img\s+id="(\w+)">/g;
-        const modified_content = content.replace(regex, (match, p1) => `<img src=${state.postFileList[p1].url}>`);
+        var string = content;
+        var i = 0;
+        string = string.replace(regex, function(match) {
+            const replacedString = match.replace(/<img/, `<img src=${state.postFileList[i].url}`);
+            i += 1;
+            console.log("replacedString", replacedString);
+            return replacedString;
+        });
 
-        console.log("변경된 문자열:", content);
-
-        return modified_content
+        return string;
     }
-
+    /*
     if (loading || !post) {
         return null;
     }
-  
+    */
     return (
         <Container>
             <FAB postId={state.postId} memberId={memberId} />
