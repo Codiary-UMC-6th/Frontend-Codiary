@@ -85,10 +85,6 @@ const OtherCards = ({ postId }) => {
         getadjacent();
     }, []);
 
-    useEffect(() => {
-        console.log(laterDiaryData.postId);
-    }, [laterDiaryData])
-
     return(
         <Container>
             <Box>
