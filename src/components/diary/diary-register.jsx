@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
 import { useFileStore } from "../../store/FileStore";
@@ -123,6 +124,8 @@ const DiaryRegister = () => {
   const [categories, setCategories] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const navigate = useNavigate();
+
   const { file } = useFileStore();
   const handleSave = async () => {
     // Save the diary entry
@@ -132,7 +135,7 @@ const DiaryRegister = () => {
     formData.append('projectId', '');
     formData.append('postTitle', sessionStorage.getItem('diary-title'));
     const content = sessionStorage.getItem('diary-content');
-    const modified_content = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '').toString();
+    const modified_content = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '').replace(new RegExp("class=\"block\"", 'g'), '').toString();
     formData.append('postBody', modified_content);
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
@@ -153,11 +156,14 @@ const DiaryRegister = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('Response:', data);
+        alert("다이어리 등록을 성공하였습니다.");
+        navigate('/');
       } else {
         console.error('Error uploading post:', response.statusText);
       }
     } catch (error) {
       console.error('Error uploading post:', error);
+      alert("다이어리 등록을 실패하였습니다.");
     }
   };
 

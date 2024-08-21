@@ -38,8 +38,10 @@ const Main = () => {
 
   const onClickPopular = async () => {
     try {
+
       const response = await get(`/posts/poplular/list?page=${currentPage}`);
-      console.log(response?.result.postPopularList);
+      console.log("response", response?.result.postPopularList);
+
       setDiaryData(response?.result.postPopularList);
     } catch (error) {
       console.error("Get(Popular-List) 요청 실패:", error);
@@ -92,12 +94,14 @@ const Main = () => {
         <CardsContainer>
           {diaryData.map((data) => (
             <Card
+              key={data.postId}
               postId={data.postId}
               title={data.postTitle}
               author={data.nickname}
               details={data.postBody}
               createdAt={data.createdAt}
               authorId={data.memberId}
+              thumbnailImageUrl={data.thumbnailImageUrl?data.thumbnailImageUrl:""}
             />
           ))}
         </CardsContainer>
