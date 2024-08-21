@@ -100,7 +100,7 @@ const LogoutBtn = styled.button`
 `
 
 const Navbar = () => {
-  const { isLogin, setLogin, setLogout } = useLoginStore();
+  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -133,7 +133,7 @@ const Navbar = () => {
           isLogin ? 
           <>
           <NavStyle to="/">홈</NavStyle>
-          <NavStyle to="/profile/1">내 다이어리</NavStyle>
+          <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
           <Dropdown></Dropdown>          
           </>
           :

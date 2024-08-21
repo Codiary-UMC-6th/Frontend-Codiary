@@ -11,71 +11,20 @@ const TeamDiary = ({ isManager }) => {
   const [diaryList, setDiaryList] = useState([]);
   const { teamId } = useParams();
 
-  // const [totalSize, setTotalSize] = useState(null);
-  const fetchTeamDiary = async () => {
-    try {
-      // 처음 요청에서 totalElements 값을 얻기 위해 초기 size를 1로 설정
-      const initialResponse = await get(
-        `/posts/team/${teamId}/paging?page=${currentPage}&size=1`
-      );
-
-      const totalElements = initialResponse.result.totalElements;
-
-      // 얻은 totalElements 값을 새로운 size로 설정하고 다시 요청
-      const finalResponse = await get(
-        `/posts/team/${teamId}/paging?page=${currentPage}&size=${totalElements}`
-      );
-
-      // 다이어리 리스트를 setDiaryList에 설정
-      setDiaryList(finalResponse.result.content);
-    } catch (error) {
-      console.error("Error fetching team data:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchTeamDiary = async () => {
       try {
-        // 처음 요청에서 totalElements 값을 얻기 위해 초기 size를 1로 설정
-        const initialResponse = await get(
-          `/posts/team/${teamId}/paging?page=${currentPage}&size=1`
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=0&size=6`
         );
 
-        const totalElements = initialResponse?.result.totalElements;
-        console.log(totalElements);
-
-        // 얻은 totalElements 값을 새로운 size로 설정하고 다시 요청
-        const finalResponse = await get(
-          `/posts/team/${teamId}/paging?page=1&size=3`
-        );
-
-        // 다이어리 리스트를 setDiaryList에 설정
-        console.log("final", finalResponse?.result.posts);
-        setDiaryList(finalResponse?.result.posts);
+        setDiaryList(response?.result.posts);
       } catch (error) {
         console.error("Error fetching team data:", error);
       }
     };
     fetchTeamDiary();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchProjectList = async () => {
-  //     try {
-  //       const response = await get("/projects/list");
-  //       console.log(response?.result);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   // fetchProjectList();
-  // }, []);
-
-  // useEffect(() => {
-  //   const tSize = fetchTeamDiary("1")?.result.totalElements;
-  //   console.log(tSize);
-  //   fetchTeamDiary(tSize);
-  // }, []);
 
   const addCategory = () => {
     setCategoryList([...categoryList, ""]);
@@ -90,8 +39,6 @@ const TeamDiary = ({ isManager }) => {
   useEffect(() => {
     setTotalPages(Math.ceil(diaryList.length / 6));
   }, [diaryList]);
-
-  const getDiary = async () => {};
 
   return (
     <Container>
@@ -111,11 +58,10 @@ const TeamDiary = ({ isManager }) => {
         )}
       </CategoryContainer>
       <DiaryContainer>
-        {diaryList
-          .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
-          .map((el) => (
-            <DiaryCard key={el.id} data={el} />
-          ))}
+        {diaryList &&
+          diaryList
+            .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
+            .map((el) => <DiaryCard key={el.id} data={el} />)}
       </DiaryContainer>
       <Pagination>
         {Array.from({ length: totalPages }, (_, index) => (

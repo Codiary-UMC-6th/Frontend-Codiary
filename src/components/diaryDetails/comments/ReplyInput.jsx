@@ -111,6 +111,7 @@ const ReplyInput = ({ postId, memberId, parentId }) => {
 
     const handleClick = () => {
         setCommentReplyBody(inputValue);
+        window.location.reload();
     }
 
     useEffect(() => {

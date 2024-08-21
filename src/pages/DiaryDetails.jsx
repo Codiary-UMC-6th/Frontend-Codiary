@@ -7,8 +7,8 @@ import { get } from '../common/api';
 import { formatDateTime } from "../components/diaryDetails/comments/formatDate";
 import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
 import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
-import { ReactComponent as Kebab } from "../assets/symbols_kebab.svg";
 
+import KebabModal from "../components/diaryDetails/KebabModal";
 import FAB from "../components/diaryDetails/FAB";
 import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
@@ -170,14 +170,13 @@ const DiaryDetails = () => {
     const [memberId, setMemberId] = useState(null);
     const [bookmarkCount, setBookmarkCount] = useState(0);
     const [totalComments, setTotalComments] = useState(0);
-    const [memberId, setMemberId] = useState(null);
     const [content, setContent] = useState();
     const [commentsData, setCommentsData] = useState([]);
 
     const getMemberId = async () => {
         try {
             const result = await get("/members/info");
-            //console.log("사용자 정보 조회 성공: ", result.result.memberId);
+            //console.log("사용자 정보 조회 성공: ", result);
             setMemberId(result.result.memberId);
         } catch (error) {
             console.error("사용자 정보 조회 실패:", error);
@@ -218,18 +217,13 @@ const DiaryDetails = () => {
   
     useEffect(() => {
         getMemberId();
-        getBookmarkCount();
         getCommentsCount();
-      
-        setTotalComments(countComments(mockComments));
+        getCommentsData();
+        getBookmarkCount();
+
         console.log(state.details);
         setContent(state.details);
-      
     }, []);
-
-    useEffect(() => {
-        getCommentsData();
-    }, [commentsData])
 
 
     return (
@@ -246,7 +240,7 @@ const DiaryDetails = () => {
                             <ScrapCount>{bookmarkCount}</ScrapCount>
                             <CommentIcon />
                             <CommentCount>{totalComments}</CommentCount>
-                            <Kebab />
+                            <KebabModal memberId={memberId} authorId={state.authorId} />
                         </Details>
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
@@ -255,14 +249,14 @@ const DiaryDetails = () => {
                 {/*<CodeBox>
                     <Code>{state.details}</Code>
                 </CodeBox>*/}
-                <ProfileCard memberId={memberId} />
+                <ProfileCard authorId={state.authorId} author={state.author} memberId={memberId} />
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
                 <CommentInput postId={state.postId} memberId={memberId} />
                 {commentsData.map((data) => (
                     <Comments comment={data} postId={state.postId} memberId={memberId} />
                 ))}
             </CenterBox>
-            <OtherCards />
+            <OtherCards postId={state.postId} />
         </Container>
     );
 

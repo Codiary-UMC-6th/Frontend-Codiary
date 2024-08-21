@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
+import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 
 const CardBox = styled.div`
     display: flex;
@@ -96,6 +97,8 @@ function Card(props) {
 
     const onClickPostDetails = () => {
         navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        window.scrollTo(0, 0);
+        window.location.reload();
     }
 
     return (
@@ -104,7 +107,7 @@ function Card(props) {
             <TextWrapper>
                 <Title>{props.title}</Title>
                 <Author>
-                    <AuthorImg />
+                    <SmallProfileImg memberId={props.authorId} />
                     <AuthorName>{props.author}</AuthorName>
                 </Author>
                 <Details>{props.details ? props.details : "내용이 없습니다."}</Details>
