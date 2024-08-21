@@ -11,10 +11,12 @@ import { SignUpBtnBox } from '../signup/SignUpBtnBox';
 import { get, put } from "../../common/api";
 import { useLoginStore } from "../../store/LoginStore";
 import { IntroduceInputContainer } from '../signup/IntroduceInputContainer';
+import { useNavigate } from 'react-router-dom';
 
 export const ModifyProfile = () => {
-  
+
   const memberId = useLoginStore((state) => state.memberId);
+  const navigate = useNavigate();
 
   const [profileFormData, setProfileFormData] = useState({
     "email": '',
@@ -27,46 +29,46 @@ export const ModifyProfile = () => {
     "introduction": '',
   });
 
-      // 유저 정보 get api
-    const getUserInfo = async () => {
-      try {
-        const response = await get(`/members/info`);  // 회원 정보를 가져오는 API
-        const userData = response.result;
-        console.log(response.result);
-        setProfileFormData({
-          email: userData.email,
-          password: userData.password,  
-          nickname: userData.nickname,
-          birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
-          github: userData.githubUrl || '',
-          linkedin: userData.linkedinUrl || '',
-          discord: userData.discordUrl || '',
-          introduction: userData.introduction || '',
-        });
+  // 유저 정보 get api
+  const getUserInfo = async () => {
+    try {
+      const response = await get(`/members/info`);  // 회원 정보를 가져오는 API
+      const userData = response.result;
+      console.log(response.result);
+      setProfileFormData({
+        email: userData.email,
+        password: userData.password,
+        nickname: userData.nickname,
+        birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
+        github: userData.githubUrl || '',
+        linkedin: userData.linkedinUrl || '',
+        discord: userData.discordUrl || '',
+        introduction: userData.introduction || '',
+      });
 
-        if (userData.birth === '1000-01-01') {
-          setProfileFormData({birth: ''});
-        }
-        console.log(profileFormData);
-      } catch (error) {
-        console.error('회원 정보 가져오기 실패', error);
+      if (userData.birth === '1000-01-01') {
+        setProfileFormData({ birth: '' });
       }
+      console.log(profileFormData);
+    } catch (error) {
+      console.error('회원 정보 가져오기 실패', error);
     }
+  }
 
-    const [changeFormData, setChangeFormData] = useState({
-      "birth": profileFormData.birth,
-      "introduction": profileFormData.introduction,
-      "github": profileFormData.github,
-      "linkedin": profileFormData.linkedin,
-      "discord": profileFormData.discord,
-    });
+  const [changeFormData, setChangeFormData] = useState({
+    "birth": profileFormData.birth,
+    "introduction": profileFormData.introduction,
+    "github": profileFormData.github,
+    "linkedin": profileFormData.linkedin,
+    "discord": profileFormData.discord,
+  });
 
-    useEffect(() => {
-      console.log(memberId);
-      if (memberId) {
-        getUserInfo();
-      }
-    }, [memberId]);
+  useEffect(() => {
+    console.log(memberId);
+    if (memberId) {
+      getUserInfo();
+    }
+  }, [memberId]);
 
   const [errors, setErrors] = useState({
     nickname: '',
@@ -93,7 +95,7 @@ export const ModifyProfile = () => {
       [name]: error,
     });
 
-        // 닉네임 변경되었을 시 초기화
+    // 닉네임 변경되었을 시 초기화
     if (name === 'nickname') {
       setIsNicknameChecked(false);
     }
@@ -104,14 +106,14 @@ export const ModifyProfile = () => {
     });
   };
 
-      // 생년월일 포맷
-      const birthFormatDate = (date) => {
-        const year = date.slice(0, 4);
-        const month = date.slice(4, 6);
-        const day = date.slice(6, 8);
-    
-        return `${year}-${month}-${day}`;
-      }
+  // 생년월일 포맷
+  const birthFormatDate = (date) => {
+    const year = date.slice(0, 4);
+    const month = date.slice(4, 6);
+    const day = date.slice(6, 8);
+
+    return `${year}-${month}-${day}`;
+  }
 
   const putUserInfo = async () => {
     try {
@@ -122,7 +124,7 @@ export const ModifyProfile = () => {
         alert('닉네임 중복 확인이 필요합니다.');
         return;
       }
-      
+
       const formattedData = {
         ...changeFormData,
         birth: birthFormatDate(changeFormData.birth),
@@ -132,6 +134,7 @@ export const ModifyProfile = () => {
       alert(response.message);
       console.log('프로필 수정 성공', response);
       console.log(changeFormData);
+      navigate(-1);
     } catch (error) {
       console.error('프로필 수정 실패', error);
       console.log(changeFormData);
@@ -149,7 +152,7 @@ export const ModifyProfile = () => {
           value={profileFormData.email}
           isButtonHidden={Boolean(false)}
           disable={true}
-          onChange={() => {}}
+          onChange={() => { }}
         />
         <SignUpInputContainer
           title='비밀번호'
@@ -158,7 +161,7 @@ export const ModifyProfile = () => {
           value={profileFormData.password}
           isButtonHidden={Boolean(true)}
           disable={true}
-          onChange={() => {}}
+          onChange={() => { }}
         />
         <SignUpInputContainer
           title='닉네임'
@@ -167,8 +170,8 @@ export const ModifyProfile = () => {
           placeholder='사용자 닉네임을 입력해주세요.'
           value={profileFormData.nickname}
           isButtonHidden={Boolean(false)}
-          onChange={(value, error) => handleChange('nickname', value, error)}
-          onCheckDuplicate={() => setIsNicknameChecked(true)}
+          disable={true}
+          onChange={() => { }}
         />
         <SignUpInputContainer
           title='생년월일'
@@ -180,20 +183,20 @@ export const ModifyProfile = () => {
           onChange={(value, error) => handleChange('birth', value, error)}
         />
       </St.SignUpContainerWrapper>
-      <IntroduceInputContainer 
+      <IntroduceInputContainer
         value={profileFormData.introduction}
         handleChange={handleChange}
       />
-      <SocialInputContainer 
-        handleChange={handleChange} 
+      <SocialInputContainer
+        handleChange={handleChange}
         github={profileFormData.github}
         linkedIn={profileFormData.linkedin}
-        discord={profileFormData.discord}  
+        discord={profileFormData.discord}
       />
-      <SignUpBtnBox 
-        onSubmit={putUserInfo} 
-        title='저장하기' 
-        isDisable={false} 
+      <SignUpBtnBox
+        onSubmit={putUserInfo}
+        title='저장하기'
+        isDisable={false}
       />
     </St.SignUpWrapper>
   )
