@@ -8,7 +8,7 @@ import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
 import { AddModal } from "../components/modal/AddModal";
-import banner from "../assets/diary/banner.svg";
+import banner from "../assets/diary/banner.png";
 
 const Container = styled.div`
   background-color: ${Color.background};
@@ -22,6 +22,7 @@ const Banner = styled.img`
   background-color: rgb(200, 200, 200);
   display: flex;
   margin-bottom: 52px;
+  object-fit: cover;
 `;
 
 const CardsContainer = styled.div`
@@ -71,7 +72,7 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Banner><img src={banner} alt="banner"></img></Banner>
+        <Banner img src={banner} alt='banner' />
         <ViewBtn
           onClickPopular={onClickPopular}
           onClickLatest={onClickLatest}
