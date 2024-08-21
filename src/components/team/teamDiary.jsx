@@ -57,15 +57,27 @@ const TeamDiary = ({ isManager }) => {
   }, [diaryList]);
 
   const handleCategoryClick = async (projectId) => {
-    try {
-      const response = await get(
-        `/posts/project/${projectId}/team/${teamId}/paging?page=0&size=6`
-      );
-      console.log("Response:", response);
-      setDiaryList(response?.result.posts);
-    } catch (error) {
-      console.error("Error fetching project data:", error);
-      setDiaryList([]);
+    if (projectId == -1) {
+      try {
+        const response = await get(
+          `/posts/team/${teamId}/paging?page=0&size=6`
+        );
+
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    } else {
+      try {
+        const response = await get(
+          `/posts/project/${projectId}/team/${teamId}/paging?page=0&size=6`
+        );
+        console.log("Response:", response);
+        setDiaryList(response?.result.posts);
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+        setDiaryList([]);
+      }
     }
   };
 
@@ -74,7 +86,7 @@ const TeamDiary = ({ isManager }) => {
       <Container>
         <Title>팀 다이어리</Title>
         <CategoryContainer>
-          <Category>전체</Category>
+          <Category onClick={() => handleCategoryClick(-1)}>전체</Category>
           {teamProject.map((el, index) => (
             <Category
               onClick={() => handleCategoryClick(el.projectId)}
