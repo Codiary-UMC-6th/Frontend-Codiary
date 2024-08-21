@@ -9,6 +9,7 @@ import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
 import { AddModal } from "../components/modal/AddModal";
+import banner from "../assets/diary/banner.svg";
 
 const Container = styled.div`
   background-color: ${Color.background};
@@ -71,7 +72,7 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Banner />
+        <Banner><img src={banner} alt="banner"></img></Banner>
         <ViewBtn
           onClickPopular={onClickPopular}
           onClickLatest={onClickLatest}
