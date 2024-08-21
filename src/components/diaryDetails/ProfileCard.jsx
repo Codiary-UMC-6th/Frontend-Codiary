@@ -78,10 +78,6 @@ const ProfileCard = ({ authorId, author, memberId }) => {
         }
     }
 
-    const handleNavigation = () => {
-
-    }
-
     useEffect(() => {
         getAuthorInfo();
     }, []);
