@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import DiaryCard from "./diaryCard";
 import { get, post } from "../../common/api";
 import { useParams } from "react-router-dom";
 import { AddModal } from "../modal/AddModal";
+import Card from "../main/Card";
+
 const TeamDiary = ({ isManager }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -105,7 +106,20 @@ const TeamDiary = ({ isManager }) => {
           {diaryList &&
             diaryList
               .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
-              .map((el) => <DiaryCard key={el.id} data={el} />)}
+              .map((data) => (
+                <Card
+                  key={data.postId}
+                  postId={data.postId}
+                  title={data.postTitle}
+                  author={data.nickname}
+                  details={data.postBody}
+                  createdAt={data.createdAt}
+                  authorId={data.memberId}
+                  thumbnailImageUrl={
+                    data.thumbnailImageUrl ? data.thumbnailImageUrl : ""
+                  }
+                />
+              ))}
         </DiaryContainer>
 
         <Pagination>
