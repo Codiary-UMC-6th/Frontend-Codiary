@@ -8,6 +8,7 @@ import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
 import { AddModal } from "../components/modal/AddModal";
+import banner from "../assets/diary/banner.png";
 
 const Container = styled.div`
   background-color: ${Color.background};
@@ -21,6 +22,7 @@ const Banner = styled.img`
   background-color: rgb(200, 200, 200);
   display: flex;
   margin-bottom: 52px;
+  object-fit: cover;
 `;
 
 const CardsContainer = styled.div`
@@ -67,10 +69,15 @@ const Main = () => {
     if (searchResults) setDiaryData(searchResults);
   }, [searchResults]);
 
+  const postAddCategory = () => {
+    alert('카테고리가 추가되었습니다');
+    closeAddCategoryModal();
+  }
+
   return (
     <>
       <Container>
-        <Banner />
+        <Banner img src={banner} alt='banner' />
         <ViewBtn
           onClickPopular={onClickPopular}
           onClickLatest={onClickLatest}
@@ -95,6 +102,7 @@ const Main = () => {
           title="카테고리 추가하기"
           placeholder='input name = "interest"'
           onClose={closeAddCategoryModal}
+          onAdd={postAddCategory}
         />
       )}
     </>
