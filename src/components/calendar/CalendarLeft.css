@@ -10,52 +10,23 @@
   padding: 40px;
   box-sizing: border-box;
   background: var(--Gray-900, #222); /* 배경색 설정 */
-}
-
-.month-records {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 40px;
-  gap: 30px;
-}
-
-.nav-button-left,
-.nav-button-right {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
-
-.month-title {
-  color: white;
-  font-family: Pretendard;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  overflow: hidden; /* 오버플로우된 부분 숨기기 */
 }
 
 .calendar-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(
+    7,
+    minmax(10px, 1fr)
+  ); /* 셀의 최소 크기를 10px로 설정하여 더 유동적으로 조정 */
+  gap: 5px; /* 셀 간의 간격을 5px로 설정 */
   margin-bottom: 20px;
 }
 
 .calendar-cell {
-  overflow: hidden;
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  aspect-ratio: 1; /* 셀을 정사각형으로 유지 */
   background-color: #ddd;
   display: flex;
   justify-content: center;
@@ -64,6 +35,7 @@
   border-radius: 8px;
   font-family: Pretendard;
   position: relative;
+  box-sizing: border-box; /* 경계선 포함 크기 조정 */
 }
 
 .inner-grid {
@@ -88,8 +60,24 @@
   text-align: center;
   font-family: Pretendard;
   font-size: 16px;
-  font-style: normal;
   font-weight: 500;
   line-height: 32px;
   text-decoration-line: underline;
+}
+
+.nav-button-left,
+.nav-button-right {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: white; /* 버튼 텍스트 색상을 흰색으로 설정 */
+}
+
+.nav-button-left:hover,
+.nav-button-right:hover {
+  opacity: 0.8; /* 호버 시 약간의 투명도를 적용하여 효과 추가 */
 }

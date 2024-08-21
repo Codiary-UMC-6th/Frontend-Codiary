@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../components/calendar/Calendar.css";
+import CalendarLeft from "../components/calendar/CalendarLeft";
 
 import { ReactComponent as BackArrow } from "../assets/calendar/BackArrow.svg";
 import { ReactComponent as NextArrow } from "../assets/calendar/NextArrow.svg";
@@ -9,21 +10,48 @@ const daysInMonth = (month, year) => {
   return new Date(year, month, 0).getDate();
 };
 
+const getRandomProjectsForDay = (projectColors) => {
+  const numberOfProjects = Math.floor(Math.random() * 5); // 0부터 4개의 프로젝트
+  const shuffledColors = [...projectColors].sort(() => 0.5 - Math.random());
+  return shuffledColors.slice(0, numberOfProjects);
+};
+
+const generateProjectsForDays = (days, projectColors) => {
+  return Array.from({ length: days }, () =>
+    getRandomProjectsForDay(projectColors)
+  );
+};
+
 const Calendar = () => {
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1); // 현재 월 (0부터 시작하므로 +1)
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // 현재 연도
-  const [days, setDays] = useState(daysInMonth(currentMonth, currentYear)); // 현재 월의 일수
   const [selectedDay, setSelectedDay] = useState(1); // 선택된 날짜 상태
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth); // 선택된 월 상태
+
+  const projectColors = [
+    { color: "#2D7295", name: "프로젝트1" },
+    { color: "#AE5257", name: "프로젝트2" },
+    { color: "#E19E58", name: "프로젝트3" },
+    { color: "#83A67B", name: "프로젝트4" },
+    { color: "#EAB3CE", name: "프로젝트5" },
+  ];
+
+  const days = daysInMonth(currentMonth, currentYear);
+
+  // 랜덤 프로젝트 데이터를 한 번만 생성하여 고정
+  const [projectsForDays, setProjectsForDays] = useState(() =>
+    generateProjectsForDays(days, projectColors)
+  );
 
   useEffect(() => {
-    setDays(daysInMonth(currentMonth, currentYear)); // 월과 연도가 변경될 때마다 일수를 계산
-  }, [currentMonth, currentYear]);
+    // 월이 변경될 때마다 projectsForDays의 길이가 올바르게 조정되도록 함
+    if (projectsForDays.length !== days) {
+      setProjectsForDays(generateProjectsForDays(days, projectColors));
+    }
+  }, [days, projectsForDays.length]);
 
   const handleDayClick = (day) => {
     setSelectedDay(day); // 선택된 날짜 업데이트
-    setSelectedMonth(currentMonth); // 선택된 월 업데이트
   };
 
   const handlePreviousMonth = () => {
@@ -44,20 +72,18 @@ const Calendar = () => {
     }
   };
 
-  const projectColors = [
-    { color: "#2D7295", name: "프로젝트1" },
-    { color: "#AE5257", name: "프로젝트2" },
-    { color: "#E19E58", name: "프로젝트3" },
-    { color: "#83A67B", name: "프로젝트4" },
-    { color: "#EAB3CE", name: "프로젝트5" },
-  ];
-
-  const projectOrder = [
-    projectColors[0],
-    projectColors[4],
-    projectColors[3],
-    projectColors[2],
-  ];
+  // 이번 달의 색칠된 셀의 개수 계산
+  const coloredCellsCount = useMemo(() => {
+    return projectsForDays.reduce((count, dayProjects) => {
+      return (
+        count +
+        dayProjects.reduce(
+          (innerCount, project) => innerCount + (project.color ? 1 : 0),
+          0
+        )
+      );
+    }, 0);
+  }, [projectsForDays]);
 
   return (
     <div className="calendar-container">
@@ -70,46 +96,24 @@ const Calendar = () => {
         </button>
       </div>
       <div className="calendar-content">
-        <div className="calendar-left">
-          <div className="month-records">
-            <button className="nav-button-left" onClick={handlePreviousMonth}>
-              <BackArrow />
-            </button>
-            <div className="month-title">{currentMonth}월의 기록</div>
-            <button className="nav-button-right" onClick={handleNextMonth}>
-              <NextArrow />
-            </button>
-          </div>
-          <div className="calendar-grid">
-            {Array(days)
-              .fill()
-              .map((_, i) => (
-                <div
-                  className={`calendar-cell ${
-                    selectedDay === i + 1 ? "selected" : ""
-                  }`}
-                  key={i}
-                  onClick={() => handleDayClick(i + 1)}
-                >
-                  <div className="inner-grid">
-                    <div className="inner-cell"></div>
-                    <div className="inner-cell"></div>
-                    <div className="inner-cell"></div>
-                    <div className="inner-cell"></div>
-                  </div>
-                </div>
-              ))}
-          </div>
-          <div className="diary-count">이번 달 {days}개의 다이어리 작성</div>
-        </div>
+        <CalendarLeft
+          currentMonth={currentMonth}
+          days={days}
+          selectedDay={selectedDay}
+          handlePreviousMonth={handlePreviousMonth}
+          handleNextMonth={handleNextMonth}
+          handleDayClick={handleDayClick}
+          projectsForDays={projectsForDays} // props 전달
+          coloredCellsCount={coloredCellsCount} // 추가된 props 전달
+        />
         <div className="calendar-right">
           <div className="diary-list-header">
             <div className="diary-list-title">
-              {selectedMonth}월 {selectedDay}일의 다이어리
+              {currentMonth}월 {selectedDay}일의 다이어리
             </div>
           </div>
           <div className="diary-list-grid">
-            {projectOrder.map((project, i) => (
+            {projectsForDays[selectedDay - 1]?.map((project, i) => (
               <div className="diary-card" key={i}>
                 <div className="diary-project">
                   <div
@@ -123,24 +127,6 @@ const Calendar = () => {
               </div>
             ))}
           </div>
-          <div className="project-colors">
-            {projectColors.map((project, index) => (
-              <div className="project-color" key={index}>
-                <div
-                  className="color-box"
-                  style={{ backgroundColor: project.color }}
-                ></div>
-                <div className="project-name">{project.name}</div>
-              </div>
-            ))}
-          </div>
-          {/* Diary.jsx로 이동하는 버튼 추가 */}
-          <button
-            onClick={() => navigate("/diary")}
-            className="go-to-diary-button"
-          >
-            다이어리 작성
-          </button>
         </div>
       </div>
     </div>
