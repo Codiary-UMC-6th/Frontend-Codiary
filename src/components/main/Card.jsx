@@ -101,8 +101,6 @@ function Card(props) {
         window.scrollTo(0, 0);
         window.location.reload();
     }
-    //
-    console.log(props.postId, props.thumbnailImageUrl);
 
     return (
         <CardBox onClick={onClickPostDetails}>

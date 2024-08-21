@@ -70,7 +70,7 @@ const Bottom = styled.div`
 
 const ModifyProfileButton = styled.button`
     display: absolute;
-    width: 115px;
+    width: 130px;
     height: 42px;
     background-color: ${Color.background};
     border-radius: 10px;
@@ -106,7 +106,12 @@ const UserInfo = (props) => {
                 </ImageBox>
                 <UserInfoWrapper>
                     <UserName>{data.userName}</UserName>
-                    <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
+                    {
+                        data.myPage ?
+                        <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
+                        :
+                        <></>
+                    }
                 </UserInfoWrapper>
                 <LinkBox>
                     <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`} />

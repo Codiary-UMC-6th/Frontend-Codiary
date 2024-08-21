@@ -29,4 +29,11 @@ module.exports = function(app) {
             changeOrigin: true,
         })
     );
+    app.use(
+        '/projects',
+        legacyCreateProxyMiddleware({
+            target: 'http://43.202.229.89:8080',
+            changeOrigin: true,
+        })
+    );
 };
