@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { SmallProfileImg } from '../diaryDetails/ProfileImg';
+import DiaryDefaultImg from '../../assets/diary_default_img.png';
 
 const CardBox = styled.div`
     display: flex;
@@ -17,7 +18,7 @@ const Img = styled.img`
     width: 360px;
     height: 202px;
     background-color: rgb(200, 200, 200);
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 10px 10px 0px 0px;
 `;
 
@@ -100,10 +101,12 @@ function Card(props) {
         window.scrollTo(0, 0);
         window.location.reload();
     }
+    //
+    console.log(props.postId, props.thumbnailImageUrl);
 
     return (
         <CardBox onClick={onClickPostDetails}>
-            <Img />
+            <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
             <TextWrapper>
                 <Title>{props.title}</Title>
                 <Author>

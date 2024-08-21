@@ -1,11 +1,86 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import * as Color from "../../common/Color";
 import { get } from "../../common/api.js";
+import { useLoginStore } from "../../store/LoginStore.js";
 
 import EnabledSvg from "../../assets/dropdown-enabled.svg";
 import DisabledSvg from "../../assets/dropdown-disabled.svg";
 import { useNavigate } from "react-router-dom";
+
+const Dropdown = () => {
+  const [visibility, setVisibility] = useState(false);
+  const navigate = useNavigate();
+
+  const [teamList, setTeamList] = useState([]);
+
+  const toggleDropdown = () => {
+    setVisibility(!visibility);
+  };
+
+  const createTeam = () => {
+    setVisibility(false);
+    navigate("/teamAdd");
+  };
+
+  const handleTeamClick = (teamId) => {
+    navigate(`/team/${teamId}`);
+    window.location.reload();
+  };
+
+  const { memberId } = useLoginStore(); 
+  const getTeamList = async () => {
+    try {
+      const response = await get(`/members/profile/${memberId}`);
+      const teamList = response.result.teamList;
+      console.log("팀 리스트 가져오기 성공", teamList);
+      setTeamList(teamList);
+    } catch (error) {
+      console.error("팀 리스트 가져오기 실패", error);
+    }
+  };
+
+  useEffect(() => {
+    getTeamList();
+  }, []);
+
+  return (
+    <Container>
+      <Nav onClick={toggleDropdown}>
+        <span>팀 홈</span>
+        {visibility ? <Svg src={DisabledSvg} /> : <Svg src={EnabledSvg} />}
+      </Nav>
+      {visibility && (
+        <DropdownBox>
+          {teamList.length > 0 ? (
+            <>
+              <TeamBox>
+                {teamList.map((team) => (
+                  <TeamListWrapper
+                    key={team.teamId}
+                    onClick={() => handleTeamClick(team.teamId)}
+                  >
+                    <TeamColor />
+                    <TeamName>{team.teamName}</TeamName>
+                  </TeamListWrapper>
+                ))}
+              </TeamBox>
+              <Create hasTeams={true} onClick={createTeam}>
+                팀스페이스 만들기
+              </Create>
+            </>
+          ) : (
+            <Create hasTeams={false} onClick={createTeam}>
+              팀스페이스 만들기
+            </Create>
+          )}
+        </DropdownBox>
+      )
+      }
+    </Container >
+  );
+};
 
 const Container = styled.div`
   display: flex;
@@ -79,77 +154,5 @@ const Create = styled.div`
   text-decoration-line: underline;
   margin-top: ${({ hasTeams }) => (hasTeams ? "auto" : "0")}; /* 팀이 없을 때 중앙에 배치 */
 `;
-
-const Dropdown = () => {
-  const [visibility, setVisibility] = useState(false);
-  const navigate = useNavigate();
-
-  const [teamList, setTeamList] = useState([]);
-
-  const toggleDropdown = () => {
-    setVisibility(!visibility);
-  };
-
-  const createTeam = () => {
-    setVisibility(false);
-    navigate("/teamAdd");
-  };
-
-  const handleTeamClick = (teamId) => {
-    navigate(`/team/${teamId}`);
-    window.location.reload();
-  };
-
-  const getTeamList = async () => {
-    try {
-      const response = await get(`/teams/list`);
-      const teamList = response.result.teams;
-      console.log("팀 리스트 가져오기 성공", teamList);
-      setTeamList(teamList);
-    } catch (error) {
-      console.error("팀 리스트 가져오기 실패", error);
-    }
-  };
-
-  useEffect(() => {
-    getTeamList();
-  }, []);
-
-  return (
-    <Container>
-      <Nav onClick={toggleDropdown}>
-        <span>팀 홈</span>
-        {visibility ? <Svg src={DisabledSvg} /> : <Svg src={EnabledSvg} />}
-      </Nav>
-      {visibility && (
-        <DropdownBox>
-          {teamList.length > 0 ? (
-            <>
-              <TeamBox>
-                {teamList.map((team) => (
-                  <TeamListWrapper
-                    key={team.teamId}
-                    onClick={() => handleTeamClick(team.teamId)}
-                  >
-                    <TeamColor />
-                    <TeamName>{team.teamName}</TeamName>
-                  </TeamListWrapper>
-                ))}
-              </TeamBox>
-              <Create hasTeams={true} onClick={createTeam}>
-                팀스페이스 만들기
-              </Create>
-            </>
-          ) : (
-            <Create hasTeams={false} onClick={createTeam}>
-              팀스페이스 만들기
-            </Create>
-          )}
-        </DropdownBox>
-      )
-      }
-    </Container >
-  );
-};
 
 export default Dropdown;

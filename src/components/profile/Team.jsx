@@ -1,9 +1,9 @@
 import styled from "styled-components";
+import { navigate, useNavigate } from "react-router-dom";
+
 import * as Color from "../../common/Color";
 
-import { Head, Infotype, Content, Add } from './BottomStyle';
-
-import PlusSvg from '../../assets/profile/ph_plus.svg';
+import { Head, Infotype, Content } from './BottomStyle';
 
 const Container = styled.div`
     flex : 1 0 auto;
@@ -34,27 +34,28 @@ const TeamColor = styled.div`
     border-radius: 50%
 `;
 
-const TeamItem = styled.div``;
+const InfoTitle = styled(Infotype)`
+    cursor: default;
+`;
 
 const Team = (props) => {
     const { teamList } = props;
-    console.log(teamList);
-
-    const onOpenModal = () => {
-        console.log('addTeamTapped')
-    }
+    const navigate = useNavigate();
+    console.log("teamList", teamList);
 
     return (
         <Container>
             <Head>
-                <Infotype>소속 팀</Infotype>
-                <Add onClick={onOpenModal} src={PlusSvg} />
+                <InfoTitle>소속 팀</InfoTitle>
             </Head>
             {teamList && teamList.length > 0 ? (
                 <>
                     {teamList.map((team) => (
                         <TeamListWrapper
                             key={team.teamId}
+                            onClick={() => {
+                                navigate(`/team/${team.teamId}`);
+                            }}
                         >
                             <TeamColor />
                             <TeamName>{team.teamName}</TeamName>
