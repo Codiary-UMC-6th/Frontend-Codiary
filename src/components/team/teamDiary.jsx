@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { boardData } from "../../pages/teamDataEx";
 import styled from "styled-components";
 import DiaryCard from "./diaryCard";
-import { get } from "../../common/api";
+import { get, post } from "../../common/api";
 import { useParams } from "react-router-dom";
+import { AddModal } from "../modal/AddModal";
 const TeamDiary = ({ isManager }) => {
   const [categoryList, setCategoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [diaryList, setDiaryList] = useState([]);
   const { teamId } = useParams();
+  const [teamProject, setTeamProject] = useState([]);
+
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+
+  const openAddCategoryModal = () => setIsAddCategoryModalOpen(true);
+  const closeAddCategoryModal = () => setIsAddCategoryModalOpen(false);
 
   useEffect(() => {
     const fetchTeamDiary = async () => {
@@ -23,11 +29,28 @@ const TeamDiary = ({ isManager }) => {
         console.error("Error fetching team data:", error);
       }
     };
-    fetchTeamDiary();
-  }, []);
+    const getTeamInfo = async () => {
+      try {
+        const result = await get(`/teams/${teamId}`);
+        setTeamProject(result?.result.projects);
+        console.log("fetch team in diary", result?.result);
+      } catch (error) {
+        console.log("Error fetching team info:", error);
+      }
+    };
 
-  const addCategory = () => {
-    setCategoryList([...categoryList, ""]);
+    getTeamInfo();
+    fetchTeamDiary();
+  }, [isAddCategoryModalOpen]);
+
+  const addCategory = async (value) => {
+    try {
+      const result = await post(`/teams/${teamId}/project`, {
+        projectName: value,
+      });
+    } catch (error) {
+      console.log("post project error", error);
+    }
   };
 
   const handleCategoryChange = (index, value) => {
@@ -41,40 +64,48 @@ const TeamDiary = ({ isManager }) => {
   }, [diaryList]);
 
   return (
-    <Container>
-      <Title>팀 다이어리</Title>
-      <CategoryContainer>
-        <Category>전체</Category>
-        {categoryList.map((el, index) => (
-          <CategoryInput
-            key={index}
-            type="text"
-            value={el}
-            onChange={(e) => handleCategoryChange(index, e.target.value)}
-          />
-        ))}
-        {isManager && (
-          <AddCategoryButton onClick={addCategory}>+</AddCategoryButton>
-        )}
-      </CategoryContainer>
-      <DiaryContainer>
-        {diaryList &&
-          diaryList
-            .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
-            .map((el) => <DiaryCard key={el.id} data={el} />)}
-      </DiaryContainer>
-      <Pagination>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <PageNum
-            key={index + 1}
-            isActive={currentPage === index + 1}
-            onClick={() => setCurrentPage(index + 1)}
-          >
-            {index + 1}
-          </PageNum>
-        ))}
-      </Pagination>
-    </Container>
+    <>
+      <Container>
+        <Title>팀 다이어리</Title>
+        <CategoryContainer>
+          <Category>전체</Category>
+          {teamProject.map((el, index) => (
+            <Category key={index}>{el.projectName}</Category>
+          ))}
+          {isManager && (
+            <AddCategoryButton onClick={openAddCategoryModal}>
+              +
+            </AddCategoryButton>
+          )}
+        </CategoryContainer>
+        <DiaryContainer>
+          {diaryList &&
+            diaryList
+              .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
+              .map((el) => <DiaryCard key={el.id} data={el} />)}
+        </DiaryContainer>
+
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PageNum
+              key={index + 1}
+              isActive={currentPage === index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </PageNum>
+          ))}
+        </Pagination>
+      </Container>
+      {isAddCategoryModalOpen && (
+        <AddModal
+          title="카테고리 추가하기"
+          placeholder='input name = "interest"'
+          onClose={closeAddCategoryModal}
+          onAdd={addCategory}
+        />
+      )}
+    </>
   );
 };
 
@@ -106,20 +137,6 @@ const Category = styled.div`
   justify-content: center;
   color: white;
   margin-right: 10px;
-  font-size: 15px;
-`;
-
-const CategoryInput = styled.input`
-  width: 90px;
-  height: 45px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background-color: #2d7295;
-  color: white;
-  margin-right: 10px;
-  border: none;
-  padding: 0;
-  text-align: center;
   font-size: 15px;
 `;
 

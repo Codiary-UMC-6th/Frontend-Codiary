@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import React, { useState } from "react";
+import styled from "styled-components";
+import * as Color from "../../common/Color";
 
-import CloseBtn from '../../assets/login/closeBtn.svg';
+import CloseBtn from "../../assets/login/closeBtn.svg";
 
 export const AddModal = (props) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value); // 입력 값 업데이트
@@ -18,8 +18,7 @@ export const AddModal = (props) => {
   return (
     <St.AddModalBackground>
       <St.ModalWrapper>
-        <St.CloseButton
-          onClick={props.onClose}>
+        <St.CloseButton onClick={props.onClose}>
           <img src={CloseBtn} alt="Close" />
         </St.CloseButton>
         <St.HeaderTitle>{props.title}</St.HeaderTitle>
@@ -36,7 +35,6 @@ export const AddModal = (props) => {
 };
 
 const St = {
-
   AddModalBackground: styled.div`
     position: fixed;
     top: 0;
@@ -85,7 +83,7 @@ const St = {
     color: ${Color.gray300};
     width: 400px;
     height: 56px;
-    font-family: 'D2Coding';
+    font-family: "D2Coding";
     border: none;
     border-radius: 10px;
     font-size: 18px;
@@ -107,7 +105,7 @@ const St = {
     background-color: ${Color.primary_blue};
     text-align: center;
     color: ${Color.text1};
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-size: 20px;
     font-weight: 500;
     line-height: 32px;
@@ -117,4 +115,4 @@ const St = {
       opacity: 0.8;
     }
   `,
-}
+};
