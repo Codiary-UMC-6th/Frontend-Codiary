@@ -69,6 +69,11 @@ const Main = () => {
     if (searchResults) setDiaryData(searchResults);
   }, [searchResults]);
 
+  const postAddCategory = () => {
+    alert('카테고리가 추가되었습니다');
+    closeAddCategoryModal();
+  }
+
   return (
     <>
       <Container>
@@ -97,6 +102,7 @@ const Main = () => {
           title="카테고리 추가하기"
           placeholder='input name = "interest"'
           onClose={closeAddCategoryModal}
+          onAdd={postAddCategory}
         />
       )}
     </>
