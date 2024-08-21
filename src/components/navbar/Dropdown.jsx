@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
 import { get } from "../../common/api.js";
@@ -45,14 +44,13 @@ const TeamBox = styled.div`
   margin-bottom: 10px;
 `;
 
-const TeamListWrapper = styled(Link)`
+const TeamListWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 8px 10px;
   background-color: ${Color.backgroundBlur};
   border-radius: 4px;
   cursor: pointer;
-  text-decoration: none;
 `;
 
 const TeamName = styled.div`
@@ -97,6 +95,11 @@ const Dropdown = () => {
     navigate("/teamAdd");
   };
 
+  const handleTeamClick = (teamId) => {
+    navigate(`/team/${teamId}`);
+    window.location.reload();
+  };
+
   const getTeamList = async () => {
     try {
       const response = await get(`/teams/list`);
@@ -125,9 +128,8 @@ const Dropdown = () => {
               <TeamBox>
                 {teamList.map((team) => (
                   <TeamListWrapper
-                    to={`/team/${team.teamId}`}
                     key={team.teamId}
-                    onClick={() => setVisibility(false)}
+                    onClick={() => handleTeamClick(team.teamId)}
                   >
                     <TeamColor />
                     <TeamName>{team.teamName}</TeamName>
