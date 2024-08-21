@@ -8,6 +8,7 @@ import Team from "./Team";
 import GithubSvg from '../../assets/profile/github.svg'
 import DiscordSvg from '../../assets/profile/discord.svg'
 import LinkedinSvg from '../../assets/profile/linkedin.svg'
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     display : flex;
@@ -91,6 +92,12 @@ const UserInfoWrapper = styled.div`
 
 const UserInfo = (props) => {
     const data = props.userInfoData;
+    const navigate = useNavigate();
+
+    const modifyProfileButtonClicked = () => {
+        navigate("/modify-profile");
+        console.log("Modify profile button clicked");
+    }
     return (
         <Container>
             <Top>
@@ -99,7 +106,7 @@ const UserInfo = (props) => {
                 </ImageBox>
                 <UserInfoWrapper>
                     <UserName>{data.userName}</UserName>
-                    <ModifyProfileButton>프로필 수정</ModifyProfileButton>
+                    <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
                 </UserInfoWrapper>
                 <LinkBox>
                     <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`} />
