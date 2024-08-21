@@ -172,6 +172,22 @@ const DiaryDetails = () => {
     const [totalComments, setTotalComments] = useState(0);
     const [content, setContent] = useState();
     const [commentsData, setCommentsData] = useState([]);
+    const [category, setCategory] = useState('');
+    const [post, setPost] = useState();
+    const [loading, setLoading] = useState(true);
+
+    const getPost = async () => {
+        try {
+            const result = await get(`/posts/${state.postId}`);
+            //console.log("다이어리 조회 성공: ", result);
+            setPost(result.result);
+            setCategory(result.result.postCategory);
+            setLoading(false);
+        } catch (error) {
+            console.error("다이어리 조회 실패: ", error);
+            setLoading(false);
+        }
+    }
 
     const getMemberId = async () => {
         try {
@@ -214,6 +230,7 @@ const DiaryDetails = () => {
     }
   
     useEffect(() => {
+        getPost();
         getMemberId();
         getCommentsCount();
         getCommentsData();
@@ -232,12 +249,16 @@ const DiaryDetails = () => {
         return modified_content
     }
 
+    if (loading || !post) {
+        return null;
+    }
+  
     return (
         <Container>
             <FAB postId={state.postId} memberId={memberId} />
             <CenterBox>
                 <Title>{state.title}</Title>
-                <CategoryChip />
+                <CategoryChip postId={state.postId} category={category} />
                 <DiaryInfo>
                     <NameBox>
                         <UserName>{state.author}</UserName>

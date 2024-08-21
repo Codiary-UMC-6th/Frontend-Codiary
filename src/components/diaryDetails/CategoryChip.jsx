@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { get } from "../../common/api";
 
 const Container = styled.div`
     display: flex;
@@ -32,12 +33,36 @@ const Category = styled.div`
     letter-spacing: -0.06px;
 `;
 
-function CategoryChip(props) {
-    const categoryList = ["카테고리", "카테고리2222", "카테", "카테고리", "아아아아아아아아아", "으아아ㅏ아아아", "으아앙아ㅏ아ㅏ아"];
+function CategoryChip({ postId }) {
+    const [categoryList, setCategoryList] = useState();
+    const [category, setCategory] = useState('');
+    
+    const getPost = async () => {
+        try {
+            const result = await get(`/posts/${postId}`);
+            //console.log("다이어리 조회 성공: ", result);
+            setCategory(result.result.postCategory);
+        } catch (error) {
+            console.error("다이어리 조회 실패: ", error);
+        }
+    }
+
+    const getCategoryList = async () => {
+        setCategoryList(category.split(', '));
+    }
+
+    useEffect(() => {
+        getPost();
+    }, [])
+
+    useEffect(() => {
+        getCategoryList();
+    }, [category])
 
     return (
         <Container>
-            {categoryList.map((data) => (
+            {category && 
+            categoryList.map((data) => (
                 <Category>{data}</Category>
             ))}
         </Container>

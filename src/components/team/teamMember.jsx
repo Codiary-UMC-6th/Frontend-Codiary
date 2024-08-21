@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { get } from "../../common/api";
 import MemberAdd from "./memberAdd";
 import { useParams } from "react-router-dom";
-
+import DiaryDefaultImg from "../../assets/diary_default_img.png";
+import svg from "../../assets/user_profile_default.svg";
 const TeamMember = ({ isManager }) => {
   const [memberIndex, setMemberIndex] = useState(0);
   const [isPop, setIsPop] = useState(false);
@@ -20,7 +21,7 @@ const TeamMember = ({ isManager }) => {
       }
     };
     getTeamInfo();
-  }, []);
+  }, [isPop]);
 
   const nextMember = () => {
     if (memberIndex + 3 < memberData.length) {
@@ -65,9 +66,18 @@ const TeamMember = ({ isManager }) => {
 
         {memberData.slice(memberIndex, memberIndex + 3).map((el) => (
           <MemberCard key={el.id}>
-            <MemberImage src={el.profileImg} alt={el.userName} />
-            <MemberName>{el.userName}</MemberName>
-            <MemberRole>{el.memberRole}</MemberRole>
+            <MemberImage
+              src={
+                el.profileImage
+                  ? el.profileImage
+                  : "https://codiary.s3.ap-northeast-2.amazonaws.com/files/61fa6597-b41f-4943-a589-8fa8a44e0148"
+              }
+              alt={el.nickname}
+            />
+            <MemberName>{el.nickname}</MemberName>
+            <MemberRole>
+              {el.memberRole === "ADMIN" ? el.memberRole : el.memberPosition}
+            </MemberRole>
           </MemberCard>
         ))}
 
