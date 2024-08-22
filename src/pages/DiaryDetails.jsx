@@ -295,7 +295,7 @@ const DiaryDetails = () => {
                 <ProfileCard authorId={state.authorId} author={state.author} memberId={memberId} />
                 {coauthorIds ? 
                 (coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} />
+                    <ProfileCard authorId={data} author={''} />
                 )))
                 : <></>}
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>

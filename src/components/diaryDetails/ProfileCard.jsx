@@ -67,7 +67,7 @@ const Text = styled.div`
 
 
 
-const ProfileCard = ({ authorId, memberId }) => {
+const ProfileCard = ({ authorId, author, memberId }) => {
     const navigate = useNavigate();
     const [introduction, setIntroduction] = useState('소개가 없습니다.');
     const [nickName, setNickname] = useState('');
@@ -93,7 +93,7 @@ const ProfileCard = ({ authorId, memberId }) => {
             <UserBox>
                 <BigProfileImg memberId={authorId} />
                 <TextBox>
-                    <UserName>{nickName}</UserName>
+                    <UserName>{author ? author : nickName}</UserName>
                     <Text>{introduction}</Text>
                 </TextBox>
             </UserBox>
