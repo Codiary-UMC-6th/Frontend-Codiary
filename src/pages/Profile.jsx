@@ -7,30 +7,10 @@ import { get, post } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
-import CalendarLeft from "../components/calendar/CalendarLeft";
+import CanlendarPreview from "../components/profile/CalendarPreview";
 
 import { AddModal } from "../components/modal/AddModal";
-
-const Container = styled.div`
-  background-color: ${Color.background};
-  display: flex;
-  flex-direction: column;
-  padding: 60px 130px;
-`;
-
-const Top = styled.div`
-  display: flex;
-`;
-
-const CalendarWrapper = styled.div`
-  background-color: var(--Gray-900, #222);
-  height: 100%;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer; /* 클릭 가능한 커서 */
-`;
+import NextSVG from "../assets/profile/calendar_icon_next.svg";
 
 const Profile = () => {
   // load member info
@@ -138,14 +118,8 @@ const Profile = () => {
             teamList={teamList}
           />
           <CalendarWrapper onClick={() => navigate("/calendar")}>
-            <CalendarLeft
-              currentMonth={currentMonth}
-              days={days}
-              selectedDay={selectedDay}
-              handlePreviousMonth={handlePreviousMonth}
-              handleNextMonth={handleNextMonth}
-              handleDayClick={handleDayClick}
-            />
+              <CalendarTop>캘린더<NextIcon src={NextSVG}></NextIcon></CalendarTop>
+              <CanlendarPreview></CanlendarPreview>
           </CalendarWrapper>
         </Top>
         <MyDiary memberId={memberId} onClick={openAddProjectModal} />
@@ -169,5 +143,43 @@ const Profile = () => {
     </>
   );
 };
+
+const Container = styled.div`
+  background-color: ${Color.background};
+  display: flex;
+  flex-direction: column;
+  padding: 60px 130px;
+`;
+
+const Top = styled.div`
+  display: flex;  
+  color: ${Color.text1};
+  font-family: Pretendard;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 48px;
+`;
+
+const CalendarWrapper = styled.div`
+  margin-top: 80px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer; /* 클릭 가능한 커서 */
+`;
+
+const CalendarTop = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`
+
+const NextIcon = styled.img`
+  margin-left: 4px;
+  width: 32px;
+  height: 32px;
+`
 
 export default Profile;

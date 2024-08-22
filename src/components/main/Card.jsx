@@ -102,6 +102,10 @@ function Card(props) {
         window.location.reload();
     }
 
+    const makeDetailsPreview = (content) => {
+        return content.replace(/<[^>]*>/g, '');
+    }
+
     return (
         <CardBox onClick={onClickPostDetails}>
             <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
@@ -111,7 +115,7 @@ function Card(props) {
                     <SmallProfileImg memberId={props.authorId} />
                     <AuthorName>{props.author}</AuthorName>
                 </Author>
-                <Details>{props.details ? props.details : "내용이 없습니다."}</Details>
+                <Details>{props.details ? makeDetailsPreview(props.details) : "내용이 없습니다."}</Details>
             </TextWrapper>
         </CardBox>
     );

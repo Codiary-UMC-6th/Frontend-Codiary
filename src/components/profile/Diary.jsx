@@ -19,6 +19,10 @@ const Diary = ( props ) => {
         window.location.reload();
     }
 
+    const makeDetailsPreview = (content) => {
+        return content.replace(/<[^>]*>/g, '');
+    }
+
     return (
         <Container onClick={handleDiaryClick}>
             <div>
@@ -26,7 +30,7 @@ const Diary = ( props ) => {
             </div>
             <div>
                 <Title>{props.title}</Title>
-                <Content>{props.details}</Content>
+                <Content>{makeDetailsPreview(props.details)}</Content>
                 <Writer>
                     <WriterImg src={ProfileDefulat}></WriterImg>
                     <WriterName>{props.author}</WriterName>
@@ -39,6 +43,7 @@ const Diary = ( props ) => {
 
 const Container = styled.div`
     display : flex;
+    width: 800px;
     margin : 0px 0px 64px 0px;
     cursor : pointer;
     border : 1px solid ${Color.background};
@@ -67,14 +72,16 @@ const Title = styled.div`
 `
 
 const Content = styled.div`
+    width: 400px;
     color : ${Color.text1};
     font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
     line-height: 36px;
-    
     margin : 0px 0px 24px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 const Writer = styled.div`

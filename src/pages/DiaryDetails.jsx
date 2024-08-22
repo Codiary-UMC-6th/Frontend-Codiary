@@ -16,6 +16,8 @@ import Comments from "../components/diaryDetails/comments/Comments";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
+import "./DiaryDetail.css";
+
 const Container = styled.div`
     background-color : ${Color.background};
 
@@ -245,7 +247,7 @@ const DiaryDetails = () => {
         var string = content;
         var i = 0;
         string = string.replace(regex, function(match) {
-            const replacedString = match.replace(/<img/, `<img src=${state.postFileList[i].url}`);
+            const replacedString = match.replace(/<img/, `<img class="postImg" src=${state.postFileList[i].url}`);
             i += 1;
             console.log("replacedString", replacedString);
             return replacedString;
