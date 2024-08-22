@@ -20,7 +20,7 @@ const Diary = ( props ) => {
     }
 
     const makeDetailsPreview = (content) => {
-        return content.replace(/<[^>]*>/g, '');
+        return content.replace(/<[^>]*>/g, '').slice(0,35)+"...";
     }
 
     return (
