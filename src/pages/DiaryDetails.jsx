@@ -124,7 +124,7 @@ const Subtitle = styled.div`
 const Text = styled.div`
     color: ${Color.text1};
     text-align: justify;
-    margin-bottom: 40px;
+    margin-bottom: 130px;
 
     font-family: Pretendard;
     font-size: 20px;
@@ -177,6 +177,7 @@ const DiaryDetails = () => {
     const [category, setCategory] = useState('');
     const [post, setPost] = useState();
     const [loading, setLoading] = useState(true);
+    const [coauthorIds, setCoauthorIds] = useState([]);
 
     const getPost = async () => {
         try {
@@ -242,6 +243,13 @@ const DiaryDetails = () => {
         setContent(state.details);
     }, []);
 
+    useEffect(() => {
+        if (post) {
+            setCoauthorIds(post.coauthorIds);
+        }
+    }, [post]);
+
+
     const stringModifyForImg = (content) => {
         const regex = /<img\s+id="(\w+)">/g;
         var string = content;
@@ -255,6 +263,7 @@ const DiaryDetails = () => {
 
         return string;
     }
+
     /*
     if (loading || !post) {
         return null;
@@ -284,6 +293,11 @@ const DiaryDetails = () => {
                     <Code>{state.details}</Code>
                 </CodeBox>*/}
                 <ProfileCard authorId={state.authorId} author={state.author} memberId={memberId} />
+                {coauthorIds ? 
+                (coauthorIds.map((data) => (
+                    <ProfileCard authorId={data} />
+                )))
+                : <></>}
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
                 <CommentInput postId={state.postId} memberId={memberId} />
                 {commentsData.map((data) => (
