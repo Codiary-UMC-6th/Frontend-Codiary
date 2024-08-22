@@ -11,7 +11,7 @@ const Container = styled.div`
     width: 740px;
     padding: 24px 20px;
     gap: 10px;
-    margin: 120px 0px;
+    margin: 20px 0px;
     align-items: center;
     justify-content: space-between;
 
@@ -59,19 +59,25 @@ const Text = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 
 
-const ProfileCard = ({ authorId, author, memberId }) => {
+const ProfileCard = ({ authorId, memberId }) => {
     const navigate = useNavigate();
     const [introduction, setIntroduction] = useState('소개가 없습니다.');
+    const [nickName, setNickname] = useState('');
 
     const getAuthorInfo = async () => {
         try {
             const result = await get(`/members/profile/${authorId}`);
             if (result.result.introduction != null) {
                 setIntroduction(result.result.introduction);
+                setNickname(result.result.userName);
             }
         } catch (error) {
             console.error("작성자 정보 조회 실패: ", error);
@@ -87,7 +93,7 @@ const ProfileCard = ({ authorId, author, memberId }) => {
             <UserBox>
                 <BigProfileImg memberId={authorId} />
                 <TextBox>
-                    <UserName>{author}</UserName>
+                    <UserName>{nickName}</UserName>
                     <Text>{introduction}</Text>
                 </TextBox>
             </UserBox>
