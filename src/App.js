@@ -1,22 +1,22 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/Footer";
-import Main from "./pages/Main";
-import Profile from "./pages/Profile";
-import Team from "./pages/Team";
+import Navbar from "./components/navbar/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
+import Main from "./pages/Main.jsx";
+import Profile from "./pages/Profile.jsx";
+import Team from "./pages/Team.jsx";
 
-import Calendar from "./pages/Calendar";
-import Diary from "./pages/Diary";
-import DiaryDetails from "./pages/DiaryDetails";
-import DiaryRegister from "./components/diary/diary-register";
-import { SignUp } from "./components/signup/SignUp";
+import Calendar from "./pages/Calendar.jsx";
+import Diary from "./pages/Diary.jsx";
+import DiaryDetails from "./pages/DiaryDetails.jsx";
+import DiaryRegister from "./components/diary/diary-register.jsx";
+import { SignUp } from "./components/signup/SignUp.jsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
 
 import "./App.css";
 
-import TeamAdd from "./components/team/teamAdd";
-import TeamEdit from "./components/team/teamEdit";
+import TeamAdd from "./components/team/teamAdd.jsx";
+import TeamEdit from "./components/team/teamEdit.jsx";
 
 function App() {
   return (
