@@ -80,7 +80,7 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Banner img src={banner} alt='banner' />
+        <Banner src={banner} alt='banner' />
         <ViewBtn
           onClickPopular={onClickPopular}
           onClickLatest={onClickLatest}

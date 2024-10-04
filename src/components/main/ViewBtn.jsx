@@ -31,7 +31,7 @@ const ViewBtn = (props) => {
   return (
     <Container>
       <Btn
-        active={activeIndex === 0}
+        active={(activeIndex === 0) ? 'active' : ''}
         onClick={() => {
           handleBtnClick(0);
           props.onClickPopular();
@@ -40,7 +40,7 @@ const ViewBtn = (props) => {
         인기글
       </Btn>
       <Btn
-        active={activeIndex === 1}
+        active={(activeIndex === 1) ? 'active' : ''}
         onClick={() => {
           handleBtnClick(1);
           props.onClickLatest();
@@ -48,7 +48,7 @@ const ViewBtn = (props) => {
       >
         최신글
       </Btn>
-      <Btn active={activeIndex === 2} onClick={() => handleBtnClick(2)}>
+      <Btn active={(activeIndex === 2) ? 'active' : ''} onClick={() => handleBtnClick(2)}>
         팔로잉
       </Btn>
     </Container>
