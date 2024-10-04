@@ -13,6 +13,8 @@ import DiaryRegister from "./components/diary/diary-register.jsx";
 import { SignUp } from "./components/signup/SignUp.jsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
 
+import Example from "./pages/Example.jsx";
+
 import "./App.css";
 
 import TeamAdd from "./components/team/teamAdd.jsx";
@@ -36,6 +38,8 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/modify-profile" element={<ModifyProfile />} />
           <Route path="*" element={"404 not found"} />
+
+          <Route path="/example" element={<Example />} />
         </Routes>
       </div>
       <Footer />
