@@ -11,7 +11,11 @@ import GithubIcon from '../../assets/login/githubIcon.svg';
 import EmailIcon from '../../assets/login/mailIcon.svg';
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
-export const LoginModal = ({ onClose }) => {
+type LoginModalProps = {
+  onClose?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+export const LoginModal = ({ onClose }: LoginModalProps) => {
 
   const { setLogin } = useLoginStore();
   const setEmail = useLoginStore((state) => state.setEmail);
@@ -41,7 +45,8 @@ export const LoginModal = ({ onClose }) => {
       alert('로그인 되었습니다.');
     } catch (error) {
       console.error('POST 요청 실패:', error);
-      alert(`${error.response}`);
+      // 여기서 error type을 어떻게 지정해야 할까?
+      // alert(`${error.response}`);
     }
   }
 

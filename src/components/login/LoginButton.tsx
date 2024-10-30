@@ -1,8 +1,12 @@
-import React from 'react';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
-const LoginButton = ({ title, children }) => (
+type LoginButtonProps = {
+  title?: string;
+  children?: string;
+};
+
+const LoginButton = ({ title, children }: LoginButtonProps) => (
   <StyledLoginButton title={title}>{children}</StyledLoginButton>
 );
 
