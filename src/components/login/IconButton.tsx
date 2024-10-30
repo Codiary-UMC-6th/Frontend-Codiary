@@ -1,7 +1,10 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const IconButton = ({ children }) => (
+type childrenProps = {
+  children?: string;
+};
+
+const IconButton = ({ children }: childrenProps) => (
   <StyledIconButton>{children}</StyledIconButton>
 );
 

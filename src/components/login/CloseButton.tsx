@@ -1,8 +1,11 @@
-import React from 'react';
 import styled from 'styled-components';
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
-const CloseButton = ({ onClick }) => (
+type onClickProps = {
+  onClick?: any;
+};
+
+const CloseButton = ({ onClick }: onClickProps) => (
   <StyledButton onClick={onClick}>
     <img src={CloseBtn} alt="Close" />
   </StyledButton>

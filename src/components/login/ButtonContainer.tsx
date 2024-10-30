@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ButtonContainer = ({ children }) => (
-  <StyledButtonContainer>{children}</StyledButtonContainer>
+type ButtonComponentProps = {
+  title?: string;
+};
+
+const ButtonContainer = ({ title }: ButtonComponentProps) => (
+  <StyledButtonContainer>{title}</StyledButtonContainer>
 );
 
 export default ButtonContainer;
