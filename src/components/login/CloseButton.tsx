@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import CloseBtn from '../../assets/login/closeBtn.svg';
 
 type onClickProps = {
-  onClick?: any;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const CloseButton = ({ onClick }: onClickProps) => (
