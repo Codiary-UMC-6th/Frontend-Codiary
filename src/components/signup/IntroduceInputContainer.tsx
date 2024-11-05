@@ -1,20 +1,27 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import * as Color from '../../common/Color';
 
-export const IntroduceInputContainer = (props) => {
+type IntroduceInputContainerProps = {
+    props: {
+        value?: string;
+        handleChange?: (name: string, value: string, error?: string) => void;
+    };
+};
 
+const IntroduceInputContainer = ({ props }: IntroduceInputContainerProps) => {
     return (
         <St.IntroduceConatinerWrapper>
             <St.IntroduceTitle>내 소개</St.IntroduceTitle>
             <St.IntroduceInput
                 placeholder='소개글'
                 value={props.value}
-                onChange={(e) => props.handleChange("introduction", e.target.value, '')}
+                onChange={(e) => props.handleChange?.("introduction", e.target.value, '')}
             />
         </St.IntroduceConatinerWrapper>
     );
 };
+
+export default IntroduceInputContainer;
 
 const St = {
     IntroduceConatinerWrapper: styled.div`
