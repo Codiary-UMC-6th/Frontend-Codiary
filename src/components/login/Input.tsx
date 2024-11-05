@@ -1,35 +1,32 @@
 import styled, { css } from 'styled-components';
 import * as Color from '../../common/Color';
+import { HTMLInputTypeAttribute } from 'react';
 
+// Input 컴포넌트의 타입을 변경
 type InputProps = {
-  props: {
-    type?: string;
-    placeholder?: string;
-    value: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    hasError?: boolean;
-    disable?: boolean;
-  };
-};
-
-type StyledInputProps = {
+  type?: HTMLInputTypeAttribute;
+  placeholder?: string;
+  value: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hasError?: boolean;
+  disable?: boolean;
 };
 
-const Input = ({ props }: InputProps) => (
+const Input = ({ type, placeholder, value, onChange, hasError, disable }: InputProps) => (
   <StyledInput
-    type={props.type}
-    placeholder={props.placeholder}
-    value={props.value}
-    onChange={props.onChange}
-    hasError={props.hasError}
-    disabled={props.disable}
+    type={type}
+    placeholder={placeholder}
+    value={value}
+    onChange={onChange}
+    hasError={hasError}
+    disabled={disable}
   />
 );
 
 export default Input;
 
-const StyledInput = styled.input<StyledInputProps>`
+
+const StyledInput = styled.input<InputProps>`
   background-color: ${Color.gray700};
   color: ${Color.gray300};
   width: 400px;

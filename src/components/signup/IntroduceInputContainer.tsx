@@ -8,7 +8,7 @@ type IntroduceInputContainerProps = {
     };
 };
 
-const IntroduceInputContainer = ({ props }: IntroduceInputContainerProps) => {
+export const IntroduceInputContainer = ({ props }: IntroduceInputContainerProps) => {
     return (
         <St.IntroduceConatinerWrapper>
             <St.IntroduceTitle>내 소개</St.IntroduceTitle>
@@ -20,8 +20,6 @@ const IntroduceInputContainer = ({ props }: IntroduceInputContainerProps) => {
         </St.IntroduceConatinerWrapper>
     );
 };
-
-export default IntroduceInputContainer;
 
 const St = {
     IntroduceConatinerWrapper: styled.div`

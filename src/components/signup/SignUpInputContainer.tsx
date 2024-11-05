@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { HTMLInputTypeAttribute, useState } from 'react';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
@@ -8,11 +8,26 @@ import { CheckDuplicateBtn } from './CheckDuplicateBtn';
 
 import { get } from "../../common/api";
 
-export const SignUpInputContainer = (props) => {
+type SignUpInputContainerType = {
+  props: {
+    title: string;
+    essential?: boolean;
+    placeholder: string;
+    value?: any;
+    onChange: (value: string, error?: string) => void;
+    isButtonHidden?: boolean;
+    inputType?: HTMLInputTypeAttribute;
+    disable?: boolean;
+    onCheckDuplicate?: any;
+    type?: HTMLInputTypeAttribute;
+  };
+};
+
+export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
 
-  const validateInput = (value) => {
+  const validateInput = (value: string) => {
     if (props.essential && !value) {
       return '필수 입력 항목입니다.';
     }
@@ -32,8 +47,8 @@ export const SignUpInputContainer = (props) => {
     }
   };
 
-  const handleChange = (e) => {
-    const { value } = e.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
     setValue(value);
     const validationError = validateInput(value);
     setError(validationError);
@@ -55,7 +70,7 @@ export const SignUpInputContainer = (props) => {
       } else {
         setError(response.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (!error.response.isSuccess) {
         setError(error.response.message);
       } else {
@@ -82,8 +97,8 @@ export const SignUpInputContainer = (props) => {
         {!props.isButtonHidden && <CheckDuplicateBtn onClick={checkRedundancyAPI} />}
       </St.InputAndButtonWrapper>
     </St.SignUpInputContainerWrapper>
-  );
-};
+  )
+}
 
 const St = {
   SignUpInputContainerWrapper: styled.div`
