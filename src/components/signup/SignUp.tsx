@@ -157,8 +157,19 @@ export const SignUp = () => {
           }}
         />
       </St.SignUpContainerWrapper>
-      <SocialInputContainer handleChange={handleChange} />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} title='회원가입' />
+      <SocialInputContainer
+        props={{
+          handleChange: handleChange
+        }}
+      />
+      <SignUpBtnBox
+        props={{
+          onSubmit: handleSubmit,
+          isDisabled: isDisabled,
+          title: '회원가입'
+        }}
+
+      />
     </St.SignUpWrapper>
   );
 };
