@@ -47,11 +47,16 @@ const RegistrationBtn = styled.button`
     line-height: 32px;
 `;
 
-const CommentInput = ({ postId, memberId }) => {
-    const [inputValue, setInputValue] = useState('');
-    const [commentBody, setCommentBody] = useState('');
+interface CommentInputProps {
+    postId: number | undefined;
+    memberId: number | undefined;
+}
 
-    const handleChange = (e) => {
+const CommentInput = ({ postId, memberId }: CommentInputProps) => {
+    const [inputValue, setInputValue] = useState<string>('');
+    const [commentBody, setCommentBody] = useState<string>('');
+
+    const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputValue(e.target.value);
     }
 

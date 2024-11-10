@@ -5,8 +5,8 @@ import styled from "styled-components";
 import * as Color from '../common/Color';
 import { get } from '../common/api';
 import { formatDateTime } from "../components/diaryDetails/comments/formatDate";
-import { ReactComponent as Scrap } from "../assets/symbols_scrap.svg";
-import { ReactComponent as CommentIcon } from "../assets/symbols_comment.svg";
+import Scrap from "../assets/symbols_scrap.svg";
+import CommentIcon from "../assets/symbols_comment.svg";
 
 import KebabModal from "../components/diaryDetails/KebabModal";
 import FAB from "../components/diaryDetails/FAB";
@@ -109,18 +109,6 @@ const PostInfo = styled.div`
     line-height: 22px;
 `;
 
-const Subtitle = styled.div`
-    color: ${Color.text1};
-    text-align: justify;
-    margin-bottom: 16px;
-
-    font-family: Pretendard;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 48px;
-`;
-
 const Text = styled.div`
     color: ${Color.text1};
     text-align: justify;
@@ -134,17 +122,6 @@ const Text = styled.div`
     letter-spacing: -0.06px;
 `;
 
-const CodeBox = styled.div`
-    display: flex;
-    width: 732px;
-    height: 70px;
-    padding: 24px;
-    align-items: center;
-
-    border: 1px solid ${Color.divider};
-    background: ${Color.background3};
-`;
-
 const CommentTitle = styled.div`
     color: ${Color.text1};
 
@@ -155,36 +132,41 @@ const CommentTitle = styled.div`
     line-height: 32px;
 `;
 
-const Code = styled.div`
-    width: 732px;
-    color: ${Color.primary_blue};
+interface Post {
+    coauthorIds: number[];
+    postCategory: string;
+    postId: number | undefined;
+    memberId: number | undefined;
+}
 
-    font-family: D2Coding;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: -0.09px;
-`;
+interface CommentsInterface {
+    memberId: number;
+    nickname: string;
+    commentId: number;
+    commentBody: string;
+    createdAt: string;
+    childCommentList: CommentsInterface[] | undefined;
+}
 
-const DiaryDetails = () => {
+function DiaryDetails() {
     const { state } = useLocation();
-    const [memberId, setMemberId] = useState(null);
-    const [bookmarkCount, setBookmarkCount] = useState(0);
-    const [totalComments, setTotalComments] = useState(0);
+    const [memberId, setMemberId] = useState<number | undefined>(undefined);
+    const [bookmarkCount, setBookmarkCount] = useState<number>(0);
+    const [totalComments, setTotalComments] = useState<number>(0);
     const [content, setContent] = useState();
-    const [commentsData, setCommentsData] = useState([]);
-    const [category, setCategory] = useState('');
-    const [post, setPost] = useState();
-    const [loading, setLoading] = useState(true);
-    const [coauthorIds, setCoauthorIds] = useState([]);
+    const [commentsData, setCommentsData] = useState<CommentsInterface[]>([]);
+    const [category, setCategory] = useState<string>('');
+    const [post, setPost] = useState<Post>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [coauthorIds, setCoauthorIds] = useState<number[]>([]);
 
     const getPost = async () => {
         try {
-            const result = await get(`/posts/${state.postId}`);
+            const response = await get(`/posts/${state.postId}`);
             //console.log("다이어리 조회 성공: ", result);
-            setPost(result.result);
-            setCategory(result.result.postCategory);
+            const result: Post = response.result;
+            setPost(result);
+            setCategory(result.postCategory);
             setLoading(false);
         } catch (error) {
             console.error("다이어리 조회 실패: ", error);
@@ -250,11 +232,11 @@ const DiaryDetails = () => {
     }, [post]);
 
 
-    const stringModifyForImg = (content) => {
+    const stringModifyForImg = (content: any) => {
         const regex = /<img\s+id="(\w+)">/g;
         var string = content;
         var i = 0;
-        string = string.replace(regex, function(match) {
+        string = string.replace(regex, function(match: string) {
             const replacedString = match.replace(/<img/, `<img class="postImg" src=${state.postFileList[i].url}`);
             i += 1;
             console.log("replacedString", replacedString);
@@ -274,7 +256,7 @@ const DiaryDetails = () => {
             <FAB postId={state.postId} memberId={memberId} />
             <CenterBox>
                 <Title>{state.title}</Title>
-                <CategoryChip postId={state.postId} category={category} />
+                <CategoryChip postId={post?.postId} />
                 <DiaryInfo>
                     <NameBox>
                         <UserName>{state.author}</UserName>
@@ -283,7 +265,7 @@ const DiaryDetails = () => {
                             <ScrapCount>{bookmarkCount}</ScrapCount>
                             <CommentIcon />
                             <CommentCount>{totalComments}</CommentCount>
-                            <KebabModal memberId={memberId} authorId={state.authorId} />
+                            <KebabModal memberId={memberId} authorId={state.authorId} commentId={0} />
                         </Details>
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
@@ -295,7 +277,7 @@ const DiaryDetails = () => {
                 <ProfileCard authorId={state.authorId} author={state.author} memberId={memberId} />
                 {coauthorIds ? 
                 (coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} author={''} />
+                    <ProfileCard authorId={data} author={''} memberId={memberId} />
                 )))
                 : <></>}
                 <CommentTitle>{totalComments}개의 댓글</CommentTitle>
@@ -304,7 +286,7 @@ const DiaryDetails = () => {
                     <Comments comment={data} postId={state.postId} memberId={memberId} />
                 ))}
             </CenterBox>
-            <OtherCards postId={state.postId} />
+            <OtherCards postId={post?.postId} />
         </Container>
     );
 

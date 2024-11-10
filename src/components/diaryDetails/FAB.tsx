@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
 
-import { ReactComponent as SharekIcon } from "../../assets/icon_share.svg";
+import SharekIcon from "../../assets/icon_share.svg";
 import BookmarkBtn from "./BookmarkBtn";
 
 const Container = styled.div`
@@ -36,7 +36,12 @@ const StyledShareIcon = styled(SharekIcon)`
     }
 `;
 
-const FAB = ({ postId, memberId }) => {
+interface FABProps {
+    postId: number | undefined;
+    memberId: number | undefined;
+}
+
+const FAB = ({ postId, memberId }: FABProps) => {
 
     return(
         <Container>

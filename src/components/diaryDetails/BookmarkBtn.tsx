@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 import { post, del, get } from '../../common/api';
 import { Button } from './FAB';
-import { ReactComponent as BookmarkIcon } from "../../assets/icon_bookmark.svg";
-import { ReactComponent as FilledBookmarkIcon } from "../../assets/icon_bookmark_fill.svg";
+import BookmarkIcon from "../../assets/icon_bookmark.svg";
+import FilledBookmarkIcon from "../../assets/icon_bookmark_fill.svg";
 
 
 const StyledFilledBookmarkIcon = styled(FilledBookmarkIcon)`
@@ -24,9 +24,14 @@ const StyledBookmarkIcon = styled(BookmarkIcon)`
     }
 `;
 
-const BookmarkBtn = ({ postId, memberId }) => {
-    const [isBookmarked, setIsBookmarked] = useState(false);
-    const [bookmarkId, setBookmarkId] = useState();
+interface BookmarkBtnProps {
+    postId: number | undefined;
+    memberId: number | undefined;
+}
+
+const BookmarkBtn = ({ postId, memberId }: BookmarkBtnProps) => {
+    const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+    const [bookmarkId, setBookmarkId] = useState<number | undefined>();
 
     async function postBookmark() {
         const endpoint = `/bookmarks/add/${memberId}/${postId}`;
@@ -54,7 +59,7 @@ const BookmarkBtn = ({ postId, memberId }) => {
         try {
             const result = await del(endpoint);
             console.log("북마크 삭제 결과:", result);
-            setBookmarkId(null);
+            setBookmarkId(undefined);
             setIsBookmarked(false);
         } catch (error) {
             console.error("북마크 삭제 실패:", error);
@@ -75,7 +80,7 @@ const BookmarkBtn = ({ postId, memberId }) => {
 
     }
 
-    let totalPage;
+    let totalPage: number;
     async function findBookmark() {
 
         for(let i = 1; i <= totalPage; i++) {

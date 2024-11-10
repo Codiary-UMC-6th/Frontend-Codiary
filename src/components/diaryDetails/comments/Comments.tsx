@@ -6,7 +6,7 @@ import ReplyInput from './ReplyInput';
 import KebabModal from '../KebabModal';
 import { SmallProfileImg } from '../ProfileImg';
 import { formatDate } from './formatDate';
-import { ReactComponent as Reply } from "../../../assets/symbols_reply.svg";
+import Reply from "../../../assets/symbols_reply.svg";
 
 const Container = styled.div`
     margin-bottom: 40px;
@@ -16,14 +16,6 @@ const Box = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-`;
-
-const UserImg = styled.img`
-    width: 36px;
-    height: 36px;
-    border-radius: 18px;
-    background-color: rgb(200, 200, 200);
-    margin-right: 12px;
 `;
 
 const Author = styled.div`
@@ -69,8 +61,22 @@ const ReplyItem = styled.div`
     padding: 16px 0px;
 `;
 
+interface CommentsProps {
+    comment: CommentsInterface;
+    postId: number | undefined;
+    memberId: number | undefined;
+}
 
-const Comments = ({ comment, postId, memberId }) => {
+interface CommentsInterface {
+    memberId: number;
+    nickname: string;
+    commentId: number;
+    commentBody: string;
+    createdAt: string;
+    childCommentList: CommentsInterface[] | undefined;
+}
+
+const Comments = ({ comment, postId, memberId }: CommentsProps) => {
 
     return (
         <Container>

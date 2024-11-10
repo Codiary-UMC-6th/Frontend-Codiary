@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as Color from '../../../common/Color';
-import { ReactComponent as Reply } from "../../../assets/symbols_reply.svg";
+import Reply from "../../../assets/symbols_reply.svg";
 import { post } from '../../../common/api';
 
 const Input = styled.input`
@@ -94,8 +94,13 @@ const RegistrationBtn = styled.button`
     line-height: 32px;
 `;
 
+interface ReplyInputProps {
+    postId: number | undefined;
+    memberId: number | undefined;
+    parentId: number | undefined;
+}
 
-const ReplyInput = ({ postId, memberId, parentId }) => {
+const ReplyInput = ({ postId, memberId, parentId }: ReplyInputProps) => {
     const [showReplyInput, setShowReplyInput] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [commentReplyBody, setCommentReplyBody] = useState('');
@@ -105,7 +110,7 @@ const ReplyInput = ({ postId, memberId, parentId }) => {
         setInputValue('');
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputValue(e.target.value);
     }
 
