@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ReactComponent as KebabIcon } from "../../assets/symbols_kebab.svg";
+import KebabIcon from "../../assets/symbols_kebab.svg";
 import * as Color from '../../common/Color';
 import { del } from '../../common/api';
 
@@ -37,8 +37,14 @@ const Modal = styled.div`
     flex-direction: column;
 `
 
+interface Props {
+    memberId: number | undefined;
+    authorId: number;
+    commentId: number;
+}
 
-const KebabModal = ({ memberId, authorId, commentId }) => {
+
+const KebabModal = ({ memberId, authorId, commentId }: Props) => {
     const [showModal, setShowModal] = useState(false);
 
     const toggleModal = () => {

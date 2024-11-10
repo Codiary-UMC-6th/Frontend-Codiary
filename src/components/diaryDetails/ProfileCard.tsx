@@ -24,14 +24,6 @@ const UserBox = styled.div`
     display: flex;
 `;
 
-const UserImg = styled.img`
-    width: 80px;
-    height: 80px;
-    border-radius: 40px;
-    background-color: rgb(200, 200, 200);
-    margin-right: 16px;
-`;
-
 const TextBox = styled.div`
     width: 492px;
     display: flex;
@@ -65,12 +57,16 @@ const Text = styled.div`
     text-overflow: ellipsis;
 `;
 
+interface Profileprops{
+    authorId: number;
+    author: string;
+    memberId: number | undefined;
+}
 
-
-const ProfileCard = ({ authorId, author, memberId }) => {
+const ProfileCard = ({ authorId, author, memberId }: Profileprops) => {
     const navigate = useNavigate();
-    const [introduction, setIntroduction] = useState('소개가 없습니다.');
-    const [nickName, setNickname] = useState('');
+    const [introduction, setIntroduction] = useState<String>('소개가 없습니다.');
+    const [nickName, setNickname] = useState<String>('');
 
     const getAuthorInfo = async () => {
         try {

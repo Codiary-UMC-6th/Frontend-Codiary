@@ -33,9 +33,13 @@ const Category = styled.div`
     letter-spacing: -0.06px;
 `;
 
-function CategoryChip({ postId }) {
-    const [categoryList, setCategoryList] = useState();
-    const [category, setCategory] = useState('');
+interface CategoryChipProps {
+    postId: number | undefined;
+}
+
+function CategoryChip({ postId }: CategoryChipProps) {
+    const [categoryList, setCategoryList] = useState<string[]>([]);
+    const [category, setCategory] = useState<string>('');
     
     const getPost = async () => {
         try {
