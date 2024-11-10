@@ -1,8 +1,12 @@
-import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const CheckDuplicateBtn = ({ onClick }) => {
+type checkUpProps = {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+};
+
+
+export const CheckDuplicateBtn = ({ onClick }: checkUpProps) => {
   return (
     <St.StyledCheckDuplicateBtn
       title='중복확인'

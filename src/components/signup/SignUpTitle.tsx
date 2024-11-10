@@ -1,8 +1,11 @@
-import React from 'react'
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
-const SignUpTitle = ({ children }) => (
+type SignUpTitleProps = {
+  children: string;
+}
+
+const SignUpTitle = ({ children }: SignUpTitleProps) => (
   <StyledSignUpTitle>{children}</StyledSignUpTitle>
 );
 

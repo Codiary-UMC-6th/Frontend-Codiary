@@ -1,6 +1,21 @@
-import React from 'react';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
+
+type CategoryBtnProps = {
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const CategoryBtn = ({ onClick }: CategoryBtnProps) => {
+
+    return (
+        <Container>
+            <Btn>전체</Btn>
+            <AddBtn onClick={onClick}>+</AddBtn>
+        </Container>
+    );
+};
+
+export default CategoryBtn;
 
 const Container = styled.div`
     padding-left: 30px;
@@ -40,15 +55,3 @@ const AddBtn = styled.button`
     font-weight: 200;
     cursor: pointer;
 `;
-
-const CategoryBtn = ({ onClick }) => {
-
-    return (
-        <Container>
-            <Btn>전체</Btn>
-            <AddBtn onClick={onClick}>+</AddBtn>
-        </Container>
-    );
-};
-
-export default CategoryBtn;

@@ -1,9 +1,17 @@
-import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color'
 
-export const SocialInputBox = (props) => {
-  const handleInputChange = (event) => {
+type SocialInputBoxProps = {
+  props: {
+    image: any;
+    placeholder: string;
+    value?: string;
+    onChange: (value: string) => void;
+  }
+}
+
+export const SocialInputBox = ({ props }: SocialInputBoxProps) => {
+  const handleInputChange = (event: any) => {
     props.onChange(event.target.value);
   };
 

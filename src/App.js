@@ -10,7 +10,7 @@ import Calendar from "./pages/Calendar.jsx";
 import Diary from "./pages/Diary.jsx";
 import DiaryDetails from "./pages/DiaryDetails.tsx";
 import DiaryRegister from "./components/diary/diary-register.jsx";
-import { SignUp } from "./components/signup/SignUp.jsx";
+import { SignUp } from "./components/signup/SignUp.tsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
 
 import Example from "./pages/Example.jsx";

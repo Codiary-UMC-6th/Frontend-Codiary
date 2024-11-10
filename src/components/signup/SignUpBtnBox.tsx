@@ -1,9 +1,16 @@
-import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 import { useNavigate } from 'react-router-dom';
 
-export const SignUpBtnBox = (props) => {
+type SignUpBtnBoxProps = {
+  props: {
+    onSubmit?: () => Promise<void>;
+    isDisabled: boolean;
+    title: string;
+  }
+}
+
+export const SignUpBtnBox = ({ props }: SignUpBtnBoxProps) => {
   const navigate = useNavigate();
   const handleBackButton = () => {
     navigate(-1);

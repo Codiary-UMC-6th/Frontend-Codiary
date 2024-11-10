@@ -5,6 +5,48 @@ import * as Color from '../../common/Color';
 import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 import DiaryDefaultImg from '../../assets/diary_default_img.png';
 
+type CardProps = {
+    props: {
+        postId: number;
+        title: string;
+        thumbnailImageUrl?: string;
+        createAt: string;
+        authorId: number;
+        author: string;
+        details: string;
+    }
+}
+
+function Card({ props }: CardProps) {
+    const navigate = useNavigate();
+
+    const onClickPostDetails = () => {
+        navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        window.scrollTo(0, 0);
+        window.location.reload();
+    }
+
+    const makeDetailsPreview = (content: string) => {
+        return content.replace(/<[^>]*>/g, '');
+    }
+
+    return (
+        <CardBox onClick={onClickPostDetails}>
+            <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
+            <TextWrapper>
+                <Title>{props.title}</Title>
+                <Author>
+                    <SmallProfileImg memberId={props.authorId} />
+                    <AuthorName>{props.author}</AuthorName>
+                </Author>
+                <Details>{props.details ? makeDetailsPreview(props.details) : "내용이 없습니다."}</Details>
+            </TextWrapper>
+        </CardBox>
+    );
+};
+
+export default Card;
+
 const CardBox = styled.div`
     display: flex;
     width: 360px;
@@ -92,33 +134,3 @@ const Details = styled.span`
     font-weight: 400;
     line-height: 24px;
 `;
-
-function Card(props) {
-    const navigate = useNavigate();
-
-    const onClickPostDetails = () => {
-        navigate(`/DiaryDetails/${props.postId}`, { state: props });
-        window.scrollTo(0, 0);
-        window.location.reload();
-    }
-
-    const makeDetailsPreview = (content) => {
-        return content.replace(/<[^>]*>/g, '');
-    }
-
-    return (
-        <CardBox onClick={onClickPostDetails}>
-            <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
-            <TextWrapper>
-                <Title>{props.title}</Title>
-                <Author>
-                    <SmallProfileImg memberId={props.authorId} />
-                    <AuthorName>{props.author}</AuthorName>
-                </Author>
-                <Details>{props.details ? makeDetailsPreview(props.details) : "내용이 없습니다."}</Details>
-            </TextWrapper>
-        </CardBox>
-    );
-};
-
-export default Card;

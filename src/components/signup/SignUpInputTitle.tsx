@@ -2,7 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import * as Color from '../../common/Color';
 
-export const SignUpInputTitle = ({ title, essential }) => {
+type SignUpInputTitleProps = {
+  title: string;
+  essential?: boolean;
+}
+
+export const SignUpInputTitle = ({ title, essential }: SignUpInputTitleProps) => {
   return (
     <St.SignUpInputTitleWrapper>
       <St.StyledSignUpInputTitle>{title}</St.StyledSignUpInputTitle>

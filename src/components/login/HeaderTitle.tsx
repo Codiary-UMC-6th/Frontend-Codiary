@@ -1,8 +1,11 @@
-import React from 'react';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 
-const HeaderTitle = ({ children }) => (
+type childrenProps = {
+  children?: string;
+};
+
+const HeaderTitle = ({ children }: childrenProps) => (
   <StyledHeaderTitle>{children}</StyledHeaderTitle>
 );
 

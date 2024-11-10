@@ -95,12 +95,14 @@ const OtherCards = ({ postId }: OtherCardsProps) => {
                 <Text>이전글</Text>
                 {olderDiaryData.postId != 0 ? 
                     <Card
-                    postId={olderDiaryData.postId}
-                    title={olderDiaryData.postTitle}
-                    author={olderDiaryData.nickname}
-                    details={olderDiaryData.postBody}
-                    createdAt={olderDiaryData.createdAt}
-                    authorId={olderDiaryData.memberId}
+                        props={{
+                            postId: olderDiaryData.postId,
+                            title: olderDiaryData.postTitle,
+                            author: olderDiaryData.nickname,
+                            details: olderDiaryData.postBody,
+                            createAt: olderDiaryData.createdAt,
+                            authorId: olderDiaryData.memberId
+                        }}
                     /> :
                     <NoDiary>다이어리가 없습니다.</NoDiary>
                 }
@@ -109,12 +111,14 @@ const OtherCards = ({ postId }: OtherCardsProps) => {
                 <Text>다음글</Text>
                 {laterDiaryData.postId != 0 ? 
                     <Card
-                    postId={laterDiaryData.postId}
-                    title={laterDiaryData.postTitle}
-                    author={laterDiaryData.nickname}
-                    details={laterDiaryData.postBody}
-                    createdAt={laterDiaryData.createdAt}
-                    authorId={laterDiaryData.memberId}
+                    props={{
+                        postId: olderDiaryData.postId,
+                        title: olderDiaryData.postTitle,
+                        author: olderDiaryData.nickname,
+                        details: olderDiaryData.postBody,
+                        createAt: olderDiaryData.createdAt,
+                        authorId: olderDiaryData.memberId
+                    }}
                     /> :
                     <NoDiary>다이어리가 없습니다.</NoDiary>
                 }

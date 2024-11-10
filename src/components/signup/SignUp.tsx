@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { useState, useEffect } from 'react';
@@ -6,14 +5,25 @@ import { useNavigate } from "react-router-dom";
 
 import SignUpTitle from './SignUpTitle';
 import { SignUpInputContainer } from './SignUpInputContainer';
-import { SocialInputContainer } from './SocialInputContainer'
+import { SocialInputContainer } from './SocialInputContainer';
 import { SignUpBtnBox } from './SignUpBtnBox';
 
 import { post } from "../../common/api";
 
+interface SignUpFormData {
+  email: string;
+  password: string;
+  nickname: string;
+  birth: string;
+  gender: 'Male' | 'Female'; 
+  github: string;
+  linkedin: string;
+  discord: string;
+}
+
 export const SignUp = () => {
   const navigate = useNavigate();
-  const [signUpFormData, setSignUpFormData] = useState({
+  const [signUpFormData, setSignUpFormData] = useState<SignUpFormData>({
     "email": '',
     "password": '',
     "nickname": '',
@@ -34,7 +44,7 @@ export const SignUp = () => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
-  const handleChange = (name, value, error) => {
+  const handleChange = (name: string, value: string, error?: string) => {
     if (name === 'birth') {
       value = birthFormatDate(value);
     }
@@ -75,14 +85,14 @@ export const SignUp = () => {
       alert('회원가입 성공');
       navigate(-1);
     } catch (error) {
-      console.error('회원가입 실패', error.response);
+      // console.error('회원가입 실패', error.response);
       console.log(signUpFormData);
       alert('회원가입 실패');
     }
   }
 
   // 생년월일 포맷
-  const birthFormatDate = (date) => {
+  const birthFormatDate = (date: string) => {
     const year = date.slice(0, 4);
     const month = date.slice(4, 6);
     const day = date.slice(6, 8);
@@ -94,7 +104,7 @@ export const SignUp = () => {
 
   useEffect(() => {
     const hasErrors = Object.values(errors).some(error => error);
-    const requiredFields = ['email', 'password', 'nickname'];
+    const requiredFields: Array<keyof SignUpFormData> = ['email', 'password', 'nickname'];
     const hasEmptyFields = requiredFields.some(field => !signUpFormData[field]);
     const disable = hasErrors || hasEmptyFields;
     setIsDisabled(disable);
@@ -105,45 +115,64 @@ export const SignUp = () => {
       <SignUpTitle>회원가입</SignUpTitle>
       <St.SignUpContainerWrapper>
         <SignUpInputContainer
-          title='이메일'
-          essential={Boolean(true)}
-          type='text'
-          placeholder='예: codiary@codiary.com'
-          isButtonHidden={Boolean(false)}
-          onChange={(value, error) => handleChange('email', value, error)}
-          onCheckDuplicate={() => setIsEmailChecked(true)}
+          props={{
+            title: '이메일',
+            essential: Boolean(true),
+            type: 'text',
+            placeholder: '예: codiary@codiary.com',
+            isButtonHidden: Boolean(false),
+            onChange: (value, error) => handleChange('email', value, error),
+            onCheckDuplicate: () => setIsEmailChecked(true),
+          }}
         />
         <SignUpInputContainer
-          title='비밀번호'
-          essential={Boolean(true)}
-          type='password'
-          placeholder='8자 이상의 영문, 숫자 조합'
-          isButtonHidden={Boolean(true)}
-          onChange={(value, error) => handleChange('password', value, error)}
+          props={{
+            title: '비밀번호',
+            essential: Boolean(true),
+            type: 'password',
+            placeholder: '8자 이상의 영문, 숫자 조합',
+            isButtonHidden: Boolean(true),
+            onChange: (value, error) => handleChange('password', value, error)
+          }}
         />
         <SignUpInputContainer
-          title='닉네임'
-          essential={Boolean(true)}
-          type='text'
-          placeholder='사용자 닉네임을 입력해주세요.'
-          isButtonHidden={Boolean(false)}
-          onChange={(value, error) => handleChange('nickname', value, error)}
-          onCheckDuplicate={() => setIsNicknameChecked(true)}
+          props={{
+            title: '닉네임',
+            essential: Boolean(true),
+            type: 'text',
+            placeholder: '사용자 닉네임을 입력해주세요.',
+            isButtonHidden: Boolean(false),
+            onChange: (value, error) => handleChange('nickname', value, error),
+            onCheckDuplicate: () => setIsNicknameChecked(true)
+          }}
         />
         <SignUpInputContainer
-          title='생년월일'
-          essential={Boolean(false)}
-          type='text'
-          placeholder='YYYYDDMM'
-          isButtonHidden={Boolean(true)}
-          onChange={(value, error) => handleChange('birth', value, error)}
+          props={{
+            title: '생년월일',
+            essential: Boolean(false),
+            type: 'text',
+            placeholder: 'YYYYDDMM',
+            isButtonHidden: Boolean(true),
+            onChange: (value, error) => handleChange('birth', value, error)
+          }}
         />
       </St.SignUpContainerWrapper>
-      <SocialInputContainer handleChange={handleChange} />
-      <SignUpBtnBox onSubmit={handleSubmit} isDisabled={isDisabled} title='회원가입' />
+      <SocialInputContainer
+        props={{
+          handleChange: handleChange
+        }}
+      />
+      <SignUpBtnBox
+        props={{
+          onSubmit: handleSubmit,
+          isDisabled: isDisabled,
+          title: '회원가입'
+        }}
+
+      />
     </St.SignUpWrapper>
-  )
-}
+  );
+};
 
 const St = {
 
