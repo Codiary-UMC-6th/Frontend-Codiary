@@ -10,6 +10,7 @@ type CardProps = {
         postId: number;
         title: string;
         thumbnailImageUrl?: string;
+        createAt: string;
         authorId: number;
         author: string;
         details: string;
