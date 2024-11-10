@@ -59,7 +59,7 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
     console.log(value);
     try {
       const response = props.title === '이메일'
-        ? await get(`/members/sign-up/check-email?email=${value}`)
+        ? await get(`/api/v2/auth/sign_up/emails/check=${value}`)
         : await get(`/members/sign-up/check-nickname?nickname=${value}`);
 
       console.log(response);
