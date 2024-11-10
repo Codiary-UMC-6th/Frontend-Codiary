@@ -5,12 +5,31 @@ import { useParams } from "react-router-dom";
 import { AddModal } from "../modal/AddModal";
 import Card from "../main/Card";
 
-const TeamDiary = ({ isManager }) => {
+interface Project {
+  projectId: Number;
+  projectName: string;
+}
+
+type TeamProject = Project[];
+
+interface Diary {
+  postId: Number;
+  postTitle: string;
+  nickname: string;
+  postBody: string;
+  createdAt: any;
+  memberId: string;
+  thumbnailImageUrl: string;
+}
+
+type DiaryList = Diary[];
+
+const TeamDiary = ({ isManager }: { isManager: boolean }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [diaryList, setDiaryList] = useState([]);
+  const [diaryList, setDiaryList] = useState<DiaryList>([]);
   const { teamId } = useParams();
-  const [teamProject, setTeamProject] = useState([]);
+  const [teamProject, setTeamProject] = useState<TeamProject>([]);
 
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
@@ -43,7 +62,7 @@ const TeamDiary = ({ isManager }) => {
     fetchTeamDiary();
   }, [isAddCategoryModalOpen]);
 
-  const addCategory = async (value) => {
+  const addCategory = async (value: string) => {
     try {
       const result = await post(`/teams/${teamId}/project`, {
         projectName: value,
@@ -57,7 +76,7 @@ const TeamDiary = ({ isManager }) => {
     setTotalPages(Math.ceil(diaryList.length / 6));
   }, [diaryList]);
 
-  const handleCategoryClick = async (projectId) => {
+  const handleCategoryClick = async (projectId: Number) => {
     if (projectId == -1) {
       try {
         const response = await get(
@@ -218,7 +237,11 @@ const Pagination = styled.div`
   margin: 20px 0;
 `;
 
-const PageNum = styled.div`
+interface PageNumProps {
+  isActive: boolean;
+}
+
+const PageNum = styled.div<PageNumProps>`
   color: ${(props) => (props.isActive ? "white" : "#888888")};
   font-size: 20px;
   cursor: pointer;

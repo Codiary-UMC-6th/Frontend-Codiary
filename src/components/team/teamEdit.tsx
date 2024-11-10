@@ -40,13 +40,13 @@ const TeamEdit = () => {
   return (
     <TeamForm>
       <TeamAddUi
-        onChangeName={(e) => setName(e.target.value)}
-        onChangeEmail={(e) => setEmail(e.target.value)}
-        onChangeIntro={(e) => setIntro(e.target.value)}
-        onChangeGithub={(e) => setGithub(e.target.value)}
-        onChangeDiscord={(e) => setDiscord(e.target.value)}
-        onChangeLinked={(e) => setLinked(e.target.value)}
-        onChangeInstagram={(e) => setInstagram(e.target.value)}
+        onChangeName={(e: any) => setName(e.target.value)}
+        onChangeEmail={(e: any) => setEmail(e.target.value)}
+        onChangeIntro={(e: any) => setIntro(e.target.value)}
+        onChangeGithub={(e: any) => setGithub(e.target.value)}
+        onChangeDiscord={(e: any) => setDiscord(e.target.value)}
+        onChangeLinked={(e: any) => setLinked(e.target.value)}
+        onChangeInstagram={(e: any) => setInstagram(e.target.value)}
         isEdit={isEdit}
       />
       <SubmitBtn type="submit" onClick={onClickEdit}>
