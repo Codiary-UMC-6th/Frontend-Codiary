@@ -21,7 +21,11 @@ const BigImg = styled.img`
     margin-right: 16px;
 `;
 
-export const BigProfileImg = ({ memberId }) => {
+interface ProfileImgProps {
+    memberId: number | undefined;
+}
+
+export const BigProfileImg = ({ memberId }: ProfileImgProps) => {
     const [url, setUrl] = useState('');
 
     const getUserImg = async () => {
@@ -49,7 +53,7 @@ export const BigProfileImg = ({ memberId }) => {
 
 }
 
-export const SmallProfileImg = ({ memberId }) => {
+export const SmallProfileImg = ({ memberId }: ProfileImgProps) => {
     const [url, setUrl] = useState('');
 
     const getUserImg = async () => {

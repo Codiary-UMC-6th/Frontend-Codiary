@@ -51,7 +51,11 @@ const NoDiary = styled.div`
     line-height: 36px;
 `;
 
-const OtherCards = ({ postId }) => {
+interface OtherCardsProps {
+    postId: number |undefined;
+}
+
+const OtherCards = ({ postId }: OtherCardsProps) => {
 
     const defaultData = {
         postId: 0,

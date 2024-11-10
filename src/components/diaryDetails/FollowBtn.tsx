@@ -63,7 +63,11 @@ const Following = styled.div`
     }
 `;
 
-const FollowBtn = ({ authorId }) => {
+interface FollowBtnProps {
+    authorId: number;
+}
+
+const FollowBtn = ({ authorId }: FollowBtnProps) => {
     const [isFollowed, setisFollowed] = useState(false);
 
     const handleFollow = async () => {
