@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import { useMutation } from '@tanstack/react-query';
+
+import React, { useState } from 'react';
 import styled from "styled-components";
 import * as Color from '../../common/Color';
 import { post } from '../../common/api';
@@ -10,6 +12,11 @@ import GoogleIcon from '../../assets/login/googleIcon.svg';
 import GithubIcon from '../../assets/login/githubIcon.svg';
 import EmailIcon from '../../assets/login/mailIcon.svg';
 import CloseBtn from '../../assets/login/closeBtn.svg';
+
+import { isAxiosError } from 'axios';
+import { postSignIn } from '../../shared/api/signin';
+import { PostLoginRequestBody } from '../../shared/api/signin/type';
+import { PATH } from '../../shared/constant/path';
 
 type LoginModalProps = {
   onClose?: React.MouseEventHandler<HTMLButtonElement>;
@@ -23,33 +30,28 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
   const setMemberId = useLoginStore((state) => state.setMemberId);
 
   const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [password,setPassword] = useState("");
 
-  const loginRequest = async () => {
+  const mutation = useMutation({
+    mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
+    onSuccess: () => {
+      alert('로그인 되었습니다');
+    },
+    onError: (error) => {
+      if (isAxiosError<{ message: string }>(error)) {
+        alert(`${error.response?.data.message}`);
+      }
+    },
+  });
+
+  const loginRequest = () => {
     const data = {
       email: userId,
-      password: password
+      password: password,
     };
-
-    console.log(data);
-    try {
-      const response = await post('/members/login', data);
-      console.log('POST 요청 결과:', response);
-      sessionStorage.setItem("accessToken", response.result.tokenInfo.accessToken);
-      setLogin();
-      setEmail(response.result.email);
-      setNickname(response.result.nickname);
-      setMemberId(response.result.memberId);
-
-      window.location.reload();
-      alert('로그인 되었습니다.');
-    } catch (error) {
-      console.error('POST 요청 실패:', error);
-      // 여기서 error type을 어떻게 지정해야 할까?
-      // alert(`${error.response}`);
-    }
-  }
-
+    mutation.mutate(data); // 데이터 전달하여 mutate 호출
+  };
+  
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
@@ -82,18 +84,17 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
         <St.LoginButton title='로그인' onClick={loginRequest}>로그인</St.LoginButton>
         <St.ButtonContainer>
           <St.IconButton><img src={NaverIcon} alt="Naver" /></St.IconButton>
-          <St.IconButton><img src={KakaorIcon} alt="Naver" /></St.IconButton>
-          <St.IconButton><img src={GoogleIcon} alt="Naver" /></St.IconButton>
-          <St.IconButton><img src={GithubIcon} alt="Naver" /></St.IconButton>
-          <St.IconButton><img src={EmailIcon} alt="Naver" /></St.IconButton>
+          <St.IconButton><img src={KakaorIcon} alt="Kakao" /></St.IconButton>
+          <St.IconButton><img src={GoogleIcon} alt="Google" /></St.IconButton>
+          <St.IconButton><img src={GithubIcon} alt="Github" /></St.IconButton>
+          <St.IconButton><img src={EmailIcon} alt="Email" /></St.IconButton>
         </St.ButtonContainer>
       </St.LoginModalWrapper>
     </St.LoginModalBackground>
-  )
+  );
 }
 
 const St = {
-
   LoginModalBackground: styled.div`
     position: fixed;
     top: 0;
@@ -101,7 +102,7 @@ const St = {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px); /* 배경 화면 블러 효과 */
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,7 +110,7 @@ const St = {
   `,
 
   LoginModalWrapper: styled.div`
-    position: relative; /* 기준 위치 설정 */
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,8 +130,7 @@ const St = {
   `,
 
   HeaderTitle: styled.h1`
-    display: block;
-    padding-top: 88px 0 0 38px;
+    padding-top: 88px;
     color: ${Color.text1};
     font-family: Pretendard;
     font-size: 32px;
@@ -183,11 +183,11 @@ const St = {
     cursor: pointer;
     margin-right: 16px;
 
-  &:checked {
-    background-color: ${Color.primary_blue};
-    border-color: ${Color.primary_blue};
-  }
-`,
+    &:checked {
+      background-color: ${Color.primary_blue};
+      border-color: ${Color.primary_blue};
+    }
+  `,
 
   LinkText: styled.a`
     margin-left: 4px;
@@ -225,7 +225,7 @@ const St = {
     align-items: center;
     width: 100%;
     max-width: 600px;
-`,
+  `,
 
   IconButton: styled.button`
     background: none;
@@ -245,5 +245,5 @@ const St = {
       width: 32px;
       height: 32px;
     }
-`,
-}
+  `,
+};
