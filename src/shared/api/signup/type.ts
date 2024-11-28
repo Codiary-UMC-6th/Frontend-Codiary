@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface postSignUpUserInfoRequest {
   email: string;
   password: string;
   nickname: string;

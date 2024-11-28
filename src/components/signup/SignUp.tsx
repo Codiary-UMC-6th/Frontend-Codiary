@@ -8,7 +8,7 @@ import { SignUpInputContainer } from "./component/SignUpInputContainer";
 import { SocialInputContainer } from "./component/SocialInputContainer";
 import { SignUpBtnBox } from "./component/SignUpBtnBox";
 
-import { post } from "@/common/api";
+import { postSignup } from "@/shared/api/signup";
 
 interface SignUpFormData {
   email: string;
@@ -79,7 +79,7 @@ export const SignUp = () => {
         alert("닉네임 중복 확인이 필요합니다.");
         return;
       }
-      const response = await post("/members/sign-up", signUpFormData);
+      const response = postSignup(signUpFormData);
       console.log("회원가입 성공", response);
       console.log(signUpFormData);
       alert("회원가입 성공");

@@ -6,7 +6,7 @@ import Input from "@/components/login/component/Input";
 import { SignUpInputTitle } from "./SignUpInputTitle";
 import { CheckDuplicateBtn } from "./CheckDuplicateBtn";
 
-import { get } from "@/common/api";
+import { getCheckEmail, getCheckNickname } from "@/shared/api/signup/index";
 
 type SignUpInputContainerType = {
   props: {
@@ -60,8 +60,8 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
     try {
       const response =
         props.title === "이메일"
-          ? await get(`/api/v2/auth/sign_up/emails/check=${value}`)
-          : await get(`/members/sign-up/check-nickname?nickname=${value}`);
+          ? await getCheckEmail(value)
+          : await getCheckNickname(value);
 
       console.log(response);
 
