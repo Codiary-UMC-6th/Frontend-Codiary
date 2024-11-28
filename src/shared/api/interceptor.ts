@@ -1,12 +1,12 @@
-import * as Sentry from '@sentry/react';
+import * as Sentry from "@sentry/react";
 
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-import { HTTPError } from './HTTPError';
-import { getReissuedToken } from './auth/index';
-import { axiosInstance } from './instance';
-import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from '../constant/api';
-import { PATH } from '../constant/path';
+import { HTTPError } from "./HTTPError";
+import { getReissuedToken } from "./auth/index";
+import { axiosInstance } from "./instance";
+import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from "../constant/api";
+import { PATH } from "../constant/path";
 
 interface ErrorResponse {
   success?: boolean;
@@ -20,9 +20,8 @@ export const handleCheckAndSetToken = (config: InternalAxiosRequestConfig) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   if (!accessToken) {
-    // window.location.replace(PATH.LOGIN);
-
-    throw new Error('토큰이 존재하지 않습니다.');
+    window.location.replace(PATH.LANDING); // 나중에 로그인 분리하고 변경
+    throw new Error("토큰이 존재하지 않습니다.");
   }
 
   config.headers.Authorization = `Bearer ${accessToken}`;
@@ -33,7 +32,8 @@ export const handleCheckAndSetToken = (config: InternalAxiosRequestConfig) => {
 export const handleTokenError = async (error: AxiosError<ErrorResponse>) => {
   const originRequest = error.config;
 
-  if (!error.response || !originRequest) throw new Error('에러가 발생했습니다.');
+  if (!error.response || !originRequest)
+    throw new Error("에러가 발생했습니다.");
 
   const { status } = error.response;
 
@@ -47,9 +47,9 @@ export const handleTokenError = async (error: AxiosError<ErrorResponse>) => {
       return axiosInstance(originRequest);
     } catch (error) {
       localStorage.removeItem(ACCESS_TOKEN_KEY);
-      // window.location.replace(PATH.LOGIN);
+      window.location.replace(PATH.LANDING); // 나중에 로그인 분리하고 변경
 
-      throw new Error('토큰 갱신에 실패하였습니다.');
+      throw new Error("토큰 갱신에 실패하였습니다.");
     }
   }
 
@@ -60,7 +60,7 @@ export const handleAPIError = (error: AxiosError<ErrorResponse>) => {
   if (!error.response) throw error;
 
   Sentry.withScope((scope) => {
-    scope.setLevel('error');
+    scope.setLevel("error");
     scope.captureMessage(`[API Error] ${window.location.href}`);
   });
 
