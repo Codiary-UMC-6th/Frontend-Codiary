@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
-import * as Color from '../../common/Color';
-import { HTMLInputTypeAttribute } from 'react';
+import styled, { css } from "styled-components";
+import * as Color from "@/common/Color";
+import { HTMLInputTypeAttribute } from "react";
 
 // Input 컴포넌트의 타입을 변경
 type InputProps = {
@@ -12,7 +12,14 @@ type InputProps = {
   disable?: boolean;
 };
 
-const Input = ({ type, placeholder, value, onChange, hasError, disable }: InputProps) => (
+const Input = ({
+  type,
+  placeholder,
+  value,
+  onChange,
+  hasError,
+  disable,
+}: InputProps) => (
   <StyledInput
     type={type}
     placeholder={placeholder}
@@ -25,13 +32,12 @@ const Input = ({ type, placeholder, value, onChange, hasError, disable }: InputP
 
 export default Input;
 
-
 const StyledInput = styled.input<InputProps>`
   background-color: ${Color.gray700};
   color: ${Color.gray300};
   width: 400px;
   height: 56px;
-  font-family: 'D2Coding';
+  font-family: "D2Coding";
   border: none;
   border-radius: 10px;
   font-size: 18px;

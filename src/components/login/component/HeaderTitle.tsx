@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 type childrenProps = {
   children?: string;

@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import * as Color from '../../common/Color'
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 type SocialInputBoxProps = {
   props: {
@@ -7,8 +7,8 @@ type SocialInputBoxProps = {
     placeholder: string;
     value?: string;
     onChange: (value: string) => void;
-  }
-}
+  };
+};
 
 export const SocialInputBox = ({ props }: SocialInputBoxProps) => {
   const handleInputChange = (event: any) => {
@@ -24,11 +24,10 @@ export const SocialInputBox = ({ props }: SocialInputBoxProps) => {
         onChange={handleInputChange}
       />
     </St.SocialInputWrapper>
-  )
-}
+  );
+};
 
 const St = {
-
   SocialInputWrapper: styled.div`
     display: flex;
     width: 420px;
@@ -46,7 +45,7 @@ const St = {
     color: ${Color.gray300};
     width: 344px;
     height: 56px;
-    font-family: 'D2Coding';
+    font-family: "D2Coding";
     border: none;
     border-radius: 10px;
     font-size: 18px;
@@ -58,4 +57,4 @@ const St = {
       color: ${Color.gray300};
     }
   `,
-}
+};

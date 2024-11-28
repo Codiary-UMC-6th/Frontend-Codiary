@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { useState, useEffect } from 'react';
 
-import SignUpTitle from '../signup/SignUpTitle';
-import { SignUpInputContainer } from '../signup/SignUpInputContainer';
-import { SocialInputContainer } from '../signup/SocialInputContainer';
-import { SignUpBtnBox } from '../signup/SignUpBtnBox';
+import SignUpTitle from '../signup/component/SignUpTitle';
+import { SignUpInputContainer } from '../signup/component/SignUpInputContainer';
+import { SocialInputContainer } from '../signup/component/SocialInputContainer';
+import { SignUpBtnBox } from '../signup/component/SignUpBtnBox';
 
 import { get, put } from "../../common/api";
 import { useLoginStore } from "../../store/LoginStore";
-import { IntroduceInputContainer } from '../signup/IntroduceInputContainer';
+import { IntroduceInputContainer } from '../signup/component/IntroduceInputContainer';
 import { useNavigate } from 'react-router-dom';
 
 export const ModifyProfile = () => {

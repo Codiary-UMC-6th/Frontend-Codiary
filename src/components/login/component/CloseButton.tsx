@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import CloseBtn from '../../assets/login/closeBtn.svg';
+import styled from "styled-components";
+import CloseBtn from "@/assets/login/closeBtn.svg";
 
 type onClickProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 type LoginButtonProps = {
   title?: string;
@@ -21,7 +21,7 @@ const StyledLoginButton = styled.button`
   background-color: ${Color.primary_blue};
   text-align: center;
   color: ${Color.text1};
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 20px;
   font-weight: 500;
   line-height: 32px;
