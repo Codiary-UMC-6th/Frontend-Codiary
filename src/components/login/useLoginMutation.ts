@@ -1,16 +1,15 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
 
-import { postSignIn } from '../../shared/api/signin';
-import { axiosInstance } from '../../shared/api/instance';
-import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from '../../shared/constant/api';
-import { PATH } from '../../shared/constant/path';
+import { postSignIn } from "@/shared/api/signin";
+import { axiosInstance } from "@/shared/api/instance";
+import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from "@/shared/constant/api";
+import { PATH } from "@/shared/constant/path";
 
 export const useLoginMutation = () => {
-
   const navigate = useNavigate();
 
   return useMutation({
@@ -30,11 +29,11 @@ export const useLoginMutation = () => {
       const { status } = error.response;
 
       if (status === HTTP_STATUS_CODE.BAD_REQUEST) {
-        alert('error');
+        alert("error");
         return;
       }
       if (status === HTTP_STATUS_CODE.NOT_FOUND) {
-        alert('error');
+        alert("error");
         return;
       }
     },
