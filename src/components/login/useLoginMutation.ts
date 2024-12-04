@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 import { useMutation } from "@tanstack/react-query";
 
 import { AxiosError } from "axios";
@@ -15,16 +13,11 @@ export const useLoginMutation = (callbacks?: { onSuccess?: () => void }) => {
     mutationFn: postSignIn,
 
     onSuccess: (data) => {
-      console.log("ㅁㄴㅇㄹ", data);
-      console.log("성공?"); // 걍 onSuccess가 안뜨는거같은데 뭐지
-      // alert(JSON.stringify(data));
-
       let accessToken = data.token_info.access_token;
       let grantType = data.token_info.grant_type;
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 
       axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
-
       callbacks?.onSuccess?.();
     },
 
