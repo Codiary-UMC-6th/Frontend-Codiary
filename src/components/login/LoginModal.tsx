@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import styled from "styled-components";
 import * as Color from "@/common/Color";
 import { useLoginStore } from "@/store/LoginStore";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 import NaverIcon from "@/assets/login/naverIcon.svg";
 import KakaorIcon from "@/assets/login/kakaoIcon.svg";
@@ -12,41 +13,39 @@ import EmailIcon from "@/assets/login/mailIcon.svg";
 import CloseBtn from "@/assets/login/closeBtn.svg";
 
 import { isAxiosError } from "axios";
-import { postSignIn } from "../../shared/api/signin";
-import { PostLoginRequestBody } from "../../shared/api/signin/type";
+import { postSignIn } from "@/shared/api/signin";
+import { PostLoginRequestBody } from "@/shared/api/signin/type";
 import { PATH } from "../../shared/constant/path";
+import { useLoginMutation } from "@/components/login/useLoginMutation";
 
 type LoginModalProps = {
   onClose?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export const LoginModal = ({ onClose }: LoginModalProps) => {
-  const { setLogin } = useLoginStore();
-  const setEmail = useLoginStore((state) => state.setEmail);
-  const setNickname = useLoginStore((state) => state.setNickname);
-  const setMemberId = useLoginStore((state) => state.setMemberId);
-
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const mutation = useMutation({
-    mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
-    onSuccess: () => {
-      alert("로그인 되었습니다");
-    },
-    onError: (error) => {
-      if (isAxiosError<{ message: string }>(error)) {
-        alert(`${error.response?.data.message}`);
-      }
-    },
-  });
+  const { mutate } = useLoginMutation();
+
+  // const mutation = useMutation({
+  //   mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
+  //   onSuccess: () => {
+  //     alert("로그인 되었습니다");
+  //   },
+  //   onError: (error) => {
+  //     if (isAxiosError<{ message: string }>(error)) {
+  //       alert(`${error.response?.data.message}`);
+  //     }
+  //   },
+  // });
 
   const loginRequest = () => {
     const data = {
-      email: userId,
+      email: email,
       password: password,
     };
-    mutation.mutate(data); // 데이터 전달하여 mutate 호출
+    mutate(data);
   };
 
   return (
@@ -59,9 +58,9 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
         <St.Input
           type="text"
           placeholder='input name = "userID"'
-          value={userId}
+          value={email}
           onChange={(event) => {
-            setUserId(event.target.value);
+            setEmail(event.target.value);
           }}
         />
         <St.Input
