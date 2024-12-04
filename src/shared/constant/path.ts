@@ -1,7 +1,7 @@
 export const PATH = {
-  ROOT: '/',
-  LANDING: '/',
+  ROOT: "/",
+  LANDING: "/",
 
-  SIGNUP: '/sign-up',
-  
+  SIGNUP: "/sign-up",
+  SIGNIN: "/sign-in",
 } as const;
