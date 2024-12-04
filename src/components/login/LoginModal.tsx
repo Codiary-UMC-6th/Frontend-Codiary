@@ -19,14 +19,19 @@ import { PATH } from "../../shared/constant/path";
 import { useLoginMutation } from "@/components/login/useLoginMutation";
 
 type LoginModalProps = {
-  onClose?: React.MouseEventHandler<HTMLButtonElement>;
+  onClose?: () => void;
 };
 
 export const LoginModal = ({ onClose }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate } = useLoginMutation();
+  const { mutate } = useLoginMutation({
+    onSuccess: () => {
+      alert("로그인에 성공했습니다.");
+      onClose?.();
+    },
+  });
 
   // const mutation = useMutation({
   //   mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),

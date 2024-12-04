@@ -10,9 +10,7 @@ import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from "@/shared/constant/api";
 import { PATH } from "@/shared/constant/path";
 import { access } from "fs";
 
-export const useLoginMutation = () => {
-  const navigate = useNavigate();
-
+export const useLoginMutation = (callbacks?: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: postSignIn,
 
@@ -27,7 +25,7 @@ export const useLoginMutation = () => {
 
       axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
 
-      navigate(PATH.ROOT);
+      callbacks?.onSuccess?.();
     },
 
     // 이 부분 에러처리 확실하게 추가
