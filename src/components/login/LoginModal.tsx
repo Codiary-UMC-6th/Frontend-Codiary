@@ -1,68 +1,71 @@
-import { useMutation } from '@tanstack/react-query';
-
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from "react";
 import styled from "styled-components";
-import * as Color from '../../common/Color';
-import { post } from '../../common/api';
-import { useLoginStore } from '../../store/LoginStore';
+import * as Color from "@/common/Color";
+import { useLoginStore } from "@/store/LoginStore";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-import NaverIcon from '../../assets/login/naverIcon.svg';
-import KakaorIcon from '../../assets/login/kakaoIcon.svg';
-import GoogleIcon from '../../assets/login/googleIcon.svg';
-import GithubIcon from '../../assets/login/githubIcon.svg';
-import EmailIcon from '../../assets/login/mailIcon.svg';
-import CloseBtn from '../../assets/login/closeBtn.svg';
+import NaverIcon from "@/assets/login/naverIcon.svg";
+import KakaorIcon from "@/assets/login/kakaoIcon.svg";
+import GoogleIcon from "@/assets/login/googleIcon.svg";
+import GithubIcon from "@/assets/login/githubIcon.svg";
+import EmailIcon from "@/assets/login/mailIcon.svg";
+import CloseBtn from "@/assets/login/closeBtn.svg";
 
-import { isAxiosError } from 'axios';
-import { postSignIn } from '../../shared/api/signin';
-import { PostLoginRequestBody } from '../../shared/api/signin/type';
-import { PATH } from '../../shared/constant/path';
+import { isAxiosError } from "axios";
+import { postSignIn } from "@/shared/api/signin";
+import { PostLoginRequestBody } from "@/shared/api/signin/type";
+import { PATH } from "../../shared/constant/path";
+import { useLoginMutation } from "@/components/login/useLoginMutation";
 
 type LoginModalProps = {
-  onClose?: React.MouseEventHandler<HTMLButtonElement>;
-}
+  onClose?: () => void;
+};
 
 export const LoginModal = ({ onClose }: LoginModalProps) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const { setLogin } = useLoginStore();
-  const setEmail = useLoginStore((state) => state.setEmail);
-  const setNickname = useLoginStore((state) => state.setNickname);
-  const setMemberId = useLoginStore((state) => state.setMemberId);
-
-  const [userId, setUserId] = useState("");
-  const [password,setPassword] = useState("");
-
-  const mutation = useMutation({
-    mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
+  const { mutate } = useLoginMutation({
     onSuccess: () => {
-      alert('로그인 되었습니다');
-    },
-    onError: (error) => {
-      if (isAxiosError<{ message: string }>(error)) {
-        alert(`${error.response?.data.message}`);
-      }
+      alert("로그인에 성공했습니다.");
+      onClose?.();
     },
   });
 
+  // const mutation = useMutation({
+  //   mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
+  //   onSuccess: () => {
+  //     alert("로그인 되었습니다");
+  //   },
+  //   onError: (error) => {
+  //     if (isAxiosError<{ message: string }>(error)) {
+  //       alert(`${error.response?.data.message}`);
+  //     }
+  //   },
+  // });
+
   const loginRequest = () => {
     const data = {
-      email: userId,
+      email: email,
       password: password,
     };
-    mutation.mutate(data); // 데이터 전달하여 mutate 호출
+    mutate(data);
   };
-  
+
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
-        <St.CloseButton onClick={onClose}><img src={CloseBtn} alt="Close" /></St.CloseButton>
+        <St.CloseButton onClick={onClose}>
+          <img src={CloseBtn} alt="Close" />
+        </St.CloseButton>
         <St.HeaderTitle>CODIARY</St.HeaderTitle>
         <St.Input
           type="text"
           placeholder='input name = "userID"'
-          value={userId}
+          value={email}
           onChange={(event) => {
-            setUserId(event.target.value);
+            setEmail(event.target.value);
           }}
         />
         <St.Input
@@ -75,24 +78,34 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
         />
         <St.LoginSettingBox>
           <St.Checkbox />
-          <St.StayLoginLabel>
-            로그인 유지하기
-          </St.StayLoginLabel>
+          <St.StayLoginLabel>로그인 유지하기</St.StayLoginLabel>
           회원이 아니신가요?
           <St.LinkText href="/sign-up">회원가입</St.LinkText>
         </St.LoginSettingBox>
-        <St.LoginButton title='로그인' onClick={loginRequest}>로그인</St.LoginButton>
+        <St.LoginButton title="로그인" onClick={loginRequest}>
+          로그인
+        </St.LoginButton>
         <St.ButtonContainer>
-          <St.IconButton><img src={NaverIcon} alt="Naver" /></St.IconButton>
-          <St.IconButton><img src={KakaorIcon} alt="Kakao" /></St.IconButton>
-          <St.IconButton><img src={GoogleIcon} alt="Google" /></St.IconButton>
-          <St.IconButton><img src={GithubIcon} alt="Github" /></St.IconButton>
-          <St.IconButton><img src={EmailIcon} alt="Email" /></St.IconButton>
+          <St.IconButton>
+            <img src={NaverIcon} alt="Naver" />
+          </St.IconButton>
+          <St.IconButton>
+            <img src={KakaorIcon} alt="Kakao" />
+          </St.IconButton>
+          <St.IconButton>
+            <img src={GoogleIcon} alt="Google" />
+          </St.IconButton>
+          <St.IconButton>
+            <img src={GithubIcon} alt="Github" />
+          </St.IconButton>
+          <St.IconButton>
+            <img src={EmailIcon} alt="Email" />
+          </St.IconButton>
         </St.ButtonContainer>
       </St.LoginModalWrapper>
     </St.LoginModalBackground>
   );
-}
+};
 
 const St = {
   LoginModalBackground: styled.div`
@@ -144,7 +157,7 @@ const St = {
     margin-bottom: 24px;
     width: 400px;
     height: 56px;
-    font-family: 'D2Coding';
+    font-family: "D2Coding";
     border: none;
     border-radius: 10px;
     font-size: 18px;
@@ -175,7 +188,7 @@ const St = {
     font-family: Pretendard;
   `,
 
-  Checkbox: styled.input.attrs({ type: 'checkbox' })`
+  Checkbox: styled.input.attrs({ type: "checkbox" })`
     appearance: none;
     border: 1px solid ${Color.gray500};
     width: 24px;
@@ -193,7 +206,7 @@ const St = {
     margin-left: 4px;
     color: ${Color.gray500};
     font-size: 16px;
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     text-decoration: none;
     cursor: pointer;
     text-decoration: underline;
@@ -208,12 +221,12 @@ const St = {
     background-color: ${Color.primary_blue};
     text-align: center;
     color: ${Color.text1};
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-size: 20px;
     font-weight: 500;
     line-height: 32px;
     cursor: pointer;
-    
+
     &:hover {
       opacity: 0.8;
     }

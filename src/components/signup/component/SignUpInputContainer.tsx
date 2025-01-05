@@ -1,12 +1,12 @@
-import React, { HTMLInputTypeAttribute, useState } from 'react';
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import React, { HTMLInputTypeAttribute, useState } from "react";
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
-import Input from '../login/Input';
-import { SignUpInputTitle } from './SignUpInputTitle';
-import { CheckDuplicateBtn } from './CheckDuplicateBtn';
+import Input from "@/components/login/component/Input";
+import { SignUpInputTitle } from "./SignUpInputTitle";
+import { CheckDuplicateBtn } from "./CheckDuplicateBtn";
 
-import { get } from "../../common/api";
+import { getCheckEmail, getCheckNickname } from "@/shared/api/signup/index";
 
 type SignUpInputContainerType = {
   props: {
@@ -24,26 +24,26 @@ type SignUpInputContainerType = {
 };
 
 export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
-  const [value, setValue] = useState('');
-  const [error, setError] = useState('');
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
 
   const validateInput = (value: string) => {
     if (props.essential && !value) {
-      return '필수 입력 항목입니다.';
+      return "필수 입력 항목입니다.";
     }
 
     switch (props.title) {
-      case '이메일':
+      case "이메일":
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(value) ? '' : '올바른 형식이 아닙니다';
-      case '비밀번호':
+        return emailRegex.test(value) ? "" : "올바른 형식이 아닙니다";
+      case "비밀번호":
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        return passwordRegex.test(value) ? '' : '올바른 형식이 아닙니다';
-      case '생년월일':
+        return passwordRegex.test(value) ? "" : "올바른 형식이 아닙니다";
+      case "생년월일":
         const dateRegex = /^\d{4}\d{2}\d{2}$/;
-        return dateRegex.test(value) ? '' : '올바른 형식이 아닙니다';
+        return dateRegex.test(value) ? "" : "올바른 형식이 아닙니다";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -58,9 +58,10 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
   const checkRedundancyAPI = async () => {
     console.log(value);
     try {
-      const response = props.title === '이메일'
-        ? await get(`/api/v2/auth/sign_up/emails/check=${value}`)
-        : await get(`/members/sign-up/check-nickname?nickname=${value}`);
+      const response =
+        props.title === "이메일"
+          ? await getCheckEmail(value)
+          : await getCheckNickname(value);
 
       console.log(response);
 
@@ -74,10 +75,10 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
       if (!error.response.isSuccess) {
         setError(error.response.message);
       } else {
-        console.log('중복확인 실패', error);
+        console.log("중복확인 실패", error);
       }
     }
-  }
+  };
 
   return (
     <St.SignUpInputContainerWrapper>
@@ -94,11 +95,13 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
           />
           {error && <St.ErrorText>{error}</St.ErrorText>}
         </St.SignUpInputWrapper>
-        {!props.isButtonHidden && <CheckDuplicateBtn onClick={checkRedundancyAPI} />}
+        {!props.isButtonHidden && (
+          <CheckDuplicateBtn onClick={checkRedundancyAPI} />
+        )}
       </St.InputAndButtonWrapper>
     </St.SignUpInputContainerWrapper>
-  )
-}
+  );
+};
 
 const St = {
   SignUpInputContainerWrapper: styled.div`

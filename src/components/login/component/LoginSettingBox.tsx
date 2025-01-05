@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 const LoginSettingBox = () => (
   <StyledLoginSettingBox>
@@ -27,11 +27,10 @@ const StyledLoginSettingBox = styled.div`
 const StayLoginLabel = styled.div`
   margin-right: 76px;
   cursor: pointer;
-  font-family: Prete
-  ndard;
+  font-family: Prete ndard;
 `;
 
-const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+const Checkbox = styled.input.attrs({ type: "checkbox" })`
   appearance: none;
   border: 1px solid ${Color.gray500};
   width: 24px;
@@ -49,7 +48,7 @@ const LinkText = styled.a`
   margin-left: 4px;
   color: ${Color.gray500};
   font-size: 16px;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   text-decoration: none;
   cursor: pointer;
   text-decoration: underline;

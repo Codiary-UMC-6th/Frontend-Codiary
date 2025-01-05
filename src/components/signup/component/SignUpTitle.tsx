@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import * as Color from '../../common/Color';
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 type SignUpTitleProps = {
   children: string;
-}
+};
 
 const SignUpTitle = ({ children }: SignUpTitleProps) => (
   <StyledSignUpTitle>{children}</StyledSignUpTitle>

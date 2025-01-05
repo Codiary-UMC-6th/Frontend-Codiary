@@ -1,21 +1,17 @@
-import styled from 'styled-components'
-import * as Color from '../../common/Color';
+import styled from "styled-components";
+import * as Color from "@/common/Color";
 
 type checkUpProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-
 export const CheckDuplicateBtn = ({ onClick }: checkUpProps) => {
   return (
-    <St.StyledCheckDuplicateBtn
-      title='중복확인'
-      onClick={onClick}
-    >
+    <St.StyledCheckDuplicateBtn title="중복확인" onClick={onClick}>
       중복확인
     </St.StyledCheckDuplicateBtn>
-  )
-}
+  );
+};
 
 const St = {
   StyledCheckDuplicateBtn: styled.button`
@@ -32,5 +28,4 @@ const St = {
     font-weight: 400;
     line-height: 26px;
   `,
-}
-
+};
