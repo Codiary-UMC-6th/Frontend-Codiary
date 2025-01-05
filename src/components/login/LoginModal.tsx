@@ -11,11 +11,6 @@ import GoogleIcon from "@/assets/login/googleIcon.svg";
 import GithubIcon from "@/assets/login/githubIcon.svg";
 import EmailIcon from "@/assets/login/mailIcon.svg";
 import CloseBtn from "@/assets/login/closeBtn.svg";
-
-import { isAxiosError } from "axios";
-import { postSignIn } from "@/shared/api/signin";
-import { PostLoginRequestBody } from "@/shared/api/signin/type";
-import { PATH } from "../../shared/constant/path";
 import { useLoginMutation } from "@/components/login/useLoginMutation";
 
 type LoginModalProps = {
@@ -33,24 +28,21 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
     },
   });
 
-  // const mutation = useMutation({
-  //   mutationFn: (formData: PostLoginRequestBody) => postSignIn(formData),
-  //   onSuccess: () => {
-  //     alert("로그인 되었습니다");
-  //   },
-  //   onError: (error) => {
-  //     if (isAxiosError<{ message: string }>(error)) {
-  //       alert(`${error.response?.data.message}`);
-  //     }
-  //   },
-  // });
-
   const loginRequest = () => {
+    console.log("Login request initiated.");
+    console.log("Email:", email);
+    console.log("Password:", password);
+
     const data = {
       email: email,
       password: password,
     };
-    mutate(data);
+
+    mutate(data, {
+      onError: (error) => {
+        console.error("에러가 발생했습니다.", error);
+      },
+    });
   };
 
   return (

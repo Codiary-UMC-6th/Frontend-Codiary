@@ -23,3 +23,9 @@ export interface TokenInfo {
   refresh_token: string;
   refresh_token_expiration_time: Date;
 }
+
+export interface PostLoginErrorResponse {
+  code: string;
+  isSuccess: boolean;
+  message: string;
+}

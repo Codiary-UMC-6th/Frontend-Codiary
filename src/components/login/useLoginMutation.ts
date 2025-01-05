@@ -1,40 +1,51 @@
 import { useMutation } from "@tanstack/react-query";
-
 import { AxiosError } from "axios";
-
 import { postSignIn } from "@/shared/api/signin";
 import { axiosInstance } from "@/shared/api/instance";
 import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from "@/shared/constant/api";
-import { PATH } from "@/shared/constant/path";
-import { access } from "fs";
+import { PostLoginErrorResponse } from "@/shared/api/signin/type";
+import { useLoginStore } from "@/store/LoginStore";
 
 export const useLoginMutation = (callbacks?: { onSuccess?: () => void }) => {
+  const { setLogin } = useLoginStore();
   return useMutation({
     mutationFn: postSignIn,
 
     onSuccess: (data) => {
-      let accessToken = data.token_info.access_token;
-      let grantType = data.token_info.grant_type;
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+      const accessToken = data.token_info.access_token;
+      const grantType = data.token_info.grant_type;
 
+      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
       axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
+      setLogin(data.member_id, data.email, data.nickname);
+
       callbacks?.onSuccess?.();
     },
 
-    // 이 부분 에러처리 확실하게 추가
-    onError: (error: AxiosError) => {
-      if (!error.response) return;
+    onError: (error: AxiosError<PostLoginErrorResponse>) => {
+      if (!error.response) {
+        alert("서버와 연결할 수 없습니다. 네트워크를 확인해주세요.");
+        return;
+      }
 
-      const { status } = error.response;
+      const { status, data } = error.response;
 
       if (status === HTTP_STATUS_CODE.BAD_REQUEST) {
-        alert("잘못된 요청입니다.");
+        switch (data.code) {
+          case "MEMBER_1006":
+            alert(`${data.message}`);
+            break;
+          default:
+            alert(`잘못된 요청입니다: ${data.message}`);
+        }
         return;
       }
+
       if (status === HTTP_STATUS_CODE.FORBIDDEN) {
-        alert("존재하지 않는 이메일입니다.");
+        alert("권한이 없습니다.");
         return;
       }
+      alert(`에러가 발생했습니다. 상태 코드: ${status}`);
     },
   });
 };
