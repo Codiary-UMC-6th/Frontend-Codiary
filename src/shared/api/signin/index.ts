@@ -3,14 +3,11 @@ import { AxiosResponse } from "axios";
 import { PostLoginRequestBody, PostLoginResponse } from "./type";
 import { axiosPublicInstance } from "../instance";
 
-export const postSignIn = async ({ email, password }: PostLoginRequestBody) => {
+export const postSignIn = async (data: PostLoginRequestBody) => {
   const response = await axiosPublicInstance.post<
     PostLoginRequestBody,
     AxiosResponse<PostLoginResponse>
-  >("/auth/login", {
-    email,
-    password,
-  });
+  >("/auth/login", data);
 
   return response.data.result;
 };

@@ -100,25 +100,22 @@ const LogoutBtn = styled.button`
 `;
 
 const Navbar = () => {
-  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
+  const { isLogin, setLogin, setLogout, memberId, email, nickname } =
+    useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const openLoginModal = () => setIsLoginModalOpen(true);
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
   useEffect(() => {
-    if (sessionStorage.getItem("accessToken") == null) {
-      setLogout();
-    } else {
+    const token = sessionStorage.getItem("accessToken");
+    if (token) {
       setLogin();
+    } else {
+      setLogout();
     }
   }, []);
 
   const handleLogout = () => {
-    setLogout();
     sessionStorage.removeItem("accessToken");
+    setLogout();
     window.location.reload();
   };
 
@@ -131,14 +128,12 @@ const Navbar = () => {
             <Codiary>Codiary</Codiary>
             <Typography>*/</Typography>
           </LinkStyle>
-          {isLogin ? (
+          {isLogin && (
             <>
               <NavStyle to="/">홈</NavStyle>
               <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
-              <Dropdown></Dropdown>
+              <Dropdown />
             </>
-          ) : (
-            <></>
           )}
         </Left>
         <Right>
@@ -149,11 +144,15 @@ const Navbar = () => {
               <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
             </>
           ) : (
-            <LoginBtn onClick={openLoginModal}>로그인</LoginBtn>
+            <LoginBtn onClick={() => setIsLoginModalOpen(true)}>
+              로그인
+            </LoginBtn>
           )}
         </Right>
       </Container>
-      {isLoginModalOpen && <LoginModal onClose={closeLoginModal} />}
+      {isLoginModalOpen && (
+        <LoginModal onClose={() => setIsLoginModalOpen(false)} />
+      )}
     </>
   );
 };
