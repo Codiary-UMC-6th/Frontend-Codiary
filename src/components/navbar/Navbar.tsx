@@ -10,6 +10,7 @@ import WriteBtn from "./WriteBtn";
 import { LoginModal } from "../login/LoginModal";
 
 import { useLoginStore } from "../../store/LoginStore";
+import { ACCESS_TOKEN_KEY } from "@/shared/constant/api";
 
 const Container = styled.div`
   display: flex;
@@ -100,23 +101,25 @@ const LogoutBtn = styled.button`
 `;
 
 const Navbar = () => {
-  const { isLogin, setLogin, setLogout, memberId, email, nickname } =
-    useLoginStore();
+  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
-      setLogin();
+      const memberId = sessionStorage.getItem("memberId");
+      const email = sessionStorage.getItem("email");
+      const nickname = sessionStorage.getItem("nickname");
+      setLogin(memberId, email, nickname);
     } else {
       setLogout();
     }
-  }, []);
+  }, [setLogin]);
 
   const handleLogout = () => {
-    sessionStorage.removeItem("accessToken");
-    setLogout();
-    window.location.reload();
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    useLoginStore.getState().setLogout();
+    console.log("로그아웃 버튼 클릭: 토큰 삭제 및 상태 초기화");
   };
 
   return (

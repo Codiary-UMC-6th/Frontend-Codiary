@@ -20,16 +20,28 @@ import "./App.css";
 
 import TeamAdd from "./components/team/teamAdd.jsx";
 import TeamEdit from "./components/team/teamEdit.jsx";
+import { useLoginStore } from "@/store/LoginStore";
+import { useEffect } from "react";
+import { ACCESS_TOKEN_KEY } from "@/shared/constant/api";
 
 function App() {
-  // 인증 코드가 있는지 확인
-  const isKakaoCallback = new URLSearchParams(window.location.search).has(
-    "code"
+  const initializeLoginState = useLoginStore(
+    (state) => state.initializeLoginState
   );
+  const isLoading = useLoginStore((state) => state.isLoading);
+  const isLogin = useLoginStore((state) => state.isLogin);
+
+  useEffect(() => {
+    initializeLoginState();
+  }, [initializeLoginState]);
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar isLogin={isLogin} />
       <div id="main-content">
         <Routes>
           <Route
@@ -54,7 +66,6 @@ function App() {
           <Route path="/modify-profile" element={<ModifyProfile />} />
           <Route path="/oauth/callback" element={<KakaoCallback />} />
           <Route path="*" element={"404 not found"} />
-
           <Route path="/example" element={<Example />} />
         </Routes>
       </div>
