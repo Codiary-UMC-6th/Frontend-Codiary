@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ACCESS_TOKEN_KEY } from "@/shared/constant/api";
+import { ACCESS_TOKEN_KEY, GRANT_TYPE } from "@/shared/constant/api";
+import { axiosInstance } from "@/shared/api/instance";
 
 export const useLoginStore = create(
   persist(
@@ -30,8 +31,13 @@ export const useLoginStore = create(
 
       // 로그인 상태 초기화
       initializeLoginState: async () => {
-        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const isLoggedIn = !!token; // 토큰이 존재하면 로그인 상태로 설정
+        const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+        const isLoggedIn = !!accessToken; // 토큰이 존재하면 로그인 상태로 설정
+
+        if (isLoggedIn) {
+          const grantType = localStorage.getItem(GRANT_TYPE);
+          axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
+        }
         set({ isLoading: false, isLogin: isLoggedIn });
         console.log(
           `로그인 상태 복구: ${isLoggedIn ? "로그인됨" : "로그아웃됨"}`

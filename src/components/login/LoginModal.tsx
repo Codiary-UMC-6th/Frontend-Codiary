@@ -30,10 +30,6 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
   });
 
   const loginRequest = () => {
-    console.log("Login request initiated.");
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     const data = {
       email: email,
       password: password,
