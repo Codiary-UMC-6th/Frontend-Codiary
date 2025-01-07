@@ -11,34 +11,25 @@ import { AddModal } from "../components/modal/AddModal";
 import Pagenation from "../components/main/Pagenation";
 import banner from "../assets/diary/banner.png";
 
-const Container = styled.div`
-  background-color: ${Color.background};
-`;
-
-const Banner = styled.img`
-  width: 100%;
-  height: 200px;
-  background-color: rgb(200, 200, 200);
-  display: flex;
-  margin-bottom: 52px;
-  object-fit: cover;
-`;
-
-const CardsContainer = styled.div`
-  margin: 0px 130px 0px 130px;
-  display: flex;
-  gap: 50px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
+interface DiaryDataType {
+  postId: number;
+  postTitle: string;
+  nickname: string;
+  postBody: string;
+  createdAt: string;
+  memberId: number;
+  thumbnailImageUrl?: string;
+  postFileList: {
+    postFileList: any[];
+  };
+}
 
 const Main = () => {
-  const [diaryData, setDiaryData] = useState([]);
+  const [diaryData, setDiaryData] = useState<DiaryDataType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const onClickPopular = async () => {
     try {
-
       const response = await get(`/posts/poplular/list?page=${currentPage}`);
       console.log("response", response?.result.postPopularList);
 
@@ -88,17 +79,10 @@ const Main = () => {
 
         <CategoryBtn onClick={openAddCategoryModal} />
         <CardsContainer>
-          {diaryData.map((data) => (
+          {diaryData.map((post) => (
             <Card
-              key={data.postId}
-              postId={data.postId}
-              title={data.postTitle}
-              author={data.nickname}
-              details={data.postBody}
-              createdAt={data.createdAt}
-              authorId={data.memberId}
-              thumbnailImageUrl={data.thumbnailImageUrl?data.thumbnailImageUrl:""}
-              postFileList={data.postFileList.postFileList}
+              key={post.postId}
+              post={post}
             />
           ))}
         </CardsContainer>
@@ -116,5 +100,26 @@ const Main = () => {
     </>
   );
 };
+
+const Container = styled.div`
+  background-color: ${Color.background};
+`;
+
+const Banner = styled.img`
+  width: 100%;
+  height: 200px;
+  background-color: rgb(200, 200, 200);
+  display: flex;
+  margin-bottom: 52px;
+  object-fit: cover;
+`;
+
+const CardsContainer = styled.div`
+  margin: 0px 130px 0px 130px;
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
 
 export default Main;
