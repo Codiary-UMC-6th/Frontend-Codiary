@@ -5,23 +5,39 @@ import * as Color from '../../common/Color';
 import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 import DiaryDefaultImg from '../../assets/diary_default_img.png';
 
-type CardProps = {
-    props: {
-        postId: number;
-        title: string;
-        thumbnailImageUrl?: string;
-        createAt: string;
-        authorId: number;
-        author: string;
-        details: string;
-    }
+interface PostType {
+    postId: number;
+    postTitle: string;
+    nickname: string;
+    postBody: string;
+    createdAt: string;
+    memberId: number;
+    thumbnailImageUrl?: string;
+    postFileList: {
+      postFileList: any[];
+    };
+  }
+  
+interface CardProps {
+    post: PostType;
 }
 
-function Card({ props }: CardProps) {
+function Card({ post }: CardProps) {
+    const {
+        postId,
+        postTitle,
+        nickname,
+        postBody,
+        createdAt,
+        memberId,
+        thumbnailImageUrl,
+        postFileList,
+      } = post;
+
     const navigate = useNavigate();
 
     const onClickPostDetails = () => {
-        navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        navigate(`/DiaryDetails/${postId}`, { state: post });
         window.scrollTo(0, 0);
         window.location.reload();
     }
@@ -32,14 +48,14 @@ function Card({ props }: CardProps) {
 
     return (
         <CardBox onClick={onClickPostDetails}>
-            <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
+            <Img src={thumbnailImageUrl?thumbnailImageUrl:DiaryDefaultImg}/>
             <TextWrapper>
-                <Title>{props.title}</Title>
+                <Title>{postTitle}</Title>
                 <Author>
-                    <SmallProfileImg memberId={props.authorId} />
-                    <AuthorName>{props.author}</AuthorName>
+                    <SmallProfileImg memberId={memberId} />
+                    <AuthorName>{nickname}</AuthorName>
                 </Author>
-                <Details>{props.details ? makeDetailsPreview(props.details) : "내용이 없습니다."}</Details>
+                <Details>{postBody ? makeDetailsPreview(postBody) : "내용이 없습니다."}</Details>
             </TextWrapper>
         </CardBox>
     );
