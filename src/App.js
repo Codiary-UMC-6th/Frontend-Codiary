@@ -12,6 +12,7 @@ import DiaryDetails from "./pages/DiaryDetails.tsx";
 import DiaryRegister from "./components/diary/diary-register.jsx";
 import { SignUp } from "./components/signup/SignUp.tsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
+import KakaoCallback from "@/components/login/component/KakaoCallback.tsx";
 
 import Example from "./pages/Example.jsx";
 
@@ -21,12 +22,26 @@ import TeamAdd from "./components/team/teamAdd.jsx";
 import TeamEdit from "./components/team/teamEdit.jsx";
 
 function App() {
+  // 인증 코드가 있는지 확인
+  const isKakaoCallback = new URLSearchParams(window.location.search).has(
+    "code"
+  );
+
   return (
     <BrowserRouter>
       <Navbar />
       <div id="main-content">
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route
+            path="/"
+            element={
+              new URLSearchParams(window.location.search).has("code") ? (
+                <KakaoCallback />
+              ) : (
+                <Main />
+              )
+            }
+          />
           <Route path="/profile/:memberId" element={<Profile />} />
           <Route path="/team/:teamId" element={<Team />} />
           <Route path="/teamAdd" element={<TeamAdd />} />
@@ -37,6 +52,7 @@ function App() {
           <Route path="/diary-register" element={<DiaryRegister />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/modify-profile" element={<ModifyProfile />} />
+          <Route path="/oauth/callback" element={<KakaoCallback />} />
           <Route path="*" element={"404 not found"} />
 
           <Route path="/example" element={<Example />} />
