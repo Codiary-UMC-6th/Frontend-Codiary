@@ -1,38 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 import DiaryDefaultImg from '../../assets/diary_default_img.png';
+import UserProfileDefault from '../../assets/user_profile_default.svg';
 
 interface PostType {
-    postId: number;
-    postTitle: string;
-    nickname: string;
-    postBody: string;
-    createdAt: string;
-    memberId: number;
-    thumbnailImageUrl?: string;
-    postFileList: {
-      postFileList: any[];
-    };
-  }
+    author: string;
+    author_image_url: string;
+    body: string;
+    created_at: string;
+    id: number;
+    team_banner_image_url?: string;
+    team_profile_image_url?: string;
+    thumbnail_image_url?: string;
+    title: string;
+    updated_at: string;
+}
   
 interface CardProps {
     post: PostType;
 }
 
 function Card({ post }: CardProps) {
-    const {
-        postId,
-        postTitle,
-        nickname,
-        postBody,
-        createdAt,
-        memberId,
-        thumbnailImageUrl,
-        postFileList,
-      } = post;
+    const postId = post.id;
+    const postTitle = post.title;
+    const postBody = post.body;
+    const authorImageUrl = post.author_image_url;
+    const author = post.author;
+    const teamBannerImage_url = post.team_banner_image_url;
+    const teamProfileImageUrl = post.team_profile_image_url;
+    const thumbnailImageUrl = post.thumbnail_image_url;
+    const createdAt = post.created_at;
+    const updatedAt = post.updated_at;
 
     const navigate = useNavigate();
 
@@ -46,19 +47,31 @@ function Card({ post }: CardProps) {
         return content.replace(/<[^>]*>/g, '');
     }
 
+    useEffect(() => {
+        console.log(post.author_image_url);
+    })
+
     return (
         <CardBox onClick={onClickPostDetails}>
             <Img src={thumbnailImageUrl?thumbnailImageUrl:DiaryDefaultImg}/>
             <TextWrapper>
                 <Title>{postTitle}</Title>
                 <Author>
-                    <SmallProfileImg memberId={memberId} />
-                    <AuthorName>{nickname}</AuthorName>
+                    {
+                        (authorImageUrl!=="")
+                        ?
+                        <AuthorImg src={authorImageUrl}></AuthorImg>
+                        :
+                        <AuthorDefault type="image/svg+xml" data={UserProfileDefault}></AuthorDefault>
+                    }
+                    <AuthorName>{author}</AuthorName>
                 </Author>
                 <Details>{postBody ? makeDetailsPreview(postBody) : "내용이 없습니다."}</Details>
             </TextWrapper>
         </CardBox>
     );
+
+    //<SmallProfileImg authorImageUrl={authorImageUrl} />
 };
 
 export default Card;
@@ -120,6 +133,10 @@ const AuthorImg = styled.img`
     background-color: rgb(200, 200, 200);
     margin-right: 16px;
 `;
+
+const AuthorDefault = styled.object`
+    margin-right: 16px;
+`
 
 const AuthorName = styled.div`
     color: ${Color.text1};

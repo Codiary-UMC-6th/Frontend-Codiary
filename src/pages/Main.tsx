@@ -4,36 +4,27 @@ import ViewBtn from "../components/main/ViewBtn";
 import styled from "styled-components";
 import * as Color from "../common/Color";
 import CategoryBtn from "../components/main/CategoryBtn";
-import { get } from "../common/api";
 import useSearchStore from "../store/SearchStore";
 
 import { AddModal } from "../components/modal/AddModal";
 import Pagenation from "../components/main/Pagenation";
 import banner from "../assets/diary/banner.png";
 
-interface DiaryDataType {
-  postId: number;
-  postTitle: string;
-  nickname: string;
-  postBody: string;
-  createdAt: string;
-  memberId: number;
-  thumbnailImageUrl?: string;
-  postFileList: {
-    postFileList: any[];
-  };
-}
+import { getPosts } from "@/shared/api/main";
+import { Post } from "@/shared/api/main/type";
 
 const Main = () => {
-  const [diaryData, setDiaryData] = useState<DiaryDataType[]>([]);
+  const [diaryData, setDiaryData] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const onClickPopular = async () => {
-    try {
-      const response = await get(`/posts/poplular/list?page=${currentPage}`);
-      console.log("response", response?.result.postPopularList);
-
-      setDiaryData(response?.result.postPopularList);
+    try { 
+      //const response = await get(`/posts/poplular/list?page=${currentPage}`);
+      //console.log("response", response?.result.postPopularList);
+      //setDiaryData(response?.result.postPopularList);
+      const response = await getPosts(currentPage - 1, 6, 'popular');
+      setDiaryData(response.content)
+      console.log(response.content);
     } catch (error) {
       console.error("Get(Popular-List) 요청 실패:", error);
     }
@@ -41,9 +32,11 @@ const Main = () => {
 
   const onClickLatest = async () => {
     try {
-      const response = await get(`/posts/latest/list?page=${currentPage}`);
-      console.log(response?.result.postLatestList);
-      setDiaryData(response?.result.postLatestList);
+      //const response = await get(`/posts/latest/list?page=${currentPage}`);
+      //console.log(response?.result.postLatestList);
+      //setDiaryData(response?.result.postLatestList);
+      const response = await getPosts(currentPage - 1, 6, 'latest');
+      setDiaryData(response.content)
     } catch (error) {
       console.error("Get(Popular-List) 요청 실패:", error);
     }
@@ -81,7 +74,7 @@ const Main = () => {
         <CardsContainer>
           {diaryData.map((post) => (
             <Card
-              key={post.postId}
+              key={post.id}
               post={post}
             />
           ))}
@@ -96,7 +89,6 @@ const Main = () => {
         />
       )}
       <Pagenation setCurrentPage={setCurrentPage}/>
-
     </>
   );
 };
