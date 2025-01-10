@@ -10,7 +10,14 @@ import WriteBtn from "./WriteBtn";
 import { LoginModal } from "../login/LoginModal";
 
 import { useLoginStore } from "../../store/LoginStore";
-import { ACCESS_TOKEN_KEY } from "@/shared/constant/api";
+import {
+  ACCESS_TOKEN_KEY,
+  GRANT_TYPE,
+  REFRESH_TOKEN_KEY,
+} from "@/shared/constant/api";
+import { postLogout } from "@/shared/api/logout";
+import { PostLogoutRequest } from "@/shared/api/logout/type";
+import { stringify } from "querystring";
 
 const Container = styled.div`
   display: flex;
@@ -116,10 +123,31 @@ const Navbar = () => {
     }
   }, [setLogin]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     useLoginStore.getState().setLogout();
-    console.log("로그아웃 버튼 클릭: 토큰 삭제 및 상태 초기화");
+
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (refreshToken) {
+      try {
+        const logoutResponse = await postLogout({
+          refresh_token: refreshToken,
+        });
+        if (logoutResponse.isSuccess) {
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          localStorage.removeItem(GRANT_TYPE);
+          useLoginStore.getState().setLogout();
+          window.location.replace("/");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log("Refresh token is null");
+      alert("로그아웃할 수 없습니다.");
+      return;
+    }
   };
 
   return (
