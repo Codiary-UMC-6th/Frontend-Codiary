@@ -5,6 +5,81 @@ import * as Color from '../../common/Color';
 import Card from "../main/Card";
 import { get } from '../../common/api';
 
+interface OtherCardsProps {
+    postId: number | undefined;
+}
+
+interface DiaryDataType {
+    postId: number;
+    postTitle: string;
+    nickname: string;
+    postBody: string;
+    createdAt: string;
+    memberId: number;
+    thumbnailImageUrl?: string;
+    postFileList: {
+      postFileList: any[];
+    };
+  }
+
+const OtherCards = ({ postId }: OtherCardsProps) => {
+
+    const [laterDiaryData, setLaterDiaryData] = useState<DiaryDataType | null>(null);
+    const [olderDiaryData, setOlderDiaryData] = useState<DiaryDataType | null>(null);
+
+    const getadjacent = async () => {
+        try {
+            const result = await get(`/posts/${postId}/adjacent`);
+            console.log("인접 다이어리 조회 성공: ", result);
+            if (result.result.hasLater === true) {
+                setLaterDiaryData(result.result.laterPost);
+            } 
+            if (result.result.hadOlder === true) {
+                setOlderDiaryData(result.result.olderPost);
+            }
+        } catch (error) {
+            console.error("인접 다이어리 조회 실패: ", error);
+        }
+    }
+
+    useEffect(() => {
+        getadjacent();
+    }, []);
+
+    /*
+    return(
+        <Container>
+            <Box>
+                <Text>이전글</Text>
+                {olderDiaryData !== null ? 
+                    <Card
+                        post={olderDiaryData}
+                    /> :
+                    <NoDiary>다이어리가 없습니다.</NoDiary>
+                }
+            </Box>
+            <Box>
+                <Text>다음글</Text>
+                {   
+                    laterDiaryData !== null 
+                    ? 
+                    <Card post={laterDiaryData}/>
+                    :
+                    <NoDiary>다이어리가 없습니다.</NoDiary>
+                }
+            </Box>
+        </Container>
+    );
+    */
+    
+    return (
+        <Temp> 수리중... </Temp>
+    )
+}
+const Temp = styled.div`
+    background-color: green;
+`
+
 const Container = styled.div`
     display: flex;
     margin-top: 150px;
@@ -51,81 +126,5 @@ const NoDiary = styled.div`
     line-height: 36px;
 `;
 
-interface OtherCardsProps {
-    postId: number |undefined;
-}
-
-const OtherCards = ({ postId }: OtherCardsProps) => {
-
-    const defaultData = {
-        postId: 0,
-        postTitle: '',
-        nickname: '',
-        postBody:'',
-        createdAt: '',
-        memberId: 0
-    }
-
-    const [laterDiaryData, setLaterDiaryData] = useState(defaultData);
-    const [olderDiaryData, setOlderDiaryData] = useState(defaultData);
-    
-
-    const getadjacent = async () => {
-        try {
-            const result = await get(`/posts/${postId}/adjacent`);
-            console.log("인접 다이어리 조회 성공: ", result);
-            if (result.result.hasLater == true) {
-                setLaterDiaryData(result.result.laterPost);
-            } 
-            if (result.result.hadOlder == true) {
-                setOlderDiaryData(result.result.olderPost);
-            }
-        } catch (error) {
-            console.error("인접 다이어리 조회 실패: ", error);
-        }
-    }
-
-    useEffect(() => {
-        getadjacent();
-    }, []);
-
-    return(
-        <Container>
-            <Box>
-                <Text>이전글</Text>
-                {olderDiaryData.postId != 0 ? 
-                    <Card
-                        props={{
-                            postId: olderDiaryData.postId,
-                            title: olderDiaryData.postTitle,
-                            author: olderDiaryData.nickname,
-                            details: olderDiaryData.postBody,
-                            createAt: olderDiaryData.createdAt,
-                            authorId: olderDiaryData.memberId
-                        }}
-                    /> :
-                    <NoDiary>다이어리가 없습니다.</NoDiary>
-                }
-            </Box>
-            <Box>
-                <Text>다음글</Text>
-                {laterDiaryData.postId != 0 ? 
-                    <Card
-                    props={{
-                        postId: olderDiaryData.postId,
-                        title: olderDiaryData.postTitle,
-                        author: olderDiaryData.nickname,
-                        details: olderDiaryData.postBody,
-                        createAt: olderDiaryData.createdAt,
-                        authorId: olderDiaryData.memberId
-                    }}
-                    /> :
-                    <NoDiary>다이어리가 없습니다.</NoDiary>
-                }
-            </Box>
-        </Container>
-    );
-
-}
 
 export default OtherCards;

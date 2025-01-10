@@ -1,27 +1,44 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
 import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 import DiaryDefaultImg from '../../assets/diary_default_img.png';
+import UserProfileDefault from '../../assets/user_profile_default.svg';
 
-type CardProps = {
-    props: {
-        postId: number;
-        title: string;
-        thumbnailImageUrl?: string;
-        createAt: string;
-        authorId: number;
-        author: string;
-        details: string;
-    }
+interface PostType {
+    author: string;
+    author_image_url: string;
+    body: string;
+    created_at: string;
+    id: number;
+    team_banner_image_url?: string;
+    team_profile_image_url?: string;
+    thumbnail_image_url?: string;
+    title: string;
+    updated_at: string;
+}
+  
+interface CardProps {
+    post: PostType;
 }
 
-function Card({ props }: CardProps) {
+function Card({ post }: CardProps) {
+    const postId = post.id;
+    const postTitle = post.title;
+    const postBody = post.body;
+    const authorImageUrl = post.author_image_url;
+    const author = post.author;
+    const teamBannerImage_url = post.team_banner_image_url;
+    const teamProfileImageUrl = post.team_profile_image_url;
+    const thumbnailImageUrl = post.thumbnail_image_url;
+    const createdAt = post.created_at;
+    const updatedAt = post.updated_at;
+
     const navigate = useNavigate();
 
     const onClickPostDetails = () => {
-        navigate(`/DiaryDetails/${props.postId}`, { state: props });
+        navigate(`/DiaryDetails/${postId}`, { state: post });
         window.scrollTo(0, 0);
         window.location.reload();
     }
@@ -30,19 +47,31 @@ function Card({ props }: CardProps) {
         return content.replace(/<[^>]*>/g, '');
     }
 
+    useEffect(() => {
+        console.log(post.author_image_url);
+    })
+
     return (
         <CardBox onClick={onClickPostDetails}>
-            <Img src={props.thumbnailImageUrl?props.thumbnailImageUrl:DiaryDefaultImg}/>
+            <Img src={thumbnailImageUrl?thumbnailImageUrl:DiaryDefaultImg}/>
             <TextWrapper>
-                <Title>{props.title}</Title>
+                <Title>{postTitle}</Title>
                 <Author>
-                    <SmallProfileImg memberId={props.authorId} />
-                    <AuthorName>{props.author}</AuthorName>
+                    {
+                        (authorImageUrl!=="")
+                        ?
+                        <AuthorImg src={authorImageUrl}></AuthorImg>
+                        :
+                        <AuthorDefault type="image/svg+xml" data={UserProfileDefault}></AuthorDefault>
+                    }
+                    <AuthorName>{author}</AuthorName>
                 </Author>
-                <Details>{props.details ? makeDetailsPreview(props.details) : "내용이 없습니다."}</Details>
+                <Details>{postBody ? makeDetailsPreview(postBody) : "내용이 없습니다."}</Details>
             </TextWrapper>
         </CardBox>
     );
+
+    //<SmallProfileImg authorImageUrl={authorImageUrl} />
 };
 
 export default Card;
@@ -104,6 +133,10 @@ const AuthorImg = styled.img`
     background-color: rgb(200, 200, 200);
     margin-right: 16px;
 `;
+
+const AuthorDefault = styled.object`
+    margin-right: 16px;
+`
 
 const AuthorName = styled.div`
     color: ${Color.text1};
