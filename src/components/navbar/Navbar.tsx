@@ -16,8 +16,6 @@ import {
   REFRESH_TOKEN_KEY,
 } from "@/shared/constant/api";
 import { postLogout } from "@/shared/api/logout";
-import { PostLogoutRequest } from "@/shared/api/logout/type";
-import { stringify } from "querystring";
 
 const Container = styled.div`
   display: flex;
