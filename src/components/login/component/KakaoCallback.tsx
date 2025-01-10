@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { postKakaoLogin } from "@/shared/api/socialLogin";
 
 import { axiosInstance } from "@/shared/api/instance";
-import { ACCESS_TOKEN_KEY } from "@/shared/constant/api";
+import {
+  ACCESS_TOKEN_KEY,
+  GRANT_TYPE,
+  REFRESH_TOKEN_KEY,
+} from "@/shared/constant/api";
 import { useLoginStore } from "@/store/LoginStore";
 
 const KakaoCallback = () => {
@@ -24,17 +28,22 @@ const KakaoCallback = () => {
         }
 
         const response = await postKakaoLogin(code);
+        console.log(response);
 
         if (response.isSuccess) {
           alert("로그인 성공!");
           window.history.replaceState({}, document.title, "/");
+          const data = response.result;
 
-          const accessToken = response.token_info.access_token;
-          const grantType = response.token_info.grant_type;
+          const accessToken = data.token_info.access_token;
+          const refreshToken = data.token_info.refresh_token;
+          const grantType = data.token_info.grant_type;
 
           localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+          localStorage.setItem(GRANT_TYPE, grantType);
           axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
-          setLogin(response.member_id, response.email, response.nickname);
+          setLogin(data.memberId, data.email, data.nickname);
 
           navigate("/", { replace: true });
         } else {
