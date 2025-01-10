@@ -2,7 +2,12 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { postSignIn } from "@/shared/api/signin";
 import { axiosInstance } from "@/shared/api/instance";
-import { ACCESS_TOKEN_KEY, HTTP_STATUS_CODE } from "@/shared/constant/api";
+import {
+  ACCESS_TOKEN_KEY,
+  GRANT_TYPE,
+  HTTP_STATUS_CODE,
+  REFRESH_TOKEN_KEY,
+} from "@/shared/constant/api";
 import { PostLoginErrorResponse } from "@/shared/api/signin/type";
 import { useLoginStore } from "@/store/LoginStore";
 
@@ -13,9 +18,12 @@ export const useLoginMutation = (callbacks?: { onSuccess?: () => void }) => {
 
     onSuccess: (data) => {
       const accessToken = data.token_info.access_token;
+      const refreshToken = data.token_info.refresh_token;
       const grantType = data.token_info.grant_type;
 
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+      localStorage.setItem(GRANT_TYPE, grantType);
       axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
       setLogin(data.member_id, data.email, data.nickname);
 

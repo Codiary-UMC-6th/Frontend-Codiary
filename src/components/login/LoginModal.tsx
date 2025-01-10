@@ -12,6 +12,7 @@ import GithubIcon from "@/assets/login/githubIcon.svg";
 import EmailIcon from "@/assets/login/mailIcon.svg";
 import CloseBtn from "@/assets/login/closeBtn.svg";
 import { useLoginMutation } from "@/components/login/useLoginMutation";
+import { getKakaoRedirectionURL } from "@/shared/api/socialLogin";
 
 type LoginModalProps = {
   onClose?: () => void;
@@ -29,10 +30,6 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
   });
 
   const loginRequest = () => {
-    console.log("Login request initiated.");
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     const data = {
       email: email,
       password: password,
@@ -43,6 +40,21 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
         console.error("에러가 발생했습니다.", error);
       },
     });
+  };
+
+  const handleKakaoLogin = async () => {
+    try {
+      const response = await getKakaoRedirectionURL();
+      const redirectUrl = response.result.redirect_url;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        alert("Redirect URL을 가져올 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("Error fetching Kakao redirect URL:", error);
+    }
   };
 
   return (
@@ -82,7 +94,7 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
             <img src={NaverIcon} alt="Naver" />
           </St.IconButton>
           <St.IconButton>
-            <img src={KakaorIcon} alt="Kakao" />
+            <img src={KakaorIcon} alt="Kakao" onClick={handleKakaoLogin} />
           </St.IconButton>
           <St.IconButton>
             <img src={GoogleIcon} alt="Google" />

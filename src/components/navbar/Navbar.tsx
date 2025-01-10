@@ -10,6 +10,12 @@ import WriteBtn from "./WriteBtn";
 import { LoginModal } from "../login/LoginModal";
 
 import { useLoginStore } from "../../store/LoginStore";
+import {
+  ACCESS_TOKEN_KEY,
+  GRANT_TYPE,
+  REFRESH_TOKEN_KEY,
+} from "@/shared/constant/api";
+import { postLogout } from "@/shared/api/logout";
 
 const Container = styled.div`
   display: flex;
@@ -100,23 +106,46 @@ const LogoutBtn = styled.button`
 `;
 
 const Navbar = () => {
-  const { isLogin, setLogin, setLogout, memberId, email, nickname } =
-    useLoginStore();
+  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
-      setLogin();
+      const memberId = sessionStorage.getItem("memberId");
+      const email = sessionStorage.getItem("email");
+      const nickname = sessionStorage.getItem("nickname");
+      setLogin(memberId, email, nickname);
     } else {
       setLogout();
     }
-  }, []);
+  }, [setLogin]);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("accessToken");
-    setLogout();
-    window.location.reload();
+  const handleLogout = async () => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    useLoginStore.getState().setLogout();
+
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (refreshToken) {
+      try {
+        const logoutResponse = await postLogout({
+          refresh_token: refreshToken,
+        });
+        if (logoutResponse.isSuccess) {
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          localStorage.removeItem(GRANT_TYPE);
+          useLoginStore.getState().setLogout();
+          window.location.replace("/");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log("Refresh token is null");
+      alert("로그아웃할 수 없습니다.");
+      return;
+    }
   };
 
   return (
