@@ -17,7 +17,7 @@ export const getKakaoRedirectionURL = async () => {
 export const postKakaoLogin = async (code: string) => {
   const response = await axiosPublicInstance.post<
     PostKakaoAuthRequest,
-    AxiosResponse
+    AxiosResponse<PostKakaoAuthResponse>
   >(`/oauth/login/kakao?code=${code}`);
   return response.data;
 };
