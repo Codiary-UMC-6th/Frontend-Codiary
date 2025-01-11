@@ -1,17 +1,39 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { get, post, del2 } from "../../common/api";
 import { useParams } from "react-router-dom";
 
-const MemberAdd = ({ isPop, onClose }) => {
-  const [memberData, setMemberData] = useState([]);
+interface MemberAddProps {
+  isPop: boolean;
+  onClose: any;
+}
+
+interface Follower {
+  current_member_id: Number;
+  user_id: Number;
+  user_name: string;
+  photo_url: string;
+  github_url: string;
+  linkedin_url: string;
+  discord_url: string;
+  introduction: string;
+}
+
+type Followers = Follower[];
+
+const MemberAdd = ({ isPop, onClose }: MemberAddProps) => {
+  const [memberData, setMemberData] = useState<Followers>([]);
   const [selectedMembers, setSelectedMembers] = useState(new Set());
   const [showRolePopup, setShowRolePopup] = useState(false);
-  const [currentMemberId, setCurrentMemberId] = useState(null);
+  const [currentMemberId, setCurrentMemberId] = useState<Number | null>(null);
   const [memberRole, setRole] = useState("");
   const { teamId } = useParams();
 
-  const addMember = async (memberId, teamId, memberRole) => {
+  const addMember = async (
+    memberId: Number | null,
+    teamId: string | undefined,
+    memberRole: string
+  ) => {
     const addData = {
       teamId: teamId,
       memberId: memberId,
@@ -26,7 +48,7 @@ const MemberAdd = ({ isPop, onClose }) => {
     }
   };
 
-  const getTeamInfo = async (teamId) => {
+  const getTeamInfo = async (teamId: string | undefined) => {
     try {
       const result = await get(`/teams/${teamId}`);
       return result?.result;
@@ -35,7 +57,7 @@ const MemberAdd = ({ isPop, onClose }) => {
     }
   };
 
-  const deleteMember = async (memberId, teamId) => {
+  const deleteMember = async (memberId: Number, teamId: string | undefined) => {
     const deleteData = {
       memberId: memberId,
       teamId: teamId,
@@ -51,8 +73,8 @@ const MemberAdd = ({ isPop, onClose }) => {
   useEffect(() => {
     const getFollowing = async () => {
       try {
-        const result = await get("/members/following");
-        setMemberData(result.result);
+        const result = await get(`/api/v2/follow/teams/${teamId}/followers`);
+        setMemberData(result?.result.followers);
       } catch (error) {
         console.log("follower", error);
       }
@@ -61,7 +83,7 @@ const MemberAdd = ({ isPop, onClose }) => {
       try {
         const teamInfo = await getTeamInfo(teamId);
         const teamMembers = new Set(
-          teamInfo.members.map((member) => member.memberId)
+          teamInfo.members.map((member: any) => member.memberId)
         );
         setSelectedMembers(teamMembers);
       } catch (error) {
@@ -73,7 +95,7 @@ const MemberAdd = ({ isPop, onClose }) => {
     fetchTeamInfo();
   }, []);
 
-  const handleToggleMember = (memberId) => {
+  const handleToggleMember = (memberId: Number) => {
     const isSelected = selectedMembers.has(memberId);
 
     if (isSelected) {
@@ -84,7 +106,7 @@ const MemberAdd = ({ isPop, onClose }) => {
     }
   };
 
-  const handleRemoveMember = async (memberId) => {
+  const handleRemoveMember = async (memberId: Number) => {
     await deleteMember(memberId, teamId);
     setSelectedMembers((prev) => {
       const newSet = new Set(prev);
@@ -124,15 +146,15 @@ const MemberAdd = ({ isPop, onClose }) => {
             memberData.map((el, index) => (
               <FollowerBtn
                 key={index}
-                onClick={() => handleToggleMember(el.memberId)}
+                onClick={() => handleToggleMember(el.current_member_id)}
                 style={{
-                  backgroundColor: selectedMembers.has(el.memberId)
+                  backgroundColor: selectedMembers.has(el.current_member_id)
                     ? "gray"
                     : "#222222",
                   color: "white",
                 }}
               >
-                {el.nickname}
+                {el.user_name}
               </FollowerBtn>
             ))
           ) : (
@@ -169,7 +191,12 @@ const Container = styled.div`
   z-index: 1000;
 `;
 
-const CloseBtn = styled.img`
+interface CloseBtnProps {
+  onClick: any;
+  src: string;
+}
+
+const CloseBtn = styled.img<CloseBtnProps>`
   margin-left: 95%;
   &:hover {
     cursor: pointer;

@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
-import { get } from "../common/api.js";
-import { useParams } from "react-router-dom";
-import TeamProfile from "../components/team/teamProfile.jsx";
-import TeamDiary from "../components/team/teamDiary.jsx";
+import TeamProfile from "../components/team/teamProfile.js";
+import TeamDiary from "../components/team/teamDiary.js";
 const Team = () => {
   const [isManager, setIsManager] = useState(true);
 
-  const container = {
+  const container: React.CSSProperties = {
     flex: 1,
     display: "flex",
     backgroundColor: "#222222",
@@ -16,7 +14,7 @@ const Team = () => {
     alignItems: "center",
   };
 
-  const bannerContainer = {
+  const bannerContainer: React.CSSProperties = {
     width: "100%",
     backgroundColor: "#434343",
   };

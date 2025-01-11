@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { post, patch } from "../../common/api";
+import { patch } from "../../common/api";
 import TeamAddUi from "./teamAddUi";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -40,13 +40,13 @@ const TeamEdit = () => {
   return (
     <TeamForm>
       <TeamAddUi
-        onChangeName={(e) => setName(e.target.value)}
-        onChangeEmail={(e) => setEmail(e.target.value)}
-        onChangeIntro={(e) => setIntro(e.target.value)}
-        onChangeGithub={(e) => setGithub(e.target.value)}
-        onChangeDiscord={(e) => setDiscord(e.target.value)}
-        onChangeLinked={(e) => setLinked(e.target.value)}
-        onChangeInstagram={(e) => setInstagram(e.target.value)}
+        onChangeName={(e: any) => setName(e.target.value)}
+        onChangeEmail={(e: any) => setEmail(e.target.value)}
+        onChangeIntro={(e: any) => setIntro(e.target.value)}
+        onChangeGithub={(e: any) => setGithub(e.target.value)}
+        onChangeDiscord={(e: any) => setDiscord(e.target.value)}
+        onChangeLinked={(e: any) => setLinked(e.target.value)}
+        onChangeInstagram={(e: any) => setInstagram(e.target.value)}
         isEdit={isEdit}
       />
       <SubmitBtn type="submit" onClick={onClickEdit}>
