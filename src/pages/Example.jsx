@@ -16,9 +16,6 @@ import Comments from "../components/diaryDetails/comments/Comments";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
-import "./DiaryDetail.css";
-
-
 const Example = () => {
     const { state } = useLocation();
     const [memberId, setMemberId] = useState(null);

@@ -2,13 +2,12 @@ import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Color from '../../common/Color';
-import { SmallProfileImg } from '../diaryDetails/ProfileImg';
 import DiaryDefaultImg from '../../assets/diary_default_img.png';
 import UserProfileDefault from '../../assets/user_profile_default.svg';
 
 interface PostType {
     author: string;
-    author_image_url: string;
+    author_image_url?: string;
     body: string;
     created_at: string;
     id: number;
@@ -29,7 +28,7 @@ function Card({ post }: CardProps) {
     const postBody = post.body;
     const authorImageUrl = post.author_image_url;
     const author = post.author;
-    const teamBannerImage_url = post.team_banner_image_url;
+    const teamBannerImageUrl = post.team_banner_image_url;
     const teamProfileImageUrl = post.team_profile_image_url;
     const thumbnailImageUrl = post.thumbnail_image_url;
     const createdAt = post.created_at;
@@ -38,7 +37,7 @@ function Card({ post }: CardProps) {
     const navigate = useNavigate();
 
     const onClickPostDetails = () => {
-        navigate(`/DiaryDetails/${postId}`, { state: post });
+        navigate(`/DiaryDetails/${postId}`);
         window.scrollTo(0, 0);
         window.location.reload();
     }
