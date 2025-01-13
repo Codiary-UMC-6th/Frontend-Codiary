@@ -61,6 +61,15 @@ const Main = () => {
     closeAddCategoryModal();
   }
 
+  const examplePost = {
+    author: 'example author',
+    body: 'example post body',
+    created_at: '2000-00-00',
+    id: 2,
+    title: 'example title',
+    updated_at: '2000-00-00',
+  }
+
   return (
     <>
       <Container>
@@ -78,6 +87,7 @@ const Main = () => {
               post={post}
             />
           ))}
+          <Card post={examplePost}></Card>
         </CardsContainer>
       </Container>
       {isAddCategoryModalOpen && (

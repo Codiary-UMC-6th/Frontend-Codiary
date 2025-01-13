@@ -7,23 +7,6 @@ import { Button } from './FAB';
 import BookmarkIcon from "../../assets/icon_bookmark.svg";
 import FilledBookmarkIcon from "../../assets/icon_bookmark_fill.svg";
 
-
-const StyledFilledBookmarkIcon = styled(FilledBookmarkIcon)`
-    &:hover {
-        path {
-            fill: ${Color.primary_red};
-        }
-    }
-`;
-
-const StyledBookmarkIcon = styled(BookmarkIcon)`
-    &:hover {
-        path {
-            fill: ${Color.primary_red};
-        }
-    }
-`;
-
 interface BookmarkBtnProps {
     postId: number | undefined;
     memberId: number | undefined;
@@ -33,107 +16,27 @@ const BookmarkBtn = ({ postId, memberId }: BookmarkBtnProps) => {
     const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
     const [bookmarkId, setBookmarkId] = useState<number | undefined>();
 
-    async function postBookmark() {
-        const endpoint = `/bookmarks/add/${memberId}/${postId}`;
-        const data = {
-            bookmarkId: null,
-            memberId: memberId,
-            postId: postId,
-            createAt: new Date().toISOString()
-        };
-
-        try {
-            const result = await post(endpoint, data);
-            console.log("북마크 추가 결과:", result);
-            setBookmarkId(result.result.bookmarkId);
-            setIsBookmarked(true);
-        } catch (error) {
-            console.error("북마크 추가 실패:", error);
-        }
-
+    async function enableBookmark() {
     }
 
-    async function deleteBookmark() {
-        const endpoint = `/bookmarks/delete/${bookmarkId}`;
-        
-        try {
-            const result = await del(endpoint);
-            console.log("북마크 삭제 결과:", result);
-            setBookmarkId(undefined);
-            setIsBookmarked(false);
-        } catch (error) {
-            console.error("북마크 삭제 실패:", error);
-        }
-    }
-
-    async function getBookmark() {
-        const endpoint = `/members/bookmarks/list/${memberId}?page=1`;
-
-        try {
-            const result = await get(endpoint);
-            console.log("북마크 게시글 리스트 가져옴 : ", result);
-            
-            totalPage = result.result.totalPage;
-        } catch (error) {
-            console.error("북마크 게시글 리스트 조회 실패: ", error);
-        }
+    async function diableBookmark() {
 
     }
-
-    let totalPage: number;
-    async function findBookmark() {
-
-        for(let i = 1; i <= totalPage; i++) {
-            const endpoint = `/members/bookmarks/list/${memberId}?page=${i}`;
-
-            const result = await get(endpoint);
-            console.log("findBookmark 성공 : ", result);
-
-            for (let j = 0; j < 9; j++ ) {
-                if (result.result.bookmarkList[j].memberId == memberId && result.result.bookmarkList[j].postId == postId) {
-                    console.log("찾았음");
-                    setIsBookmarked(true);
-                    setBookmarkId(result.result.bookmarkList[j].bookmarkId);
-                    break;
-                } 
-            }
-
-            if (isBookmarked) {
-                break;
-            }
-        }
-    }
-
-    //컴포넌트가 마운트될 때 북마크 상태를 가져옴
-    useEffect(() => {
-        const getAndFindData = async () => {
-            try {
-                await getBookmark();
-                await findBookmark();
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        getAndFindData();
-
-    }, [memberId, postId]);
 
     const handleBookmark = () => {
-
         if (isBookmarked) {
-            deleteBookmark();
+            diableBookmark();
         } else {
-            postBookmark();
+            enableBookmark();
         }
         window.location.reload();
-
     };
 
-    return(<>
+    return(
         <Button onClick={handleBookmark}>
-            {isBookmarked ? <StyledFilledBookmarkIcon /> : <StyledBookmarkIcon />}
+            {isBookmarked ? <img src={FilledBookmarkIcon} alt='filled bookmark icon'/> : <img src={BookmarkIcon} alt='bookmark icon'/> }
         </Button>
-    </>);
+    );
 }
 
 export default BookmarkBtn;

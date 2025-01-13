@@ -4,6 +4,51 @@ import KebabIcon from "../../assets/symbols_kebab.svg";
 import * as Color from '../../common/Color';
 import { del } from '../../common/api';
 
+interface Props {
+    memberId: number | undefined;
+    authorId: number;
+    commentId: number;
+}
+
+
+const KebabModal = ({ memberId, authorId, commentId }: Props) => {
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleModal = () => {
+        setShowModal(pre => !pre);
+    }
+
+    const delComment = async () => {
+        try {
+            const result = await del(`/comments/delete/${commentId}`);
+            console.log("댓글 삭제 성공: ", result);
+        } catch (error) {
+            console.error("댓글 삭제 실패:", error);
+        }
+        toggleModal();
+    }
+
+    return(
+        <div>
+            <KebabButton onClick={toggleModal}>
+                <img src={KebabIcon} alt='kebab icon' />
+            </KebabButton>
+            {showModal && (
+                <Modal>
+                    {memberId === authorId ?
+                        <>
+                        <Button onClick={delComment}>삭제하기</Button>
+                        <Button onClick={toggleModal} >수정하기</Button>
+                        </> :
+                        <Button onClick={toggleModal}>신고하기</Button>
+                    }
+                </Modal>
+            )}
+
+        </div>
+    )
+}
+
 const KebabButton = styled.button`
     border: 0;
     background-color: transparent;
@@ -36,52 +81,5 @@ const Modal = styled.div`
     display: flex;
     flex-direction: column;
 `
-
-interface Props {
-    memberId: number | undefined;
-    authorId: number;
-    commentId: number;
-}
-
-
-const KebabModal = ({ memberId, authorId, commentId }: Props) => {
-    const [showModal, setShowModal] = useState(false);
-
-    const toggleModal = () => {
-        setShowModal(pre => !pre);
-    }
-
-    const delComment = async () => {
-        try {
-            const result = await del(`/comments/delete/${commentId}`);
-            console.log("댓글 삭제 성공: ", result);
-        } catch (error) {
-            console.error("댓글 삭제 실패:", error);
-        }
-        toggleModal();
-    }
-
-
-    return(
-        <div>
-            <KebabButton onClick={toggleModal}>
-                <KebabIcon />
-            </KebabButton>
-            {showModal && (
-                <Modal>
-                    {memberId == authorId ?
-                        <>
-                        <Button onClick={delComment}>삭제하기</Button>
-                        <Button onClick={toggleModal} >수정하기</Button>
-                        </> :
-                        <Button onClick={toggleModal}>신고하기</Button>
-                    }
-                </Modal>
-            )}
-
-        </div>
-    )
-
-}
 
 export default KebabModal;
