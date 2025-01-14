@@ -62,7 +62,7 @@ const ReplyItem = styled.div`
 `;
 
 interface CommentsProps {
-    comment: CommentsInterface;
+    comment: Comment;
     postId: number | undefined;
     memberId: number | undefined;
 }
@@ -76,9 +76,13 @@ interface CommentsInterface {
     childCommentList: CommentsInterface[] | undefined;
 }
 
-const Comments = ({ comment, postId, memberId }: CommentsProps) => {
+interface Comment {
 
-    return (
+}
+
+const CommentBox = ({ comment, postId, memberId }: CommentsProps) => {
+
+    return <></>;/*(
         <Container>
             <Box>
                 <Box>
@@ -117,8 +121,8 @@ const Comments = ({ comment, postId, memberId }: CommentsProps) => {
 
             <ReplyInput postId={postId} memberId={memberId} parentId={comment.commentId} />
         </Container>
-    );
+    );*/
   
 }
 
-export default Comments;
+export default CommentBox;
