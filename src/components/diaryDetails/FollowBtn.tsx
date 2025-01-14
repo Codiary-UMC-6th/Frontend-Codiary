@@ -2,7 +2,46 @@ import React, { useState, useEffect } from "react";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 
-import { get, post } from "../../common/api";
+import { getIsFollowed, toggleFollow } from "@/shared/api/diaryDetail";
+
+interface FollowBtnProps {
+    authorId: number;
+}
+
+const FollowBtn = ({ authorId }: FollowBtnProps) => {
+    const [isSelf, setIsSelf] = useState<boolean>(false);
+    const [isFollowed, setisFollowed] = useState<boolean>(false);
+    const loadFollow = async () => {
+        try {
+            const response = await getIsFollowed(authorId);
+            setisFollowed(response);
+            setIsSelf(false);
+        } catch (error) {
+            console.log(error);
+            setIsSelf(true);
+        }
+    }
+
+    useEffect(() => {
+        loadFollow();
+    })
+
+    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        const response = await toggleFollow(authorId);
+        setisFollowed(response.follow_status);
+    }
+
+    return(
+        isSelf
+        ?
+        <></>
+        :
+        <Button onClick={handleClick}>
+        { (isFollowed === false) ? <Follow>팔로우</Follow> : <Following>팔로잉</Following> }
+        </Button>
+    );
+}
 
 const Button = styled.button`
     border: 0;
@@ -12,7 +51,7 @@ const Button = styled.button`
 
 const Follow = styled.div`
     color: ${Color.text1};
-    width: 47px;
+    width: 55px;
     height: 26px;
     font-family: Pretendard;
     font-size: 17px;
@@ -38,7 +77,7 @@ const Follow = styled.div`
 
 const Following = styled.div`
     color: ${Color.primary_blue};
-    width: 47px;
+    width: 55px;
     height: 26px;
     font-family: Pretendard;
     font-size: 17px;
@@ -62,48 +101,5 @@ const Following = styled.div`
         border: 1px solid #225373;
     }
 `;
-
-interface FollowBtnProps {
-    authorId: number;
-}
-
-const FollowBtn = ({ authorId }: FollowBtnProps) => {
-    const [isFollowed, setisFollowed] = useState(false);
-
-    const handleFollow = async () => {
-        try {
-            const result = await post(`/members/follow/${authorId}`);
-            //console.log("팔로우 결과:", result);
-            setisFollowed(pre => ! pre);
-        } catch (error) {
-            console.error("팔로우 실패:", error);
-        }
-    }
-
-    const getIsFollowed = async() => {
-        try {
-            const result = await get(`/members/follow/${authorId}`);
-            //console.log("팔로우 조회 결과: ", result);
-            if (result.result == true) {
-                setisFollowed(true);
-            }
-        } catch (error) {
-            console.error("팔로우 조회 실패:", error);
-        }
-    }
-
-    useEffect(() => {
-        getIsFollowed();
-    }, [])
-
-    return(
-        <Button onClick={handleFollow}>
-            {(isFollowed == false) ?
-                <Follow>팔로우</Follow> :
-                <Following>팔로잉</Following>
-            }
-        </Button>
-    );
-}
 
 export default FollowBtn;

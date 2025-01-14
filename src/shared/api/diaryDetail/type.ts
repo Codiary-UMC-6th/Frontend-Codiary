@@ -19,11 +19,20 @@ export interface PostResult {
     updated_at: string;
 }
 
-export type GetPostResponse = GeneralResponse<PostResult>;
-
 export interface AuthorResult {
     introduction: string;
     user_name: string;
 }
 
+export interface IsFollowedResult {
+
+}
+
+export interface ToggleFollowResult {
+    follow_status: boolean;
+}
+
+export type GetPostResponse = GeneralResponse<PostResult>;
 export type GetAuthorResponse = GeneralResponse<AuthorResult>;
+export type GetIsFollowedResponse = GeneralResponse<boolean>;
+export type ToggleFollowResponse = GeneralResponse<ToggleFollowResult>;

@@ -40,9 +40,7 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
                     <Text>{introduction ? introduction : '소개가 없습니다.'}</Text>
                 </TextBox>
             </UserBox>
-            {authorId === memberId ?
-            <></> : 
-            <FollowBtn authorId={authorId} /> }
+            <FollowBtn authorId={authorId} /> 
         </Container>
     );
 }
