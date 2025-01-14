@@ -12,7 +12,7 @@ import KebabModal from "../components/diaryDetails/KebabModal";
 import FAB from "../components/diaryDetails/FAB";
 import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
-import Comments from "../components/diaryDetails/comments/Comments";
+import Comments from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 

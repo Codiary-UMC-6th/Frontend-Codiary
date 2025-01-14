@@ -32,9 +32,6 @@ const Main = () => {
 
   const onClickLatest = async () => {
     try {
-      //const response = await get(`/posts/latest/list?page=${currentPage}`);
-      //console.log(response?.result.postLatestList);
-      //setDiaryData(response?.result.postLatestList);
       const response = await getPosts(currentPage - 1, 6, 'latest');
       setDiaryData(response.content)
     } catch (error) {
@@ -61,15 +58,6 @@ const Main = () => {
     closeAddCategoryModal();
   }
 
-  const examplePost = {
-    author: 'example author',
-    body: 'example post body',
-    created_at: '2000-00-00',
-    id: 2,
-    title: 'example title',
-    updated_at: '2000-00-00',
-  }
-
   return (
     <>
       <Container>
@@ -87,7 +75,6 @@ const Main = () => {
               post={post}
             />
           ))}
-          <Card post={examplePost}></Card>
         </CardsContainer>
       </Container>
       {isAddCategoryModalOpen && (

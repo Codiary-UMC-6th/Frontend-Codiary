@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 
 import * as Color from '../common/Color';
-import { get } from '../common/api';
 import { formatDateTime } from "../components/diaryDetails/comments/formatDate";
 import Scrap from "../assets/symbols_scrap.svg";
 import CommentIcon from "../assets/symbols_comment.svg";
@@ -12,7 +11,7 @@ import KebabModal from "../components/diaryDetails/KebabModal";
 import FAB from "../components/diaryDetails/FAB";
 import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
-import Comments from "../components/diaryDetails/comments/Comments";
+import CommentBox from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
@@ -38,8 +37,13 @@ interface CommentsInterface {
     childCommentList: CommentsInterface[] | undefined;
 }
 
+interface Comment {
+
+}
+
 function DiaryDetails() {
     const memberId = 0;
+    const { postId } = useParams<string>();
     const [post, setPost] = useState<Post>({
         coauthorIds: [],
         postCategory: "",
@@ -50,8 +54,9 @@ function DiaryDetails() {
         authorId: 0,
         createdAt: ""
     });
+
     const loadPost = async () => {
-        const response = await getPost(2);
+        const response = await getPost(Number(postId));
         console.log(response);
         setPost({
             coauthorIds: response.coauthor_ids,
@@ -64,6 +69,8 @@ function DiaryDetails() {
             createdAt: response.created_at,
         })
     }
+
+    const [comments, setComments] = useState<Comment[]>([]);
 
     useEffect(() => {
         loadPost();
@@ -80,7 +87,6 @@ function DiaryDetails() {
             console.log("replacedString", replacedString);
             return replacedString;
         });
-
         return string;
     }
     */
@@ -105,17 +111,17 @@ function DiaryDetails() {
                     <PostInfo>최초 등록일 {formatDateTime(post.createdAt)}</PostInfo>
                 </DiaryInfo>
                 <Text dangerouslySetInnerHTML={{ __html: post.details/*stringModifyForImg(state.details)*/ }}></Text>
-                <ProfileCard authorId={post.authorId} author={post.author} memberId={memberId} />
+                <ProfileCard authorId={post.authorId} author={post.author} />
                 {post.coauthorIds ? 
                 (post.coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} author={''} memberId={memberId} />
+                    <ProfileCard authorId={data} author={''} />
                 )))
                 : <></>}
                 <CommentTitle>{/*totalComments*/0}개의 댓글</CommentTitle>
                 <CommentInput postId={post.postId} memberId={memberId} />
-                {/*commentsData.map((data) => (
-                    <Comments comment={data} postId={state.postId} memberId={memberId} />
-                ))*/}
+                {comments.map((data) => (
+                    <CommentBox comment={data} postId={post.postId} memberId={memberId} />
+                ))}
             </CenterBox>
             <OtherCards postId={post.postId} />
         </Container>
@@ -124,7 +130,6 @@ function DiaryDetails() {
 
 const Container = styled.div`
     background-color : ${Color.background};
-
     display: flex;
     flex-direction: column;
     align-items: center;
