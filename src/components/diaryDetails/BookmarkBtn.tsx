@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import * as Color from "../../common/Color";
 import styled from "styled-components";
 
-import { post, del, get } from '../../common/api';
 import { Button } from './FAB';
-import BookmarkIcon from "../../assets/icon_bookmark.svg";
-import FilledBookmarkIcon from "../../assets/icon_bookmark_fill.svg";
+import BookmarkIcon from "../../assets/diaryDetail/icon_bookmark.svg";
+import FilledBookmarkIcon from "../../assets/diaryDetail/icon_bookmark_fill.svg";
+
+import { postBookmark, deleteBookmark } from '@/shared/api/diaryDetail';
 
 interface BookmarkBtnProps {
     postId: number | undefined;
@@ -16,11 +17,16 @@ const BookmarkBtn = ({ postId, memberId }: BookmarkBtnProps) => {
     const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
     const [bookmarkId, setBookmarkId] = useState<number | undefined>();
 
-    async function enableBookmark() {
+    const enableBookmark = async () => {
+        const response = await postBookmark(Number(postId));
+        console.log(response);
+        alert('북마크하였습니다.');
     }
 
-    async function diableBookmark() {
-
+    const diableBookmark = async () => {
+        const response = await deleteBookmark(Number(postId));
+        console.log(response);
+        alert('북마크를 삭제하였습니다.');
     }
 
     const handleBookmark = () => {
@@ -29,7 +35,7 @@ const BookmarkBtn = ({ postId, memberId }: BookmarkBtnProps) => {
         } else {
             enableBookmark();
         }
-        window.location.reload();
+        //window.location.reload();
     };
 
     return(

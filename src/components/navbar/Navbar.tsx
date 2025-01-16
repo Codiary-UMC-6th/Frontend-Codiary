@@ -73,7 +73,7 @@ const Navbar = () => {
             <>
               <NavStyle to="/">홈</NavStyle>
               <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
-              <NavStyle to={""}>북마크</NavStyle>
+              <NavStyle to={"/bookmark"}>북마크</NavStyle>
               <NavStyle to={""}>통계</NavStyle>
               <Dropdown />
             </>

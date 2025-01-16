@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import * as Color from "../../common/Color";
 
-import ShareIcon from "../../assets/icon_share.svg";
+import ShareIcon from "../../assets/diaryDetail/icon_share.svg";
 import BookmarkBtn from "./BookmarkBtn";
 
 export const Button = styled.button`
