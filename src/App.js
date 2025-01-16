@@ -53,6 +53,7 @@ function App() {
               )
             }
           />
+          <Route path="/bookmark" element={<Main />} />
           <Route path="/profile/:memberId" element={<Profile />} />
           <Route path="/team/:teamId" element={<Team />} />
           <Route path="/teamAdd" element={<TeamAdd />} />
