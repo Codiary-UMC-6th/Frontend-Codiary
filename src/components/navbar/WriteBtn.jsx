@@ -5,6 +5,21 @@ import * as Color from '../../common/Color';
 
 import SymbolSvg from '../../assets/symbols_write.svg'
 
+const WriteBtn = () => {
+    const navigate = useNavigate();
+
+    const btnClick = () => {
+        navigate("/diaryEditor");
+    }
+
+    return (
+        <Btn onClick = {btnClick}>
+            글쓰기
+            <WriteSymbol src={SymbolSvg} alt={"write symbol"}/>
+        </Btn>
+    );
+}
+
 const Btn = styled.button`
     display : flex;
     align-items : center;
@@ -30,21 +45,5 @@ const WriteSymbol = styled.img`
     width : 24px;
     height : 24px;
 `
-
-const WriteBtn = () => {
-    const navigate = useNavigate();
-
-    
-    const btnClick = () => {
-        navigate("/diary");
-    }
-
-    return (
-        <Btn onClick = {btnClick}>
-            글쓰기
-            <WriteSymbol src={SymbolSvg} alt={"write symbol"}/>
-        </Btn>
-    );
-}
 
 export default WriteBtn;

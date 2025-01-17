@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
@@ -18,6 +18,12 @@ import {
 import { postLogout } from "@/shared/api/logout";
 
 const Navbar = () => {
+  const location = useLocation();
+  const [path, setPath] = useState<string>('/');
+  useEffect(() => {
+    setPath(location.pathname);
+  }, [location.pathname])
+
   const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -61,15 +67,13 @@ const Navbar = () => {
   };
 
   return (
+    (path !== '/diaryEditor')
+    ?
     <>
       <Container>
         <Left>
-          <LinkStyle to="/">
-            <Typography>{"/*"}</Typography>
-            <Codiary>Codiary</Codiary>
-            <Typography>*/</Typography>
-          </LinkStyle>
-          {isLogin && (
+          <Logo />
+          {(isLogin) && (
             <>
               <NavStyle to="/">홈</NavStyle>
               <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
@@ -81,7 +85,7 @@ const Navbar = () => {
         </Left>
         <Right>
           <SearchBox />
-          {isLogin ? (
+          {(isLogin) ? (
             <>
               <WriteBtn />
               <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
@@ -97,8 +101,28 @@ const Navbar = () => {
         <LoginModal onClose={() => setIsLoginModalOpen(false)} />
       )}
     </>
+    :
+    <Container>
+      <Left>
+        <Logo />
+      </Left>
+      <Right>
+        <TempSaveBtn>임시저장</TempSaveBtn>
+        <SaveBtn>작성하기</SaveBtn>
+      </Right>
+    </Container>
   );
 };
+
+const Logo = () => {
+  return (
+    <LinkStyle to="/">
+    <Typography>{"/*"}</Typography>
+    <Codiary>Codiary</Codiary>
+    <Typography>*/</Typography>
+  </LinkStyle>
+  );
+}
 
 const Container = styled.div`
   display: flex;
@@ -187,5 +211,49 @@ const LogoutBtn = styled.button`
   font-weight: 500;
   line-height: 32px;
 `;
+
+const TempSaveBtn = styled.div`
+  display: flex;
+  padding: 4px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  border: 2px solid ${Color.primary_red};
+
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+  color: ${Color.primary_red};
+
+  margin-right: 16px;
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+  }
+`
+
+const SaveBtn = styled.div`
+  display: flex;
+  padding: 4px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  border: 2px solid ${Color.primary_red};
+  background: ${Color.primary_red};
+
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+  color: ${Color.text1};
+
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+  }
+`
 
 export default Navbar;

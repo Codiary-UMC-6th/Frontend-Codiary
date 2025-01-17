@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import styled from 'styled-components';
 
 import Navbar from "./components/navbar/Navbar.tsx";
 import Footer from "./components/Footer.jsx";
@@ -8,6 +9,7 @@ import Team from "./pages/Team.jsx";
 
 import Calendar from "./pages/Calendar.jsx";
 import Diary from "./pages/Diary.jsx";
+import DiaryEditor from "./pages/DiaryEditor.tsx";
 import DiaryDetails from "./pages/DiaryDetails.tsx";
 import DiaryRegister from "./components/diary/diary-register.jsx";
 import { SignUp } from "./components/signup/SignUp.tsx";
@@ -41,7 +43,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar isLogin={isLogin} />
-      <div id="main-content">
+      <Container id="main-content">
         <Routes>
           <Route
             path="/"
@@ -60,6 +62,7 @@ function App() {
           <Route path="teamEdit/:teamId" element={<TeamEdit />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/diary" element={<Diary />} />
+          <Route path="/diaryEditor" element={<DiaryEditor />}></Route>
           <Route path="/DiaryDetails/:postId" element={<DiaryDetails />} />
           <Route path="/diary-register" element={<DiaryRegister />} />
           <Route path="/sign-up" element={<SignUp />} />
@@ -68,10 +71,14 @@ function App() {
           <Route path="*" element={"404 not found"} />
           <Route path="/example" element={<Example />} />
         </Routes>
-      </div>
+      </Container>
       <Footer />
     </BrowserRouter>
   );
 }
+
+const Container = styled.div`
+  flex: 1;
+`
 
 export default App;
