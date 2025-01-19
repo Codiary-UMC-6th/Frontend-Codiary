@@ -4,46 +4,51 @@ import * as Color from '../../common/Color';
 
 import DefaultIMG from '../../assets/diary_default_img.png';
 import ProfileDefulat from '../../assets/user_profile_default.svg';
+import { diary } from "@/shared/api/profile/type";
 
-const Diary = ( props ) => {
-    const createYear = props.createdAt.slice(0,4);
-    const createMonth = props.createdAt.slice(5,7);
-    const createDate = props.createdAt.slice(8,10);
-    const createdAt = createYear + "." + createMonth + "." + createDate;
+interface diaryProps {
+  diary: diary;
+}
 
-    const navigate = useNavigate();
-    
-    const handleDiaryClick = () => {
-        navigate(`/DiaryDetails/${props.postId}`, { state: props });
-        window.scrollTo(0, 0);
-        window.location.reload();
-    }
+const Diary = (props: diaryProps) => {
+  const createYear = props.diary.created_at.slice(0, 4);
+  const createMonth = props.diary.created_at.slice(5, 7);
+  const createDate = props.diary.created_at.slice(8, 10);
+  const createdAt = createYear + "." + createMonth + "." + createDate;
 
-    const makeDetailsPreview = (content) => {
-        return content.replace(/<[^>]*>/g, '').slice(0,35)+"...";
-    }
+  const navigate = useNavigate();
 
-    return (
-        <Container onClick={handleDiaryClick}>
-            <div>
-                <Img src={props.thumbnailImageUrl}></Img>               
-            </div>
-            <div>
-                <Title>{props.title}</Title>
-                <Content>{makeDetailsPreview(props.details)}</Content>
-                <Writer>
-                    <WriterImg src={ProfileDefulat}></WriterImg>
-                    <WriterName>{props.author}</WriterName>
-                </Writer>
-                <Date>{createdAt}</Date>
-            </div>
-        </Container>
-    );
+  const handleDiaryClick = () => {
+    navigate(`/DiaryDetails/${props.diary.post_id}`, { state: props.diary });
+    window.scrollTo(0, 0);
+    window.location.reload();
+  }
+
+  const makeDetailsPreview = (content: string) => {
+    return content.replace(/<[^>]*>/g, '').slice(0, 35) + "...";
+  }
+
+  return (
+    <Container onClick={handleDiaryClick}>
+      <div>
+        <Img src={props.diary.thumbnail_image_url}></Img>
+      </div>
+      <TextArea>
+        <Title>{props.diary.post_title}</Title>
+        <Content>{makeDetailsPreview(props.diary.post_body)}</Content>
+        <Writer>
+          <WriterImg src={ProfileDefulat}></WriterImg>
+          <WriterName>{props.diary.author_nickname}</WriterName>
+        </Writer>
+        <Date>{createdAt}</Date>
+      </TextArea>
+    </Container>
+  );
 }
 
 const Container = styled.div`
     display : flex;
-    width: 800px;
+    width: 100%;
     margin : 0px 0px 64px 0px;
     cursor : pointer;
     border : 1px solid ${Color.background};
@@ -57,7 +62,6 @@ const Img = styled.img`
     width: 321px;
     height: 180px;
     border-radius : 5px;
-    margin : 0px 24px 0px 0px;
     object-fit: cover;
     background-color: ${Color.divider};
 `
@@ -69,11 +73,16 @@ const Title = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 36px;
+
+    flex-shrink: 0;
+    align-self: stretch;
 `
 
 const Content = styled.div`
-    width: 400px;
-    color : ${Color.text1};
+    flex-shrink: 0;
+    align-self: stretch;
+    
+    color: ${Color.text1};
     font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
@@ -111,6 +120,11 @@ const Date = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+`
+
+const TextArea = styled.div`
+  width: 311px;
+  padding: 0px 24px;
 `
 
 

@@ -2,6 +2,9 @@
   "extends": "./tsconfig.path.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"] // '@'를 src/로 매핑
+    },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
