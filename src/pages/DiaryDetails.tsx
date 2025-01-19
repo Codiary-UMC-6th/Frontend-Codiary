@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 
 import * as Color from '../common/Color';
-import { get } from '../common/api';
 import { formatDateTime } from "../components/diaryDetails/comments/formatDate";
 import Scrap from "../assets/symbols_scrap.svg";
 import CommentIcon from "../assets/symbols_comment.svg";
@@ -12,15 +11,125 @@ import KebabModal from "../components/diaryDetails/KebabModal";
 import FAB from "../components/diaryDetails/FAB";
 import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
-import Comments from "../components/diaryDetails/comments/Comments";
+import CommentBox from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
-import "./DiaryDetail.css";
+import { getPost } from "@/shared/api/diaryDetail";
+
+interface Post {
+    coauthorIds: number[];
+    postCategory: string;
+    postId: number;
+    title: string;
+    details: string;
+    author: string;
+    authorId: number;
+    createdAt: string;
+}
+
+interface CommentsInterface {
+    memberId: number;
+    nickname: string;
+    commentId: number;
+    commentBody: string;
+    createdAt: string;
+    childCommentList: CommentsInterface[] | undefined;
+}
+
+interface Comment {
+
+}
+
+function DiaryDetails() {
+    const memberId = 0;
+    const { postId } = useParams<string>();
+    const [post, setPost] = useState<Post>({
+        coauthorIds: [],
+        postCategory: "",
+        postId: 0,
+        title: "",
+        details: "",
+        author: "",
+        authorId: 0,
+        createdAt: ""
+    });
+
+    const loadPost = async () => {
+        const response = await getPost(Number(postId));
+        console.log(response);
+        setPost({
+            coauthorIds: response.coauthor_ids,
+            postCategory: response.post_category,
+            postId: response.post_id,
+            title: response.post_title,
+            details: response.post_body,
+            author: response.author_nickname,
+            authorId: response.member_id,
+            createdAt: response.created_at,
+        })
+    }
+
+    const [comments, setComments] = useState<Comment[]>([]);
+
+    useEffect(() => {
+        loadPost();
+    }, []);
+
+    /*
+        const stringModifyForImg = (content: any) => {
+        const regex = /<img\s+id="(\w+)">/g;
+        var string = content;
+        var i = 0;
+        string = string.replace(regex, function(match: string) {
+            const replacedString = match.replace(/<img/, `<img class="postImg" src=${post.postFileList[i].url}`);
+            i += 1;
+            console.log("replacedString", replacedString);
+            return replacedString;
+        });
+        return string;
+    }
+    */
+
+    return (
+        <Container>
+            <FAB postId={post.postId} memberId={memberId} />
+            <CenterBox>
+                <Title>{post.title}</Title>
+                <CategoryChip postId={post.postId} />
+                <DiaryInfo>
+                    <NameBox>
+                        <UserName>{post.author}</UserName>
+                        <Details>
+                            <img src={Scrap} alt='scrap icon'/>
+                            <ScrapCount>{/*bookmarkCount*/0}</ScrapCount>
+                            <img src={CommentIcon} alt='comment icon'/>
+                            <CommentCount>{/*totalComments*/0}</CommentCount>
+                            <KebabModal memberId={memberId} authorId={post.authorId} commentId={0} />
+                        </Details>
+                    </NameBox>
+                    <PostInfo>최초 등록일 {formatDateTime(post.createdAt)}</PostInfo>
+                </DiaryInfo>
+                <Text dangerouslySetInnerHTML={{ __html: post.details/*stringModifyForImg(state.details)*/ }}></Text>
+                <ProfileCard authorId={post.authorId} author={post.author} />
+                {post.coauthorIds ? 
+                (post.coauthorIds.map((data) => (
+                    <ProfileCard authorId={data} author={''} />
+                )))
+                : <></>}
+                <CommentTitle>{/*totalComments*/0}개의 댓글</CommentTitle>
+                <CommentInput postId={post.postId} memberId={memberId} />
+                {comments.map((data) => (
+                    <CommentBox comment={data} postId={post.postId} memberId={memberId} />
+                ))}
+            </CenterBox>
+            <OtherCards postId={post.postId} />
+        </Container>
+    );
+}
 
 const Container = styled.div`
     background-color : ${Color.background};
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -131,165 +240,5 @@ const CommentTitle = styled.div`
     font-weight: 500;
     line-height: 32px;
 `;
-
-interface Post {
-    coauthorIds: number[];
-    postCategory: string;
-    postId: number | undefined;
-    memberId: number | undefined;
-}
-
-interface CommentsInterface {
-    memberId: number;
-    nickname: string;
-    commentId: number;
-    commentBody: string;
-    createdAt: string;
-    childCommentList: CommentsInterface[] | undefined;
-}
-
-function DiaryDetails() {
-    const { state } = useLocation();
-    const [memberId, setMemberId] = useState<number | undefined>(undefined);
-    const [bookmarkCount, setBookmarkCount] = useState<number>(0);
-    const [totalComments, setTotalComments] = useState<number>(0);
-    const [content, setContent] = useState();
-    const [commentsData, setCommentsData] = useState<CommentsInterface[]>([]);
-    const [category, setCategory] = useState<string>('');
-    const [post, setPost] = useState<Post>();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [coauthorIds, setCoauthorIds] = useState<number[]>([]);
-
-    const getPost = async () => {
-        try {
-            const response = await get(`/posts/${state.postId}`);
-            //console.log("다이어리 조회 성공: ", result);
-            const result: Post = response.result;
-            setPost(result);
-            setCategory(result.postCategory);
-            setLoading(false);
-        } catch (error) {
-            console.error("다이어리 조회 실패: ", error);
-            setLoading(false);
-        }
-    }
-
-    const getMemberId = async () => {
-        try {
-            const result = await get("/members/info");
-            //console.log("사용자 정보 조회 성공: ", result);
-            setMemberId(result.result.memberId);
-        } catch (error) {
-            console.error("사용자 정보 조회 실패:", error);
-        }
-    };
-
-    const getBookmarkCount = async () => {
-        try {
-            const result = await get(`/bookmarks/count/${state.postId}`);
-            //console.log("북마크 개수 조회 결과:", result);
-            setBookmarkCount(result.result.countBookmark);
-        } catch (error) {
-            console.error("북마크 개수 조회 실패:", error);
-        }
-    };
-
-    const getCommentsCount = async () => {
-        try {
-            const result = await get(`/comments/count/${state.postId}`);
-            console.log("댓글 개수 조회 결과:", result);
-            setTotalComments(result.result.countComments);
-        } catch (error) {
-            console.error("댓글 개수 조회 실패:", error);
-        }
-    };
-
-    const getCommentsData = async () => {
-        try {
-            const result = await get(`/posts/comments/list/${state.postId}`);
-            //console.log("댓글 조회 성공: ", result);
-            setCommentsData(result.result);
-        } catch (error) {
-            console.error("댓글 조회 실패: ", error);
-        }
-    }
-  
-    useEffect(() => {
-        getPost();
-        getMemberId();
-        getCommentsCount();
-        getCommentsData();
-        getBookmarkCount();
-
-        console.log("state", state);
-        setContent(state.details);
-    }, []);
-
-    useEffect(() => {
-        if (post) {
-            setCoauthorIds(post.coauthorIds);
-        }
-    }, [post]);
-
-
-    const stringModifyForImg = (content: any) => {
-        const regex = /<img\s+id="(\w+)">/g;
-        var string = content;
-        var i = 0;
-        string = string.replace(regex, function(match: string) {
-            const replacedString = match.replace(/<img/, `<img class="postImg" src=${state.postFileList[i].url}`);
-            i += 1;
-            console.log("replacedString", replacedString);
-            return replacedString;
-        });
-
-        return string;
-    }
-
-    /*
-    if (loading || !post) {
-        return null;
-    }
-    */
-    return (
-        <Container>
-            <FAB postId={state.postId} memberId={memberId} />
-            <CenterBox>
-                <Title>{state.title}</Title>
-                <CategoryChip postId={post?.postId} />
-                <DiaryInfo>
-                    <NameBox>
-                        <UserName>{state.author}</UserName>
-                        <Details>
-                            <Scrap />
-                            <ScrapCount>{bookmarkCount}</ScrapCount>
-                            <CommentIcon />
-                            <CommentCount>{totalComments}</CommentCount>
-                            <KebabModal memberId={memberId} authorId={state.authorId} commentId={0} />
-                        </Details>
-                    </NameBox>
-                    <PostInfo>최초 등록일 {formatDateTime(state.createdAt)}</PostInfo>
-                </DiaryInfo>
-                <Text dangerouslySetInnerHTML={{ __html: stringModifyForImg(state.details) }}></Text>
-                {/*<CodeBox>
-                    <Code>{state.details}</Code>
-                </CodeBox>*/}
-                <ProfileCard authorId={state.authorId} author={state.author} memberId={memberId} />
-                {coauthorIds ? 
-                (coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} author={''} memberId={memberId} />
-                )))
-                : <></>}
-                <CommentTitle>{totalComments}개의 댓글</CommentTitle>
-                <CommentInput postId={state.postId} memberId={memberId} />
-                {commentsData.map((data) => (
-                    <Comments comment={data} postId={state.postId} memberId={memberId} />
-                ))}
-            </CenterBox>
-            <OtherCards postId={post?.postId} />
-        </Container>
-    );
-
-}
 
 export default DiaryDetails;

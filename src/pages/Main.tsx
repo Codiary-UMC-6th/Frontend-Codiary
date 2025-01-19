@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import Card from "../components/main/Card";
 import ViewBtn from "../components/main/ViewBtn";
 import styled from "styled-components";
@@ -10,18 +12,21 @@ import { AddModal } from "../components/modal/AddModal";
 import Pagenation from "../components/main/Pagenation";
 import banner from "../assets/diary/banner.png";
 
-import { getPosts } from "@/shared/api/main";
+import { getPosts, getBookmarkPosts } from "@/shared/api/main";
 import { Post } from "@/shared/api/main/type";
 
 const Main = () => {
+  const location = useLocation();
+  const [path, setPath] = useState<string>('/');
+  useEffect(() => {
+    setPath(location.pathname);
+  }, [location.pathname])
+
   const [diaryData, setDiaryData] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const onClickPopular = async () => {
-    try { 
-      //const response = await get(`/posts/poplular/list?page=${currentPage}`);
-      //console.log("response", response?.result.postPopularList);
-      //setDiaryData(response?.result.postPopularList);
+    try {
       const response = await getPosts(currentPage - 1, 6, 'popular');
       setDiaryData(response.content)
       console.log(response.content);
@@ -32,9 +37,6 @@ const Main = () => {
 
   const onClickLatest = async () => {
     try {
-      //const response = await get(`/posts/latest/list?page=${currentPage}`);
-      //console.log(response?.result.postLatestList);
-      //setDiaryData(response?.result.postLatestList);
       const response = await getPosts(currentPage - 1, 6, 'latest');
       setDiaryData(response.content)
     } catch (error) {
@@ -48,9 +50,19 @@ const Main = () => {
 
   const { searchResults } = useSearchStore();
 
+  const loadBookmarkPosts = async () => {
+    const response = await getBookmarkPosts(currentPage -1, 6, 'string');
+    setDiaryData(response.content);
+    console.log(response);
+  }
+
   useEffect(() => {
-    onClickPopular();
-  }, [currentPage]);
+    if (path === '/') {
+      onClickPopular();
+    } else {
+      loadBookmarkPosts();
+    }
+  }, [path, currentPage]);
 
   useEffect(() => {
     if (searchResults) setDiaryData(searchResults);
@@ -64,13 +76,20 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Banner src={banner} alt='banner' />
-        <ViewBtn
-          onClickPopular={onClickPopular}
-          onClickLatest={onClickLatest}
-        />
-
-        <CategoryBtn onClick={openAddCategoryModal} />
+        {
+          (location.pathname === '/')
+          ?
+          <>
+            <Banner src={banner} alt='banner' />
+            <ViewBtn
+              onClickPopular={onClickPopular}
+              onClickLatest={onClickLatest}
+            />
+            <CategoryBtn onClick={openAddCategoryModal} />
+          </>
+          :
+          <BookmarkBanner>북마크 다이어리 목록</BookmarkBanner>
+        }
         <CardsContainer>
           {diaryData.map((post) => (
             <Card
@@ -105,6 +124,21 @@ const Banner = styled.img`
   margin-bottom: 52px;
   object-fit: cover;
 `;
+
+const BookmarkBanner = styled.div`
+  color: #FFFFFF;
+  font-family: Pretendard;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 48px;
+
+  padding: 80px 130px 64px 130px;
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`
 
 const CardsContainer = styled.div`
   margin: 0px 130px 0px 130px;

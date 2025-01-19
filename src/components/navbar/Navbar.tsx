@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
@@ -16,6 +16,113 @@ import {
   REFRESH_TOKEN_KEY,
 } from "@/shared/constant/api";
 import { postLogout } from "@/shared/api/logout";
+
+const Navbar = () => {
+  const location = useLocation();
+  const [path, setPath] = useState<string>('/');
+  useEffect(() => {
+    setPath(location.pathname);
+  }, [location.pathname])
+
+  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("accessToken");
+    if (token) {
+      const memberId = sessionStorage.getItem("memberId");
+      const email = sessionStorage.getItem("email");
+      const nickname = sessionStorage.getItem("nickname");
+      setLogin(memberId, email, nickname);
+    } else {
+      setLogout();
+    }
+  }, [setLogin]);
+
+  const handleLogout = async () => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    useLoginStore.getState().setLogout();
+
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (refreshToken) {
+      try {
+        const logoutResponse = await postLogout({
+          refresh_token: refreshToken,
+        });
+        if (logoutResponse.isSuccess) {
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          localStorage.removeItem(GRANT_TYPE);
+          useLoginStore.getState().setLogout();
+          window.location.replace("/");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log("Refresh token is null");
+      alert("로그아웃할 수 없습니다.");
+      return;
+    }
+  };
+
+  return (
+    (path !== '/diaryEditor')
+    ?
+    <>
+      <Container>
+        <Left>
+          <Logo />
+          {(isLogin) && (
+            <>
+              <NavStyle to="/">홈</NavStyle>
+              <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
+              <NavStyle to={"/bookmark"}>북마크</NavStyle>
+              <NavStyle to={""}>통계</NavStyle>
+              <Dropdown />
+            </>
+          )}
+        </Left>
+        <Right>
+          <SearchBox />
+          {(isLogin) ? (
+            <>
+              <WriteBtn />
+              <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
+            </>
+          ) : (
+            <LoginBtn onClick={() => setIsLoginModalOpen(true)}>
+              로그인
+            </LoginBtn>
+          )}
+        </Right>
+      </Container>
+      {isLoginModalOpen && (
+        <LoginModal onClose={() => setIsLoginModalOpen(false)} />
+      )}
+    </>
+    :
+    <Container>
+      <Left>
+        <Logo />
+      </Left>
+      <Right>
+        <TempSaveBtn>임시저장</TempSaveBtn>
+        <SaveBtn>작성하기</SaveBtn>
+      </Right>
+    </Container>
+  );
+};
+
+const Logo = () => {
+  return (
+    <LinkStyle to="/">
+    <Typography>{"/*"}</Typography>
+    <Codiary>Codiary</Codiary>
+    <Typography>*/</Typography>
+  </LinkStyle>
+  );
+}
 
 const Container = styled.div`
   display: flex;
@@ -105,85 +212,48 @@ const LogoutBtn = styled.button`
   line-height: 32px;
 `;
 
-const Navbar = () => {
-  const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+const TempSaveBtn = styled.div`
+  display: flex;
+  padding: 4px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  border: 2px solid ${Color.primary_red};
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
-    if (token) {
-      const memberId = sessionStorage.getItem("memberId");
-      const email = sessionStorage.getItem("email");
-      const nickname = sessionStorage.getItem("nickname");
-      setLogin(memberId, email, nickname);
-    } else {
-      setLogout();
-    }
-  }, [setLogin]);
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+  color: ${Color.primary_red};
 
-  const handleLogout = async () => {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    useLoginStore.getState().setLogout();
+  margin-right: 16px;
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+  }
+`
 
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    if (refreshToken) {
-      try {
-        const logoutResponse = await postLogout({
-          refresh_token: refreshToken,
-        });
-        if (logoutResponse.isSuccess) {
-          localStorage.removeItem(REFRESH_TOKEN_KEY);
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          localStorage.removeItem(GRANT_TYPE);
-          useLoginStore.getState().setLogout();
-          window.location.replace("/");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      console.log("Refresh token is null");
-      alert("로그아웃할 수 없습니다.");
-      return;
-    }
-  };
+const SaveBtn = styled.div`
+  display: flex;
+  padding: 4px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  border: 2px solid ${Color.primary_red};
+  background: ${Color.primary_red};
 
-  return (
-    <>
-      <Container>
-        <Left>
-          <LinkStyle to="/">
-            <Typography>{"/*"}</Typography>
-            <Codiary>Codiary</Codiary>
-            <Typography>*/</Typography>
-          </LinkStyle>
-          {isLogin && (
-            <>
-              <NavStyle to="/">홈</NavStyle>
-              <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
-              <Dropdown />
-            </>
-          )}
-        </Left>
-        <Right>
-          <SearchBox />
-          {isLogin ? (
-            <>
-              <WriteBtn />
-              <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
-            </>
-          ) : (
-            <LoginBtn onClick={() => setIsLoginModalOpen(true)}>
-              로그인
-            </LoginBtn>
-          )}
-        </Right>
-      </Container>
-      {isLoginModalOpen && (
-        <LoginModal onClose={() => setIsLoginModalOpen(false)} />
-      )}
-    </>
-  );
-};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+  color: ${Color.text1};
+
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+  }
+`
 
 export default Navbar;
