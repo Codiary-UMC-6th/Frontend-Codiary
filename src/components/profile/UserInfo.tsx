@@ -10,6 +10,57 @@ import DiscordSvg from '../../assets/profile/discord.svg'
 import LinkedinSvg from '../../assets/profile/linkedin.svg'
 import { useNavigate } from "react-router-dom";
 
+import { teamInfo, memberProfile } from "@/shared/api/profile/type";
+
+type userPersonalInfo = {
+  props: {
+    memberProfileData: memberProfile | undefined;
+    onClick: any;
+    techstackList: string[];
+    teamList: teamInfo[];
+  }
+}
+
+const UserInfo = ({props}: userPersonalInfo) => {
+  const data = props.memberProfileData;
+  const navigate = useNavigate();
+
+  const modifyProfileButtonClicked = () => {
+    navigate("/modify-profile", { state: { userInfo: props.memberProfileData } });
+    console.log("Modify profile button clicked");
+  }
+  return (
+    <Container>
+      <Top>
+        <ImageBox>
+          <Image></Image>
+        </ImageBox>
+        <UserInfoWrapper>
+          <UserName>{data?.user_name}</UserName>
+          {
+            data?.my_page ?
+              <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
+              :
+              <></>
+          }
+        </UserInfoWrapper>
+        <LinkBox>
+          <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data?.github_url}`} />
+          <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`} />
+          <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={`https://www.linkedin.com/${data?.linkedin_url}`} />
+        </LinkBox>
+      </Top>
+      <Bio>
+        {data?.introduction ? data?.introduction : "소개를 입력해주세요."}
+      </Bio>
+      <Bottom>
+        <Techstack onClick={props.onClick} techstackList={props.techstackList}></Techstack>
+        <Team teamList={props.teamList}></Team>
+      </Bottom>
+    </Container>
+  );
+}
+
 const Container = styled.div`
     display : flex;
     flex-direction : column;
@@ -89,49 +140,5 @@ const ModifyProfileButton = styled.button`
 const UserInfoWrapper = styled.div`
     width: 237px;
 `
-
-const UserInfo = (props) => {
-    const data = props.userInfoData;
-    const navigate = useNavigate();
-
-    const modifyProfileButtonClicked = () => {
-        navigate("/modify-profile");
-        console.log("Modify profile button clicked");
-    }
-    return (
-        <Container>
-            <Top>
-                <ImageBox>
-                    <Image></Image>
-                </ImageBox>
-                <UserInfoWrapper>
-                    <UserName>{data.userName}</UserName>
-                    {
-                        data.myPage ?
-                        <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
-                        :
-                        <></>
-                    }
-                </UserInfoWrapper>
-                <LinkBox>
-                    <ProfileLink type={"Github"} svg={GithubSvg} link={`https://github.com/${data.githubUrl}`} />
-                    <ProfileLink type={"Discord"} svg={DiscordSvg} link={`https://discord.com/`} />
-                    <ProfileLink type={"Linkedin"} svg={LinkedinSvg} link={`https://www.linkedin.com/${data.linkedinUrl}`} />
-                </LinkBox>
-            </Top>
-            <Bio>
-                {data.introduction ?
-                    data.introduction
-                    :
-                    "소개를 입력해주세요."
-                }
-            </Bio>
-            <Bottom>
-                <Techstack onClick={props.onClick} techStackList={props.techStackList}></Techstack>
-                <Team teamList={props.teamList}></Team>
-            </Bottom>
-        </Container>
-    );
-}
 
 export default UserInfo;

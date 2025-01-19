@@ -7,6 +7,9 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'), // '@'를 src 폴더로 매핑
+    },
     extensions: ['.ts', '.tsx', '.js'], // .ts와 .tsx 확장자 인식
   },
   module: {
