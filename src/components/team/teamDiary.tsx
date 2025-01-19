@@ -5,12 +5,34 @@ import { useParams } from "react-router-dom";
 import { AddModal } from "../modal/AddModal";
 import Card from "../main/Card";
 
-const TeamDiary = ({ isManager }) => {
+interface Project {
+  projectId: Number;
+  projectName: string;
+}
+
+type TeamProject = Project[];
+
+interface Diary {
+  author: string;
+  author_image_url: string;
+  body: string;
+  created_at: string;
+  id: number;
+  team_banner_image_url?: string;
+  team_profile_image_url?: string;
+  thumbnail_image_url?: string;
+  title: string;
+  updated_at: string;
+}
+
+type DiaryList = Diary[];
+
+const TeamDiary = ({ isManager }: { isManager: boolean }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [diaryList, setDiaryList] = useState([]);
+  const [diaryList, setDiaryList] = useState<DiaryList>([]);
   const { teamId } = useParams();
-  const [teamProject, setTeamProject] = useState([]);
+  const [teamProject, setTeamProject] = useState<TeamProject>([]);
 
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
 
@@ -43,7 +65,7 @@ const TeamDiary = ({ isManager }) => {
     fetchTeamDiary();
   }, [isAddCategoryModalOpen]);
 
-  const addCategory = async (value) => {
+  const addCategory = async (value: string) => {
     try {
       const result = await post(`/teams/${teamId}/project`, {
         projectName: value,
@@ -57,7 +79,7 @@ const TeamDiary = ({ isManager }) => {
     setTotalPages(Math.ceil(diaryList.length / 6));
   }, [diaryList]);
 
-  const handleCategoryClick = async (projectId) => {
+  const handleCategoryClick = async (projectId: Number) => {
     if (projectId == -1) {
       try {
         const response = await get(
@@ -106,20 +128,7 @@ const TeamDiary = ({ isManager }) => {
           {diaryList &&
             diaryList
               .slice((currentPage - 1) * 6, (currentPage - 1) * 6 + 6)
-              .map((data) => (
-                <Card
-                  key={data.postId}
-                  postId={data.postId}
-                  title={data.postTitle}
-                  author={data.nickname}
-                  details={data.postBody}
-                  createdAt={data.createdAt}
-                  authorId={data.memberId}
-                  thumbnailImageUrl={
-                    data.thumbnailImageUrl ? data.thumbnailImageUrl : ""
-                  }
-                />
-              ))}
+              .map((data) => <Card key={data.id} post={data} />)}
         </DiaryContainer>
 
         <Pagination>
@@ -218,7 +227,11 @@ const Pagination = styled.div`
   margin: 20px 0;
 `;
 
-const PageNum = styled.div`
+interface PageNumProps {
+  isActive: boolean;
+}
+
+const PageNum = styled.div<PageNumProps>`
   color: ${(props) => (props.isActive ? "white" : "#888888")};
   font-size: 20px;
   cursor: pointer;

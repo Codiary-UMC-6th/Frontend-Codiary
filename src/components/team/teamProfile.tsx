@@ -1,9 +1,24 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TeamMember from "./teamMember";
 import { useNavigate, useParams } from "react-router-dom";
 import { get } from "../../common/api";
-const TeamProfile = (props) => {
+
+interface TeamData {
+  team_id: 0;
+  name: "string";
+  intro: "string";
+  admin_mail: "string";
+  profile_image_url: "string";
+  banner_image_url: "string";
+  github: "string";
+  email: "string";
+  linked_in: "string";
+  discord: "string";
+  instagram: "string";
+}
+
+const TeamProfile = (props: any) => {
   const [teamName, setTeamName] = useState("Team Name");
   const [teamUrl, setTeamUrl] = useState([]);
   const [teamDescription, setTeamDescription] = useState("Team Introduce");
@@ -13,14 +28,14 @@ const TeamProfile = (props) => {
 
   const isEdit = true;
   const { teamId } = useParams();
-  const [teamData, setTeamData] = useState(null);
+  const [teamData, setTeamData] = useState<TeamData | null>(null);
 
   const [isManager, setIsManager] = useState(true);
 
   useEffect(() => {
     const fetchTeamData = async () => {
       try {
-        const response = await get(`/teams/${teamId}`);
+        const response = await get(`api/v2/teams/${teamId}`);
         setTeamData(response.result);
         console.log(response.result);
       } catch (error) {

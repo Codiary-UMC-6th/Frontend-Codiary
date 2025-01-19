@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TeamInput from "./commons/teamInput";
-import { Link } from "react-router-dom";
 
-const TeamAddUi = (props) => {
+interface TeamAddUiProps {
+  onChangeName: (value: string) => void;
+  onChangeEmail: (value: string) => void;
+  onChangeIntro: (value: string) => void;
+  onChangeGithub: (value: string) => void;
+  onChangeDiscord: (value: string) => void;
+  onChangeLinked: (value: string) => void;
+  onChangeInstagram: (value: string) => void;
+  isEdit: boolean;
+}
+
+const TeamAddUi = (props: TeamAddUiProps) => {
   return (
     <div>
       <Title>팀 정보</Title>
@@ -44,23 +53,22 @@ const TeamAddUi = (props) => {
         <SocialDiv>
           <SocialImg
             src={`${process.env.PUBLIC_URL}/team_images/discord.png`}
-            onChange={props.onChangeDiscord}
           />
+
           <TeamInput
             placeholder={'input discord = "team discord"'}
             width="280px"
+            onChange={props.onChangeDiscord}
           />
         </SocialDiv>
         <p />
         <p />
         <SocialDiv>
-          <SocialImg
-            src={`${process.env.PUBLIC_URL}/team_images/linked.png`}
-            onChange={props.onChangeLinked}
-          />
+          <SocialImg src={`${process.env.PUBLIC_URL}/team_images/linked.png`} />
           <TeamInput
             placeholder={'input linkedin = "team linkedin"'}
             width="280px"
+            onChange={props.onChangeLinked}
           />
         </SocialDiv>
         <p />
