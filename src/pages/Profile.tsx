@@ -12,13 +12,14 @@ import CanlendarPreview from "../components/profile/CalendarPreview";
 import { AddModal } from "../components/modal/AddModal";
 import NextSVG from "../assets/profile/calendar_icon_next.svg";
 
-import { getProfile } from "@/shared/api/profile"
+import { getMemberProfile, patchTeckstackData } from "@/shared/api/profile"
+import { memberProfile } from "@/shared/api/profile/type";
 
 const Profile = () => {
   // load member info
   const { memberId } = useParams<string>();
-  const [userInfoData, setUserInfoData] = useState({});
-  const [techStackList, setTechStackList] = useState([]);
+  const [memberProfileData, setMemberProfileData] = useState<memberProfile>();
+  const [techstackList, setTechstackList] = useState<string[]>([]);
   const [teamList, setTeamList] = useState([]);
 
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
@@ -26,19 +27,21 @@ const Profile = () => {
   const openAddProjectModal = () => setIsAddProjectModalOpen(true);
   const closeAddProjectModal = () => setIsAddProjectModalOpen(false);
 
-  const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
+  const [isTechstackModalOpen, setIsTechstackModalOpen] = useState(false);
 
-  const openTechStackModal = () => setIsTechStackModalOpen(true);
-  const closeTechStackModal = () => setIsTechStackModalOpen(false);
+  const openTechstackModal = () => setIsTechstackModalOpen(true);
+  const closeTechstackModal = () => setIsTechstackModalOpen(false);
   
   const loadProfile = async () => {
-    const response = await getProfile(Number(memberId));
+    const response = await getMemberProfile(memberId);
     console.log(response);
+    setMemberProfileData(response);
+    setTechstackList(response.tech_stacks_list);
   }
 
   useEffect(() => {
     loadProfile();
-  });
+  }, []);
   /*
     useEffect(() => {
     async function getUserInfo() {
@@ -58,45 +61,45 @@ const Profile = () => {
   */
 
   // Calendar
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [days, setDays] = useState(
-    new Date(currentYear, currentMonth, 0).getDate()
-  );
-  const [selectedDay, setSelectedDay] = useState<number>(1);
+  // const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+  // const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  // const [days, setDays] = useState(
+  //   new Date(currentYear, currentMonth, 0).getDate()
+  // );
+  // const [selectedDay, setSelectedDay] = useState<number>(1);
 
-  useEffect(() => {
-    setDays(new Date(currentYear, currentMonth, 0).getDate());
-  }, [currentMonth, currentYear]);
+  // useEffect(() => {
+  //   setDays(new Date(currentYear, currentMonth, 0).getDate());
+  // }, [currentMonth, currentYear]);
 
-  const handleDayClick = (day: number) => setSelectedDay(day);
+  // const handleDayClick = (day: number) => setSelectedDay(day);
 
-  const handlePreviousMonth = () => {
-    if (currentMonth === 1) {
-      setCurrentMonth(12);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
+  // const handlePreviousMonth = () => {
+  //   if (currentMonth === 1) {
+  //     setCurrentMonth(12);
+  //     setCurrentYear(currentYear - 1);
+  //   } else {
+  //     setCurrentMonth(currentMonth - 1);
+  //   }
+  // };
 
-  const handleNextMonth = () => {
-    if (currentMonth === 12) {
-      setCurrentMonth(1);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
+  // const handleNextMonth = () => {
+  //   if (currentMonth === 12) {
+  //     setCurrentMonth(1);
+  //     setCurrentYear(currentYear + 1);
+  //   } else {
+  //     setCurrentMonth(currentMonth + 1);
+  //   }
+  // };
 
   const postAddTechStack = async (value: string) => {
     try {
-      const response = await post(`/members/techstack/${value}`);
+      const response = await patchTeckstackData(value);
       alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
       console.log(response);
-      closeTechStackModal();
+      closeTechstackModal();
       window.location.reload();
     } catch (error) {
       //if (error.response.status === 400) {
@@ -124,15 +127,20 @@ const Profile = () => {
     <>
       <Container>
         <Top>
-          <UserInfo userInfoData={userInfoData}
-            onClick={openTechStackModal}
-            techStackList={techStackList}
-            teamList={teamList}
+          <UserInfo 
+            props={{
+              memberProfileData: memberProfileData,
+              onClick: openTechstackModal,
+              techstackList: techstackList,
+              teamList: teamList,
+            }}
           />
+          {/*
           <CalendarWrapper onClick={() => navigate("/calendar")}>
               <CalendarTop>캘린더<NextIcon src={NextSVG}></NextIcon></CalendarTop>
               <CanlendarPreview></CanlendarPreview>
           </CalendarWrapper>
+          */}
         </Top>
         <MyDiary memberId={memberId} onClick={openAddProjectModal} />
       </Container>
@@ -144,12 +152,12 @@ const Profile = () => {
           onClose={closeAddProjectModal}
         />
       }
-      {isTechStackModalOpen &&
+      {isTechstackModalOpen &&
         <AddModal
           title='TECH STACK 추가하기'
           placeholder='input name = "tech_stack"'
           onAdd={postAddTechStack}
-          onClose={closeTechStackModal}
+          onClose={closeTechstackModal}
         />
       }
     </>

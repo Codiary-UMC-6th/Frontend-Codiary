@@ -12,14 +12,16 @@ import { useNavigate } from "react-router-dom";
 
 import { teamInfo, memberProfile } from "@/shared/api/profile/type";
 
-interface props {
-  memberProfileData: memberProfile | undefined;
-  onClick: any;
-  techstackList: string[];
-  teamList: teamInfo[];
+type userPersonalInfo = {
+  props: {
+    memberProfileData: memberProfile | undefined;
+    onClick: any;
+    techstackList: string[];
+    teamList: teamInfo[];
+  }
 }
 
-const UserInfo = (props: props) => {
+const UserInfo = ({props}: userPersonalInfo) => {
   const data = props.memberProfileData;
   const navigate = useNavigate();
 
