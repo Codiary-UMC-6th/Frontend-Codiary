@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.tsx";
 import Footer from "./components/Footer.jsx";
 import Main from "./pages/Main.tsx";
-import Profile from "./pages/Profile.jsx";
+import Profile from "./pages/Profile.tsx";
 import Team from "./pages/Team.jsx";
 
 import Calendar from "./pages/Calendar.jsx";

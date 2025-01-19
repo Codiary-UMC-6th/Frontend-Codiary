@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../common/Color";
-import { get, post } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
@@ -12,12 +11,15 @@ import CanlendarPreview from "../components/profile/CalendarPreview";
 import { AddModal } from "../components/modal/AddModal";
 import NextSVG from "../assets/profile/calendar_icon_next.svg";
 
+import { getMemberProfile, patchTeckstackData, postPersonalProjectData } from "@/shared/api/profile";
+import { teamInfo, memberProfile } from "@/shared/api/profile/type";
+
 const Profile = () => {
   // load member info
   const { memberId } = useParams();
-  const [userInfoData, setUserInfoData] = useState({});
-  const [techStackList, setTechStackList] = useState([]);
-  const [teamList, setTeamList] = useState([]);
+  const [memberProfileData, setMemberProfileData] = useState<memberProfile>();
+  const [techstackList, setTechstackList] = useState<string[]>([]);
+  const [teamList, setTeamList] = useState<teamInfo[]>([]);
 
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
@@ -29,22 +31,69 @@ const Profile = () => {
   const openTechStackModal = () => setIsTechStackModalOpen(true);
   const closeTechStackModal = () => setIsTechStackModalOpen(false);
 
-  useEffect(() => {
-    async function getUserInfo() {
-      try {
-        const result = await get(`/members/profile/${memberId}`);
-        console.log('GET 요청 결과:', result);
-        setUserInfoData(result.result);
-        setTechStackList(result.result.techStacksList);
-        setTeamList(result.result.teamList);
-        console.log(techStackList);
-      } catch (error) {
-        console.error('GET 요청 실패:', error);
-      }
+  async function getUserInfoData() {
+    try {
+      //const result = await get(`/members/profile/${memberId}`);
+      //console.log('GET 요청 결과:', result);
+      //setUserInfoData(result.result);
+      //setTechStackList(result.result.techStacksList);
+      //setTeamList(result.result.teamList);
+
+      const response = await getMemberProfile(memberId);
+      setMemberProfileData(response);
+      setTechstackList(response.tech_stacks_list);
+      setTeamList(response.team_list);
+
+      console.log(response);
+    } catch (error) {
+      console.error('GET 요청 실패:', error);
     }
-    getUserInfo();
+  }
+
+  useEffect(() => {
+    getUserInfoData();
   }, [memberId]);
 
+
+  const patchTechStack = async (value: string | undefined) => {
+    try {
+      // const response = await post(`/members/techstack/${value}`);
+
+      const response = await patchTeckstackData(value);
+      alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+      closeTechStackModal();
+      window.location.reload();
+    } catch (error) {
+      // if (error.response.status === 400) {
+      //   alert('TECH STACK은 JAVA, SPRING, JAVA_SCRIPT, REACT, CSS, HTML, NODE_JS만 입력 가능합니다.')
+      // } else {
+      //   alert('TECH STACK 추가를 실패했습니다.');
+      //   console.error(error.response);
+      // }
+      alert('TECH STACK은 JAVA, SPRING, JAVA_SCRIPT, REACT, CSS, HTML, NODE_JS만 입력 가능합니다.');
+      console.error(error);
+    }
+  };
+
+  
+  const postPersonalProject = async (value: string | undefined) => {
+    try {
+      // const response = await post(`/members/project/${value}`);
+
+      const response = await postPersonalProjectData(value);
+      alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
+      console.log(response);
+      closeAddProjectModal();
+      window.location.reload();
+    } catch (error) {
+      alert('프로젝트 추가를 실패했습니다.');
+      console.error(error);
+    }
+  };
+  
+
+  /*
   // Calendar
   const navigate = useNavigate();
 
@@ -78,68 +127,48 @@ const Profile = () => {
       setCurrentMonth(currentMonth + 1);
     }
   };
-
-  const postAddTechStack = async (value) => {
-    try {
-      const response = await post(`/members/techstack/${value}`);
-      alert(`TECH STACK '${value}' 추가를 성공했습니다.`);
-      console.log(response);
-      closeTechStackModal();
-      window.location.reload();
-    } catch (error) {
-      if (error.response.status === 400) {
-        alert('TECH STACK은 JAVA, SPRING, JAVA_SCRIPT, REACT, CSS, HTML, NODE_JS만 입력 가능합니다.')
-      } else {
-        alert('TECH STACK 추가를 실패했습니다.');
-        console.error(error.response);
-      }
-    }
-  };
-
-  const postAddProject = async (value) => {
-    try {
-      const response = await post(`/members/project/${value}`);
-      alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
-      console.log(response);
-      closeAddProjectModal();
-    } catch (error) {
-      alert('프로젝트 추가를 실패했습니다.');
-      console.error(error);
-    }
-  };
+  */
 
   return (
     <>
       <Container>
         <Top>
-          <UserInfo userInfoData={userInfoData}
+          <UserInfo memberProfileData={memberProfileData}
             onClick={openTechStackModal}
-            techStackList={techStackList}
+            techstackList={techstackList}
             teamList={teamList}
           />
+
+          {/*
           <CalendarWrapper onClick={() => navigate("/calendar")}>
               <CalendarTop>캘린더<NextIcon src={NextSVG}></NextIcon></CalendarTop>
               <CanlendarPreview></CanlendarPreview>
           </CalendarWrapper>
+          */}
         </Top>
         <MyDiary memberId={memberId} onClick={openAddProjectModal} />
       </Container>
-      {isAddProjectModalOpen &&
-        <AddModal
-          title='프로젝트 추가하기'
-          placeholder='input name = "project"'
-          onAdd={postAddProject}
-          onClose={closeAddProjectModal}
-        />
-      }
+
+
       {isTechStackModalOpen &&
         <AddModal
           title='TECH STACK 추가하기'
           placeholder='input name = "tech_stack"'
-          onAdd={postAddTechStack}
+          onAdd={patchTechStack}
           onClose={closeTechStackModal}
         />
       }
+      
+      {isAddProjectModalOpen &&
+        <AddModal
+          title='프로젝트 추가하기'
+          placeholder='input name = "project"'
+          onAdd={postPersonalProject}
+          onClose={closeAddProjectModal}
+        />
+      }
+
+
     </>
   );
 };
