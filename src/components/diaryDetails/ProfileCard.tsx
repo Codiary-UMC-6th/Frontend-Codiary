@@ -4,7 +4,46 @@ import * as Color from '../../common/Color';
 import styled from "styled-components";
 import FollowBtn from "./FollowBtn";
 import { BigProfileImg } from "./ProfileImg";
-import { get } from "../../common/api";
+
+import { getAuthorInfo } from "@/shared/api/diaryDetail/index"
+
+interface Profileprops{
+    authorId: number;
+    author: string;
+}
+
+const ProfileCard = ({ authorId, author }: Profileprops) => {
+    console.log('authorId', authorId);
+
+    const memberId = 0;
+    const navigate = useNavigate();
+    const [introduction, setIntroduction] = useState<String>('');
+    const [name, setName] = useState<String>('');
+
+    const loadAuthorInfo = async () => {
+        const response = await getAuthorInfo(authorId);
+        console.log(response);
+        setName(response.user_name);
+        setIntroduction(response.introduction);
+    }
+
+    useEffect(() => {
+        loadAuthorInfo();
+    });
+
+    return (
+        <Container onClick={() => navigate(`/profile/${authorId}`)}>
+            <UserBox>
+                <BigProfileImg memberId={authorId} />
+                <TextBox>
+                    <UserName>{name ? name : ''}</UserName>
+                    <Text>{introduction ? introduction : '소개가 없습니다.'}</Text>
+                </TextBox>
+            </UserBox>
+            <FollowBtn authorId={authorId} /> 
+        </Container>
+    );
+}
 
 const Container = styled.div`
     display: flex;
@@ -56,48 +95,5 @@ const Text = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
 `;
-
-interface Profileprops{
-    authorId: number;
-    author: string;
-    memberId: number | undefined;
-}
-
-const ProfileCard = ({ authorId, author, memberId }: Profileprops) => {
-    const navigate = useNavigate();
-    const [introduction, setIntroduction] = useState<String>('소개가 없습니다.');
-    const [nickName, setNickname] = useState<String>('');
-
-    const getAuthorInfo = async () => {
-        try {
-            const result = await get(`/members/profile/${authorId}`);
-            if (result.result.introduction != null) {
-                setIntroduction(result.result.introduction);
-                setNickname(result.result.userName);
-            }
-        } catch (error) {
-            console.error("작성자 정보 조회 실패: ", error);
-        }
-    }
-
-    useEffect(() => {
-        getAuthorInfo();
-    }, []);
-
-    return (
-        <Container onClick={() => navigate(`/profile/${authorId}`)}>
-            <UserBox>
-                <BigProfileImg memberId={authorId} />
-                <TextBox>
-                    <UserName>{author ? author : nickName}</UserName>
-                    <Text>{introduction}</Text>
-                </TextBox>
-            </UserBox>
-            {authorId == memberId ?
-            <></> : 
-            <FollowBtn authorId={authorId} /> }
-        </Container>
-    );
-}
 
 export default ProfileCard;
