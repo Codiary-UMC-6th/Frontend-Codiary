@@ -22,14 +22,25 @@ const StyledInput = styled.input`
   }
 `;
 
-const TeamInput = ({ placeholder, width, height, onChange }) => {
+interface TeamInputProps {
+  placeholder?: string;
+  width?: string;
+  height?: string;
+  onChange: (value: string) => void;
+}
+
+const TeamInput: React.FC<TeamInputProps> = ({
+  placeholder,
+  width,
+  height,
+  onChange,
+}) => {
   return (
-    <StyledInput
+    <input
       type="text"
       placeholder={placeholder}
-      width={width}
-      height={height}
-      onChange={onChange}
+      style={{ width, height }}
+      onChange={(e) => onChange(e.target.value)}
     />
   );
 };
