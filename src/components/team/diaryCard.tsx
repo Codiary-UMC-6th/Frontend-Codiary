@@ -1,20 +1,30 @@
 import React from "react";
 
-const DiaryCard = ({ data }) => {
-  const cardContainer = {
+interface Diary {
+  postId: Number;
+  postTitle: string;
+  nickname: string;
+  postBody: string;
+  createdAt: any;
+  memberId: string;
+  thumbnailImageUrl: string;
+}
+
+const DiaryCard = ({ data }: { data: Diary }) => {
+  const cardContainer: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     width: "360px",
     height: "460px",
   };
 
-  const imgContainer = {
+  const imgContainer: React.CSSProperties = {
     width: "100%",
     height: "200px",
   };
   return (
     <div style={cardContainer}>
-      <img src={data.thumbImg} style={imgContainer} />
+      <img src={data.thumbnailImageUrl} style={imgContainer} />
       <div
         style={{
           width: "96%",
@@ -27,9 +37,9 @@ const DiaryCard = ({ data }) => {
         <div style={{ fontSize: "25px", margin: "15px 15px 40px" }}>
           {data.postTitle}
         </div>
-        <div style={{ fontSize: "20px", margin: "15px" }}>{data.writer}</div>
+        <div style={{ fontSize: "20px", margin: "15px" }}>{data.nickname}</div>
         <div style={{ fontSize: "16px", margin: "15px", color: "#999999" }}>
-          {data.contents}
+          {data.postBody}
         </div>
       </div>
     </div>
