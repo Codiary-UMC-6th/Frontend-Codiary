@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import Navbar from "./components/navbar/Navbar.tsx";
 import Footer from "./components/Footer.jsx";
@@ -20,8 +20,8 @@ import Example from "./pages/Example.jsx";
 
 import "./App.css";
 
-import TeamAdd from "./components/team/teamAdd.jsx";
-import TeamEdit from "./components/team/teamEdit.jsx";
+import TeamAdd from "./components/team/teamAdd.tsx";
+import TeamEdit from "./components/team/teamEdit.tsx";
 import { useLoginStore } from "@/store/LoginStore";
 import { useEffect } from "react";
 
@@ -79,6 +79,6 @@ function App() {
 
 const Container = styled.div`
   flex: 1;
-`
+`;
 
 export default App;
