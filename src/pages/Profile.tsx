@@ -71,26 +71,29 @@ const Profile = () => {
   const [selectedDay, setSelectedDay] = useState<number>(1);
 
   useEffect(() => {
-    setDays(new Date(currentYear, currentMonth, 0).getDate());
-  }, [currentMonth, currentYear]);
+    const totalDays = new Date(currentYear, currentMonth, 0).getDate();
+    setDays(totalDays);
 
-  const handleDayClick = (day: number) => setSelectedDay(day);
+    if (selectedDay > totalDays) {
+      setSelectedDay(1);
+    }
+  }, [currentMonth, currentYear, selectedDay]);
 
   const handlePreviousMonth = () => {
     if (currentMonth === 1) {
       setCurrentMonth(12);
-      setCurrentYear(currentYear - 1);
+      setCurrentYear((prevYear) => prevYear - 1);
     } else {
-      setCurrentMonth(currentMonth - 1);
+      setCurrentMonth((prevMonth) => prevMonth - 1);
     }
   };
 
   const handleNextMonth = () => {
     if (currentMonth === 12) {
       setCurrentMonth(1);
-      setCurrentYear(currentYear + 1);
+      setCurrentYear((prevYear) => prevYear + 1);
     } else {
-      setCurrentMonth(currentMonth + 1);
+      setCurrentMonth((prevMonth) => prevMonth + 1);
     }
   };
 
@@ -136,10 +139,7 @@ const Profile = () => {
             }}
           />
           <CalendarWrapper onClick={() => navigate("/calendar")}>
-            <CalendarTop>
-              캘린더<NextIcon src={NextSVG}></NextIcon>
-            </CalendarTop>
-            <CanlendarPreview></CanlendarPreview>
+            <CanlendarPreview />
           </CalendarWrapper>
         </Top>
         <MyDiary memberId={memberId} onClick={openAddProjectModal} />
@@ -188,18 +188,6 @@ const CalendarWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   cursor: pointer; /* 클릭 가능한 커서 */
-`;
-
-const CalendarTop = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const NextIcon = styled.img`
-  margin-left: 4px;
-  width: 32px;
-  height: 32px;
 `;
 
 export default Profile;
