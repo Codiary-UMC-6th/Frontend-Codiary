@@ -12,7 +12,7 @@ import CanlendarPreview from "../components/profile/CalendarPreview";
 import { AddModal } from "../components/modal/AddModal";
 import NextSVG from "../assets/profile/calendar_icon_next.svg";
 
-import { getMemberProfile, patchTeckstackData } from "@/shared/api/profile"
+import { getMemberProfile, patchTeckstackData } from "@/shared/api/profile";
 import { memberProfile } from "@/shared/api/profile/type";
 
 const Profile = () => {
@@ -31,13 +31,13 @@ const Profile = () => {
 
   const openTechstackModal = () => setIsTechstackModalOpen(true);
   const closeTechstackModal = () => setIsTechstackModalOpen(false);
-  
+
   const loadProfile = async () => {
     const response = await getMemberProfile(memberId);
     console.log(response);
     setMemberProfileData(response);
     setTechstackList(response.tech_stacks_list);
-  }
+  };
 
   useEffect(() => {
     loadProfile();
@@ -61,38 +61,38 @@ const Profile = () => {
   */
 
   // Calendar
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
-  // const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  // const [days, setDays] = useState(
-  //   new Date(currentYear, currentMonth, 0).getDate()
-  // );
-  // const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [days, setDays] = useState(
+    new Date(currentYear, currentMonth, 0).getDate()
+  );
+  const [selectedDay, setSelectedDay] = useState<number>(1);
 
-  // useEffect(() => {
-  //   setDays(new Date(currentYear, currentMonth, 0).getDate());
-  // }, [currentMonth, currentYear]);
+  useEffect(() => {
+    setDays(new Date(currentYear, currentMonth, 0).getDate());
+  }, [currentMonth, currentYear]);
 
-  // const handleDayClick = (day: number) => setSelectedDay(day);
+  const handleDayClick = (day: number) => setSelectedDay(day);
 
-  // const handlePreviousMonth = () => {
-  //   if (currentMonth === 1) {
-  //     setCurrentMonth(12);
-  //     setCurrentYear(currentYear - 1);
-  //   } else {
-  //     setCurrentMonth(currentMonth - 1);
-  //   }
-  // };
+  const handlePreviousMonth = () => {
+    if (currentMonth === 1) {
+      setCurrentMonth(12);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
 
-  // const handleNextMonth = () => {
-  //   if (currentMonth === 12) {
-  //     setCurrentMonth(1);
-  //     setCurrentYear(currentYear + 1);
-  //   } else {
-  //     setCurrentMonth(currentMonth + 1);
-  //   }
-  // };
+  const handleNextMonth = () => {
+    if (currentMonth === 12) {
+      setCurrentMonth(1);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
 
   const postAddTechStack = async (value: string) => {
     try {
@@ -118,7 +118,7 @@ const Profile = () => {
       console.log(response);
       closeAddProjectModal();
     } catch (error) {
-      alert('프로젝트 추가를 실패했습니다.');
+      alert("프로젝트 추가를 실패했습니다.");
       console.error(error);
     }
   };
@@ -127,7 +127,7 @@ const Profile = () => {
     <>
       <Container>
         <Top>
-          <UserInfo 
+          <UserInfo
             props={{
               memberProfileData: memberProfileData,
               onClick: openTechstackModal,
@@ -135,31 +135,31 @@ const Profile = () => {
               teamList: teamList,
             }}
           />
-          {/*
           <CalendarWrapper onClick={() => navigate("/calendar")}>
-              <CalendarTop>캘린더<NextIcon src={NextSVG}></NextIcon></CalendarTop>
-              <CanlendarPreview></CanlendarPreview>
+            <CalendarTop>
+              캘린더<NextIcon src={NextSVG}></NextIcon>
+            </CalendarTop>
+            <CanlendarPreview></CanlendarPreview>
           </CalendarWrapper>
-          */}
         </Top>
         <MyDiary memberId={memberId} onClick={openAddProjectModal} />
       </Container>
-      {isAddProjectModalOpen &&
+      {isAddProjectModalOpen && (
         <AddModal
-          title='프로젝트 추가하기'
+          title="프로젝트 추가하기"
           placeholder='input name = "project"'
           onAdd={postAddProject}
           onClose={closeAddProjectModal}
         />
-      }
-      {isTechstackModalOpen &&
+      )}
+      {isTechstackModalOpen && (
         <AddModal
-          title='TECH STACK 추가하기'
+          title="TECH STACK 추가하기"
           placeholder='input name = "tech_stack"'
           onAdd={postAddTechStack}
           onClose={closeTechstackModal}
         />
-      }
+      )}
     </>
   );
 };
@@ -172,7 +172,7 @@ const Container = styled.div`
 `;
 
 const Top = styled.div`
-  display: flex;  
+  display: flex;
   color: ${Color.text1};
   font-family: Pretendard;
   font-size: 32px;
@@ -194,12 +194,12 @@ const CalendarTop = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-`
+`;
 
 const NextIcon = styled.img`
   margin-left: 4px;
   width: 32px;
   height: 32px;
-`
+`;
 
 export default Profile;
