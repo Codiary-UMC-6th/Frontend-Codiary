@@ -30,30 +30,30 @@ export const ModifyProfile = () => {
   });
 
   // 유저 정보 get api
-  const getUserInfo = async () => {
-    try {
-      const response = await get(`/members/info`);  // 회원 정보를 가져오는 API
-      const userData = response.result;
-      console.log(response.result);
-      setProfileFormData({
-        email: userData.email,
-        password: userData.password,
-        nickname: userData.nickname,
-        birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
-        github: userData.githubUrl || '',
-        linkedin: userData.linkedinUrl || '',
-        discord: userData.discordUrl || '',
-        introduction: userData.introduction || '',
-      });
+  // const getUserInfo = async () => {
+  //   try {
+  //     const response = await get(`/members/info`);  // 회원 정보를 가져오는 API
+  //     const userData = response.result;
+  //     console.log(response.result);
+  //     setProfileFormData({
+  //       email: userData.email,
+  //       password: userData.password,
+  //       nickname: userData.nickname,
+  //       birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
+  //       github: userData.githubUrl || '',
+  //       linkedin: userData.linkedinUrl || '',
+  //       discord: userData.discordUrl || '',
+  //       introduction: userData.introduction || '',
+  //     });
 
-      if (userData.birth === '1000-01-01') {
-        setProfileFormData({ birth: '' });
-      }
-      console.log(profileFormData);
-    } catch (error) {
-      console.error('회원 정보 가져오기 실패', error);
-    }
-  }
+  //     if (userData.birth === '1000-01-01') {
+  //       setProfileFormData({ birth: '' });
+  //     }
+  //     console.log(profileFormData);
+  //   } catch (error) {
+  //     console.error('회원 정보 가져오기 실패', error);
+  //   }
+  // }
 
   const [changeFormData, setChangeFormData] = useState({
     "birth": profileFormData.birth,
@@ -63,12 +63,12 @@ export const ModifyProfile = () => {
     "discord": profileFormData.discord,
   });
 
-  useEffect(() => {
-    console.log(memberId);
-    if (memberId) {
-      getUserInfo();
-    }
-  }, [memberId]);
+  // useEffect(() => {
+  //   console.log(memberId);
+  //   if (memberId) {
+  //     getUserInfo();
+  //   }
+  // }, [memberId]);
 
   const [errors, setErrors] = useState({
     nickname: '',
@@ -77,7 +77,7 @@ export const ModifyProfile = () => {
 
   const [isNicknameChecked, setIsNicknameChecked] = useState(true);
 
-  const handleChange = (name, value, error) => {
+  const handleChange = (name: string, value: string, error: string | undefined) => {
     if (name === 'birth') {
       setProfileFormData({
         ...profileFormData,
@@ -107,7 +107,7 @@ export const ModifyProfile = () => {
   };
 
   // 생년월일 포맷
-  const birthFormatDate = (date) => {
+  const birthFormatDate = (date: string) => {
     const year = date.slice(0, 4);
     const month = date.slice(4, 6);
     const day = date.slice(6, 8);
@@ -146,57 +146,73 @@ export const ModifyProfile = () => {
       <SignUpTitle>내 정보</SignUpTitle>
       <St.SignUpContainerWrapper>
         <SignUpInputContainer
-          title='이메일'
-          essential={Boolean(true)}
-          type='text'
-          value={profileFormData.email}
-          isButtonHidden={Boolean(false)}
-          disable={true}
-          onChange={() => { }}
+          props={{
+            title: "이메일",
+            essential: true,
+            placeholder: "이메일을 입력해주세요.",
+            value: profileFormData.email,
+            onChange: () => { },
+            isButtonHidden: false,
+            disable: true,
+            type: "text",
+          }}
         />
         <SignUpInputContainer
-          title='비밀번호'
-          essential={Boolean(true)}
-          type='password'
-          value={profileFormData.password}
-          isButtonHidden={Boolean(true)}
-          disable={true}
-          onChange={() => { }}
+          props={{
+            title: "비밀번호",
+            essential: true,
+            placeholder: "비밀번호를 입력해주세요.",
+            value: profileFormData.password,
+            onChange: () => { },
+            isButtonHidden: true,
+            disable: true,
+            type: "password",
+          }}
         />
         <SignUpInputContainer
-          title='닉네임'
-          essential={Boolean(true)}
-          type='text'
-          placeholder='사용자 닉네임을 입력해주세요.'
-          value={profileFormData.nickname}
-          isButtonHidden={Boolean(false)}
-          disable={true}
-          onChange={() => { }}
+          props={{
+            title: "닉네임",
+            essential: true,
+            placeholder: "사용자 닉네임을 입력해주세요.",
+            value: profileFormData.nickname,
+            onChange: () => { },
+            isButtonHidden: false,
+            disable: true,
+            type: "text",
+          }}
         />
         <SignUpInputContainer
-          title='생년월일'
-          essential={Boolean(false)}
-          type='text'
-          placeholder='YYYYDDMM'
-          value={profileFormData.birth}
-          isButtonHidden={Boolean(true)}
-          onChange={(value, error) => handleChange('birth', value, error)}
+          props={{
+            title: "생년월일",
+            essential: false,
+            placeholder: "YYYYDDMM",
+            value: profileFormData.birth,
+            onChange: (value, error) => handleChange('birth', value, error),
+            isButtonHidden: true,
+            type: "text",
+          }}
         />
       </St.SignUpContainerWrapper>
       <IntroduceInputContainer
-        value={profileFormData.introduction}
-        handleChange={handleChange}
+        props={{
+          value: profileFormData.introduction,
+          handleChange: handleChange
+        }}
       />
       <SocialInputContainer
-        handleChange={handleChange}
-        github={profileFormData.github}
-        linkedIn={profileFormData.linkedin}
-        discord={profileFormData.discord}
+        props={{
+          handleChange: handleChange,
+          github: profileFormData.github,
+          linkedIn: profileFormData.linkedin,
+          discord: profileFormData.discord
+        }}
       />
       <SignUpBtnBox
-        onSubmit={putUserInfo}
-        title='저장하기'
-        isDisable={false}
+        props={{
+          onSubmit: putUserInfo,
+          title: "저장하기",
+          isDisabled: false
+        }}
       />
     </St.SignUpWrapper>
   )
