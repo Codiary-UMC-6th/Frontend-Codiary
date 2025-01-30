@@ -1,4 +1,4 @@
-import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse } from "./type";
+import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getMemberProfile = async (memberId: string | undefined) => {
@@ -34,7 +34,7 @@ export const patchTeckstackData = async (techstack_name: string | undefined) => 
   return response.data;
 }
 
-export const postPersonalProjectData = async (project_name: string | undefined) => {
+export const postMyProjectData = async (project_name: string | undefined) => {
   const response = await axiosInstance.post<postPersonalProjectResponse>(
     `project/create/${project_name}`
   );
@@ -45,6 +45,30 @@ export const postPersonalProjectData = async (project_name: string | undefined) 
 export const getPersonalDiaryData = async (memberId: string | undefined, page: number, size: number) => {
   const response = await axiosInstance.get<getPersonalDiaryResponse>(
     `post/member/${memberId}/paging?page=${page}&size=${size}`
+  );
+
+  return response.data.result;
+}
+
+export const getMyProjectData = async () => {
+  const response = await axiosInstance.get<getMyProjectResponse>(
+    'project/my'
+  );
+
+  return response.data.result;
+}
+
+export const patchUserProfileImage = async () => {
+  const response = await axiosInstance.patch<userProfileImgResponse>(
+    'member/profile-image'
+  );
+
+  return response.data;
+}
+
+export const getUserProfileImage = async () => {
+  const response = await axiosInstance.get<userProfileImgResponse>(
+    'member/profile-image'
   );
 
   return response.data.result;

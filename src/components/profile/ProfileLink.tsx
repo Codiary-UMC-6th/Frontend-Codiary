@@ -4,7 +4,13 @@ const Img = styled.div`
     cursor: pointer;
 `
 
-const ProfileLink = ({ type, svg, link }) => {
+interface props {
+    type: string;
+    svg: string;
+    link: string;
+}
+
+const ProfileLink = ({ type, svg, link }: props) => {
 
     const OpenOuterProfilePage = () => {
         window.open(link)

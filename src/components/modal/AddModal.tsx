@@ -4,10 +4,17 @@ import * as Color from "../../common/Color";
 
 import CloseBtn from "../../assets/login/closeBtn.svg";
 
-export const AddModal = (props) => {
+interface props {
+  title: string;
+  placeholder: string;
+  onAdd: any;
+  onClose: any;
+}
+
+export const AddModal = (props: props) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     setInputValue(e.target.value); // 입력 값 업데이트
   };
 
