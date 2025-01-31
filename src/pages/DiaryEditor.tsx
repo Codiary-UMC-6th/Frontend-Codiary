@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import * as Color from "../common/Color";
 
+import { useEditorStore } from '../store/EditorStore';
 import { Editor, EditorState } from 'draft-js';
 
 const DiaryEditor: React.FC = () => {
+    const navigate = useNavigate();
+    const { register, setRegister } = useEditorStore();
+
     const [title, setTitle] = useState<string>('');
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
 
     const handleEditorChange = (state: EditorState) => {
         setEditorState(state);
     };
-  
-    const printText = () => {
-        const contentState = editorState.getCurrentContent();
-        const plainText = contentState.getPlainText();
-        console.log('Plain Text:', plainText);
-    }
+
+    useEffect(() => {
+        if (register) {
+            localStorage.setItem('diary-title', title);
+            localStorage.setItem('diary-content', editorState.getCurrentContent().getPlainText());
+            setRegister(false);
+            navigate('/diary/register');
+        }
+    }, [register])
 
     return (
         <Container>
-            <button style={{width: '80px', height: '30px'}} onClick={printText}>출력</button>
             <Title 
                 value={title}
                 onChange={(e) => {setTitle(e.target.value)}}

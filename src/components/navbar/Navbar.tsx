@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useNavigate,useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
@@ -9,6 +9,7 @@ import SearchBox from "./SearchBox";
 import WriteBtn from "./WriteBtn";
 import { LoginModal } from "../login/LoginModal";
 
+import { useEditorStore} from "../../store/EditorStore";
 import { useLoginStore } from "../../store/LoginStore";
 import {
   ACCESS_TOKEN_KEY,
@@ -18,6 +19,8 @@ import {
 import { postLogout } from "@/shared/api/logout";
 
 const Navbar = () => {
+  const { setRegister } = useEditorStore();
+  const navigate = useNavigate();
   const location = useLocation();
   const [path, setPath] = useState<string>('/');
   useEffect(() => {
@@ -108,7 +111,7 @@ const Navbar = () => {
       </Left>
       <Right>
         <TempSaveBtn>임시저장</TempSaveBtn>
-        <SaveBtn>작성하기</SaveBtn>
+        <SaveBtn onClick={()=>{setRegister(true)}}>작성하기</SaveBtn>
       </Right>
     </Container>
   );
