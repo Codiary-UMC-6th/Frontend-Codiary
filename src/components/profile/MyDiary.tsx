@@ -7,23 +7,25 @@ import * as Color from '../../common/Color';
 import Diary from './Diary';
 import PagenationBox from "./PagenationBox";
 import { AddModal } from "../modal/AddModal";
-import { getPersonalDiaryData } from "@/shared/api/profile";
-import { diary } from "@/shared/api/profile/type";
+import { getMyProjectData, getPersonalDiaryData } from "@/shared/api/profile";
+import { diary, projectList } from "@/shared/api/profile/type";
 import { Content } from "./BottomStyle";
 
 interface props {
   memberId: string | undefined;
   onClick: any;
+  myPage: boolean;
 }
 
 const MyDiary = (props: props) => {
   const [diaryList, setDiaryList] = useState<diary[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [projectList, setProjectList] = useState<projectList[]>([]);
 
   const getPersonalDiary = async (memberId: string | undefined, page: number, size: number) => {
     try {
       const response = await getPersonalDiaryData(memberId, page, size);
-      console.log(response);
+      // console.log(response);
       setDiaryList(response.posts);
     } catch(error) {
       console.error(error);
@@ -31,25 +33,44 @@ const MyDiary = (props: props) => {
   }
 
   useEffect(() => {
-    // const memberId = props.memberId;
-    // axios.get(`/posts/member/${memberId}/paging?page=${currentPage-1}&size=5`)
-    //     .then((response) => {
-    //         console.log(response.data.result.posts);
-    //         setDiaryList(response.data.result.posts);
-    //     })
-    //     .catch((error) => {})
-    // setDiaryList(diaryList);
     getPersonalDiary(props.memberId, currentPage - 1, 5);
-    console.log("Page updated. current page : " + currentPage);
+    // console.log("Page updated. current page : " + currentPage);
   }, [currentPage]);
+
+  // 프로젝트 리스트 가져오기
+  const getMyProject = async () => {
+    try {
+      const response = await getMyProjectData();
+      console.log(response);
+      setProjectList(response);
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getMyProject();
+  }, []);
+
+
 
   return (
     <Container>
       <Title>내 다이어리</Title>
       <Category>
         <Btn>전체</Btn>
-        <Btn>전체</Btn>
-        <AddBtn onClick={props.onClick}>+</AddBtn>
+        {projectList && projectList.length > 0 ? (
+          <>
+            {projectList.map((project: projectList) => {
+              return (
+                <Btn>{project.name}</Btn>
+              )
+            })}
+          </>
+        ) : (
+          <></>
+        )}
+        {props.myPage ? <AddBtn onClick={props.onClick}>+</AddBtn> : <></>}
       </Category>
       <DiaryBox>
         {diaryList && diaryList.length > 0 ? (

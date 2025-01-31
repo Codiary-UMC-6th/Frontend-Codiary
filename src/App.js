@@ -13,7 +13,7 @@ import DiaryEditor from "./pages/DiaryEditor.tsx";
 import DiaryDetails from "./pages/DiaryDetails.tsx";
 import DiaryRegister from "./components/diary/diary-register.jsx";
 import { SignUp } from "./components/signup/SignUp.tsx";
-import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
+import { ModifyProfile } from "./components/profile/ModifyProfile.tsx";
 import KakaoCallback from "@/components/login/component/KakaoCallback.tsx";
 
 import Example from "./pages/Example.jsx";

@@ -104,3 +104,26 @@ export interface file {
   name: string;
   url: string;
 }
+
+// my project list
+export interface getMyProjectResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: projectList[];
+}
+
+export interface projectList {
+  project_id: number;
+  name: string;
+}
+
+//patch & get user image
+export interface userProfileImgResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    url: string;
+  };
+}

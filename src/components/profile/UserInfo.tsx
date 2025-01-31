@@ -11,10 +11,12 @@ import LinkedinSvg from '../../assets/profile/linkedin.svg'
 import { useNavigate } from "react-router-dom";
 
 import { teamInfo, memberProfile } from "@/shared/api/profile/type";
+import FollowBtn from "../diaryDetails/FollowBtn";
+import { useRef, useState } from "react";
 
 type userPersonalInfo = {
   props: {
-    memberProfileData: memberProfile | undefined;
+    memberProfileData: memberProfile;
     onClick: any;
     techstackList: string[];
     teamList: teamInfo[];
@@ -25,15 +27,30 @@ const UserInfo = ({props}: userPersonalInfo) => {
   const data = props.memberProfileData;
   const navigate = useNavigate();
 
+
+  const handleUploadImg = () => {
+
+  }
+
+  const handlePreviewImg = () => {
+
+  }
+
   const modifyProfileButtonClicked = () => {
     navigate("/modify-profile", { state: { userInfo: props.memberProfileData } });
     console.log("Modify profile button clicked");
   }
+
+
   return (
     <Container>
       <Top>
         <ImageBox>
-          <Image></Image>
+          <Image/>
+          <ImageUploadButtonWrapper>
+            {/*<ImageInput type="file" />*/}
+            <AddImageButton>+</AddImageButton>
+          </ImageUploadButtonWrapper>
         </ImageBox>
         <UserInfoWrapper>
           <UserName>{data?.user_name}</UserName>
@@ -41,7 +58,9 @@ const UserInfo = ({props}: userPersonalInfo) => {
             data?.my_page ?
               <ModifyProfileButton onClick={modifyProfileButtonClicked}>프로필 수정</ModifyProfileButton>
               :
-              <></>
+              <FollowBtnWrapper>
+                <FollowBtn authorId={props.memberProfileData.user_id} />
+              </FollowBtnWrapper>
           }
         </UserInfoWrapper>
         <LinkBox>
@@ -51,10 +70,15 @@ const UserInfo = ({props}: userPersonalInfo) => {
         </LinkBox>
       </Top>
       <Bio>
-        {data?.introduction ? data?.introduction : "소개를 입력해주세요."}
+        {
+          data?.my_page ?
+            (data.introduction ? data?.introduction : "소개를 입력해주세요.")
+            :
+            (data.introduction ? data?.introduction : "소개가 없습니다.")
+        }
       </Bio>
       <Bottom>
-        <Techstack onClick={props.onClick} techstackList={props.techstackList}></Techstack>
+        <Techstack onClick={props.onClick} techstackList={props.techstackList} my_page={data.my_page} ></Techstack>
         <Team teamList={props.teamList}></Team>
       </Bottom>
     </Container>
@@ -78,9 +102,35 @@ const ImageBox = styled.div`
     width: 200px;
     height: 200px;
     border-radius : 140px;
+    position: relative;
 `
 
+
+
+const ImageUploadButtonWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+`
 const Image = styled.img`
+`
+
+const ImageInput = styled.input`
+`
+
+const AddImageButton = styled.div`
+  background: ${Color.background2};
+  border: none;
+  color: ${Color.text1};
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+
+  font-family: Pretendard;
+  font-size: 36px;
+  font-weight: 200;
 `
 
 const UserName = styled.div`
@@ -123,7 +173,7 @@ const ModifyProfileButton = styled.button`
     display: absolute;
     width: 130px;
     height: 42px;
-    background-color: ${Color.background};
+    background: ${Color.background};
     border-radius: 10px;
     border: 1px solid ${Color.gray500};
     color: ${Color.gray500};
@@ -135,6 +185,28 @@ const ModifyProfileButton = styled.button`
     padding: 8px 15px 8px 15px;
     margin-left: 29px;
     cursor: pointer;
+`
+const FollowBtnWrapper = styled.div`
+  margin-left: 28px;
+`
+
+const FollowButton = styled.button`
+    display: absolute;
+    width: 79px;
+    height: 34px;
+    border-radius: 18px;
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 18px;
+    weight: 400;
+    line-height: 26px;
+    padding: 4px 16px;
+    margin-left: 29px;
+    cursor: pointer;
+
+    background: ${Color.primary_blue};
+    border: none;
+    color: ${Color.text1};
 `
 
 const UserInfoWrapper = styled.div`

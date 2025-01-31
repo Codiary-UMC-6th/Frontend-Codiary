@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../common/Color";
-import { get, post } from "../common/api";
 
 import UserInfo from "../components/profile/UserInfo";
 import MyDiary from "../components/profile/MyDiary";
 import CanlendarPreview from "../components/profile/CalendarPreview";
 
 import { AddModal } from "../components/modal/AddModal";
-import NextSVG from "../assets/profile/calendar_icon_next.svg";
 
-import { getMemberProfile, patchTeckstackData } from "@/shared/api/profile";
+import { getMemberProfile, patchTeckstackData, postMyProjectData } from "@/shared/api/profile"
 import { memberProfile } from "@/shared/api/profile/type";
 
 const Profile = () => {
   // load member info
   const { memberId } = useParams<string>();
-  const [memberProfileData, setMemberProfileData] = useState<memberProfile>();
+  const [memberProfileData, setMemberProfileData] = useState<memberProfile>({} as memberProfile);
   const [techstackList, setTechstackList] = useState<string[]>([]);
   const [teamList, setTeamList] = useState([]);
 
@@ -42,23 +40,6 @@ const Profile = () => {
   useEffect(() => {
     loadProfile();
   }, []);
-  /*
-    useEffect(() => {
-    async function getUserInfo() {
-      try {
-        const result = await get(`/members/profile/${memberId}`);
-        console.log('GET 요청 결과:', result);
-        setUserInfoData(result.result);
-        setTechStackList(result.result.techStacksList);
-        setTeamList(result.result.teamList);
-        console.log(techStackList);
-      } catch (error) {
-        console.error('GET 요청 실패:', error);
-      }
-    }
-    getUserInfo();
-  }, [memberId]);
-  */
 
   // Calendar
   const navigate = useNavigate();
@@ -111,15 +92,18 @@ const Profile = () => {
       //  alert('TECH STACK 추가를 실패했습니다.');
       //  console.error(error.response);
       //}
+      console.error(error);
     }
   };
 
   const postAddProject = async (value: string) => {
     try {
-      const response = await post(`/members/project/${value}`);
+      // const response = await post(`/members/project/${value}`);
+      const response = await postMyProjectData(value);
       alert(`프로젝트 '${value}' 추가를 성공했습니다.`);
       console.log(response);
       closeAddProjectModal();
+      window.location.reload();
     } catch (error) {
       alert("프로젝트 추가를 실패했습니다.");
       console.error(error);
@@ -142,7 +126,7 @@ const Profile = () => {
             <CanlendarPreview />
           </CalendarWrapper>
         </Top>
-        <MyDiary memberId={memberId} onClick={openAddProjectModal} />
+        <MyDiary memberId={memberId} onClick={openAddProjectModal} myPage={memberProfileData.my_page} />
       </Container>
       {isAddProjectModalOpen && (
         <AddModal

@@ -7,6 +7,7 @@ import PlusSvg from "../../assets/profile/ph_plus.svg";
 interface props {
   techstackList: string[];
   onClick: any;
+  my_page: boolean;
 }
 const Techstack = (props: props) => {
   const { techstackList, onClick } = props;
@@ -15,7 +16,7 @@ const Techstack = (props: props) => {
     <Container>
       <Head onClick={onClick}>
         <Infotype>TECH STACK</Infotype>
-        <Add src={PlusSvg} />
+        {props.my_page ? <Add src={PlusSvg} /> : <></>}
       </Head>
       {techstackList && techstackList.length > 0 ? (
         <TechStackWrapper>
