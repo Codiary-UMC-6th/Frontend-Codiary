@@ -11,7 +11,7 @@ import Calendar from "./pages/Calendar.jsx";
 import Diary from "./pages/Diary.jsx";
 import DiaryEditor from "./pages/DiaryEditor.tsx";
 import DiaryDetails from "./pages/DiaryDetails.tsx";
-import DiaryRegister from "./components/diary/diary-register.jsx";
+import DiaryRegister from "./pages/DiaryRegister.jsx";
 import { SignUp } from "./components/signup/SignUp.tsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.jsx";
 import KakaoCallback from "@/components/login/component/KakaoCallback.tsx";
@@ -64,7 +64,7 @@ function App() {
           <Route path="/diary" element={<Diary />} />
           <Route path="/diaryEditor" element={<DiaryEditor />}></Route>
           <Route path="/DiaryDetails/:postId" element={<DiaryDetails />} />
-          <Route path="/diary-register" element={<DiaryRegister />} />
+          <Route path="/diary/register" element={<DiaryRegister />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/modify-profile" element={<ModifyProfile />} />
           <Route path="/oauth/callback" element={<KakaoCallback />} />
