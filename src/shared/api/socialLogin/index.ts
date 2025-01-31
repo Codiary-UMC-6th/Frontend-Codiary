@@ -21,3 +21,10 @@ export const postKakaoLogin = async (code: string) => {
   >(`/oauth/login/kakao?code=${code}`);
   return response.data;
 };
+
+export const getGoogleRedirectionURL = async () => {
+  const response = await axiosPublicInstance.get<GetRedirectionURLResponse>(
+    `/oauth/login/google_url`
+  );
+  return response.data;
+};
