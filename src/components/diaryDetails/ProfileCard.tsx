@@ -21,10 +21,12 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
     const [name, setName] = useState<String>('');
 
     const loadAuthorInfo = async () => {
-        const response = await getAuthorInfo(authorId);
-        console.log(response);
-        setName(response.user_name);
-        setIntroduction(response.introduction);
+        if (authorId !== 0) {
+            const response = await getAuthorInfo(authorId);
+            console.log(response);
+            setName(response.user_name);
+            setIntroduction(response.introduction);
+        }
     }
 
     useEffect(() => {
