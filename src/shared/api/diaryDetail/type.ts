@@ -17,6 +17,7 @@ export interface PostResult {
     team_profile_image_url: string;
     thumbnail_image_url: string;
     updated_at: string;
+    is_bookmarked: boolean;
 }
 
 export interface AuthorResult {

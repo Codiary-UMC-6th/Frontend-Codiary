@@ -11,10 +11,10 @@ import { postBookmark, deleteBookmark } from '@/shared/api/diaryDetail';
 interface BookmarkBtnProps {
     postId: number | undefined;
     memberId: number | undefined;
+    isBookmarked: boolean | undefined;
 }
 
-const BookmarkBtn = ({ postId, memberId }: BookmarkBtnProps) => {
-    const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+const BookmarkBtn = ({ postId, memberId, isBookmarked }: BookmarkBtnProps) => {
     const [bookmarkId, setBookmarkId] = useState<number | undefined>();
 
     const enableBookmark = async () => {
