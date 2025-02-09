@@ -1,4 +1,4 @@
-import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse } from "./type";
+import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse, getProjectResponse } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getMemberProfile = async (memberId: string | undefined) => {
@@ -23,7 +23,7 @@ export const putUserInfo = async (formData: userInfo | undefined) => {
     formData
   );
 
-  return response.data.result;
+  return response.data;
 }
 
 export const patchTeckstackData = async (techstack_name: string | undefined) => {
@@ -69,6 +69,14 @@ export const patchUserProfileImage = async () => {
 export const getUserProfileImage = async () => {
   const response = await axiosInstance.get<userProfileImgResponse>(
     'member/profile-image'
+  );
+
+  return response.data.result;
+}
+
+export const getProjectData = async (memberId: string | undefined) => {
+  const response = await axiosInstance.get<getProjectResponse>(
+    `project/${memberId}`
   );
 
   return response.data.result;

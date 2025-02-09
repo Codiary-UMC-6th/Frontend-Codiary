@@ -34,6 +34,9 @@ export interface userInfoResponse {
 }
 
 export interface userInfo {
+  email: string;
+  password: string;
+  nickname: string;
   birth: string;
   introduction: string;
   github: string;
@@ -126,4 +129,12 @@ export interface userProfileImgResponse {
   result: {
     url: string;
   };
+}
+
+//get others project list
+export interface getProjectResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: projectList[];
 }
