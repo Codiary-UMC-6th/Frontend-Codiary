@@ -12,6 +12,8 @@ import { get, put } from "../../common/api";
 import { useLoginStore } from "../../store/LoginStore";
 import { IntroduceInputContainer } from '../signup/component/IntroduceInputContainer';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo, putUserInfo } from '@/shared/api/profile';
+import { profile } from 'console';
 
 export const ModifyProfile = () => {
 
@@ -30,32 +32,35 @@ export const ModifyProfile = () => {
   });
 
   // 유저 정보 get api
-  // const getUserInfo = async () => {
-  //   try {
-  //     const response = await get(`/members/info`);  // 회원 정보를 가져오는 API
-  //     const userData = response.result;
-  //     console.log(response.result);
-  //     setProfileFormData({
-  //       email: userData.email,
-  //       password: userData.password,
-  //       nickname: userData.nickname,
-  //       birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
-  //       github: userData.githubUrl || '',
-  //       linkedin: userData.linkedinUrl || '',
-  //       discord: userData.discordUrl || '',
-  //       introduction: userData.introduction || '',
-  //     });
-
-  //     if (userData.birth === '1000-01-01') {
-  //       setProfileFormData({ birth: '' });
-  //     }
-  //     console.log(profileFormData);
-  //   } catch (error) {
-  //     console.error('회원 정보 가져오기 실패', error);
-  //   }
-  // }
+  const getUserInfoData = async () => {
+    try {
+      const userData = await getUserInfo();  // 회원 정보를 가져오는 API
+      console.log(userData);
+      setProfileFormData({
+        email: userData.email,
+        password: userData.password,
+        nickname: userData.nickname,
+        birth: userData.birth === '1000-01-01' ? '' : userData.birth.replaceAll('-', ''),
+        github: userData.github || '',
+        linkedin: userData.linkedin || '',
+        discord: userData.discord || '',
+        introduction: userData.introduction || '',
+      });
+      /*
+      if (userData.birth === '1000-01-01') {
+        setProfileFormData({ birth: '' });
+      }
+      */
+      console.log(profileFormData);
+    } catch (error) {
+      console.error('회원 정보 가져오기 실패', error);
+    }
+  }
 
   const [changeFormData, setChangeFormData] = useState({
+    "email": profileFormData.email,
+    "password": profileFormData.password,
+    "nickname": profileFormData.nickname,
     "birth": profileFormData.birth,
     "introduction": profileFormData.introduction,
     "github": profileFormData.github,
@@ -63,12 +68,12 @@ export const ModifyProfile = () => {
     "discord": profileFormData.discord,
   });
 
-  // useEffect(() => {
-  //   console.log(memberId);
-  //   if (memberId) {
-  //     getUserInfo();
-  //   }
-  // }, [memberId]);
+  useEffect(() => {
+    console.log(memberId);
+    if (memberId) {
+      getUserInfoData();
+    }
+  }, [memberId]);
 
   const [errors, setErrors] = useState({
     nickname: '',
@@ -115,7 +120,7 @@ export const ModifyProfile = () => {
     return `${year}-${month}-${day}`;
   }
 
-  const putUserInfo = async () => {
+  const putUserInfoData = async () => {
     try {
       if (Object.values(errors).some(error => error)) {
         console.error('폼 형식이 알맞지 않습니다.');
@@ -130,7 +135,7 @@ export const ModifyProfile = () => {
         birth: birthFormatDate(changeFormData.birth),
       };
 
-      const response = await put('/members/info', formattedData);
+      const response = await putUserInfo(formattedData);
       alert(response.message);
       console.log('프로필 수정 성공', response);
       console.log(changeFormData);
@@ -209,7 +214,7 @@ export const ModifyProfile = () => {
       />
       <SignUpBtnBox
         props={{
-          onSubmit: putUserInfo,
+          onSubmit: putUserInfoData,
           title: "저장하기",
           isDisabled: false
         }}

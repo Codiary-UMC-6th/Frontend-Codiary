@@ -33,7 +33,7 @@ export const SocialInputContainer = ({ props }: SocialInputContainerProps) => {
           props={{
             image: <img src={linkedInIcon} alt="linkedIn" />,
             placeholder: "id를 입력해주세요.",
-            value: props.github,
+            value: props.linkedIn,
             onChange: (value) => props.handleChange("linkedin", value, ""),
           }}
         />
@@ -43,7 +43,7 @@ export const SocialInputContainer = ({ props }: SocialInputContainerProps) => {
           props={{
             image: <img src={discordIcon} alt="discord" />,
             placeholder: "id를 입력해주세요.",
-            value: props.github,
+            value: props.discord,
             onChange: (value) => props.handleChange("discord", value, ""),
           }}
         />
