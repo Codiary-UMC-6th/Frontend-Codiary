@@ -26,6 +26,7 @@ interface Post {
     author: string;
     authorId: number;
     createdAt: string;
+    isBookmarked: boolean;
 }
 
 interface CommentsInterface {
@@ -52,7 +53,8 @@ function DiaryDetails() {
         details: "",
         author: "",
         authorId: 0,
-        createdAt: ""
+        createdAt: "",
+        isBookmarked: false,
     });
 
     const loadPost = async () => {
@@ -67,6 +69,7 @@ function DiaryDetails() {
             author: response.author_nickname,
             authorId: response.member_id,
             createdAt: response.created_at,
+            isBookmarked: response.is_bookmarked,
         })
     }
 
@@ -93,7 +96,7 @@ function DiaryDetails() {
 
     return (
         <Container>
-            <FAB postId={post.postId} memberId={memberId} />
+            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked}/>
             <CenterBox>
                 <Title>{post.title}</Title>
                 <CategoryChip postId={post.postId} />
