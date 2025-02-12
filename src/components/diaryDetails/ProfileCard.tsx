@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 import FollowBtn from "./FollowBtn";
-import { BigProfileImg } from "./ProfileImg";
-
 import { getAuthorInfo } from "@/shared/api/diaryDetail/index"
 
 interface Profileprops{
@@ -36,7 +34,7 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
     return (
         <Container onClick={() => navigate(`/profile/${authorId}`)}>
             <UserBox>
-                <BigProfileImg memberId={authorId} />
+                <BigImg src={'url'}/>
                 <TextBox>
                     <UserName>{name ? name : ''}</UserName>
                     <Text>{introduction ? introduction : '소개가 없습니다.'}</Text>
@@ -96,6 +94,14 @@ const Text = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+`;
+
+const BigImg = styled.img`
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    background-color: rgb(200, 200, 200);
+    margin-right: 16px;
 `;
 
 export default ProfileCard;

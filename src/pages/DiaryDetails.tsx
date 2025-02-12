@@ -15,7 +15,7 @@ import CommentBox from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
-import { getPost } from "@/shared/api/diaryDetail";
+import { getPost, getComments } from "@/shared/api/diaryDetail";
 
 interface Post {
     coauthorIds: number[];
@@ -29,17 +29,16 @@ interface Post {
     isBookmarked: boolean;
 }
 
-interface CommentsInterface {
-    memberId: number;
-    nickname: string;
-    commentId: number;
-    commentBody: string;
-    createdAt: string;
-    childCommentList: CommentsInterface[] | undefined;
-}
-
 interface Comment {
-
+    comment_body: string;
+    comment_id: number;
+    commenter_id: number;
+    commenter_nickname: string;
+    commenter_profile_image_url: string;
+    created_at: string;
+    number_of_reply: number;
+    post_id: number;
+    updated_at: string;
 }
 
 function DiaryDetails() {
@@ -74,13 +73,19 @@ function DiaryDetails() {
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const loadComments = async () => {
+        const response = await getComments(Number(postId));
+        setComments(response.content);
+        console.log(response.content);
+    }
 
     useEffect(() => {
         loadPost();
+        loadComments();
     }, []);
 
     /*
-        const stringModifyForImg = (content: any) => {
+    const stringModifyForImg = (content: any) => {
         const regex = /<img\s+id="(\w+)">/g;
         var string = content;
         var i = 0;
@@ -123,7 +128,7 @@ function DiaryDetails() {
                 <CommentTitle>{/*totalComments*/0}개의 댓글</CommentTitle>
                 <CommentInput postId={post.postId} memberId={memberId} />
                 {comments.map((data) => (
-                    <CommentBox comment={data} postId={post.postId} memberId={memberId} />
+                    <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
             </CenterBox>
             <OtherCards postId={post.postId} />

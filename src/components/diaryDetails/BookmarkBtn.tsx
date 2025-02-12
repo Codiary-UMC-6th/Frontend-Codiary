@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import * as Color from "../../common/Color";
-import styled from "styled-components";
+import React, { useState } from 'react';
 
 import { Button } from './FAB';
 import BookmarkIcon from "../../assets/diaryDetail/icon_bookmark.svg";
@@ -15,18 +13,18 @@ interface BookmarkBtnProps {
 }
 
 const BookmarkBtn = ({ postId, memberId, isBookmarked }: BookmarkBtnProps) => {
-    const [bookmarkId, setBookmarkId] = useState<number | undefined>();
-
     const enableBookmark = async () => {
         const response = await postBookmark(Number(postId));
         console.log(response);
-        alert('북마크하였습니다.');
+        //alert('북마크하였습니다.');
+        window.location.reload();
     }
 
     const diableBookmark = async () => {
         const response = await deleteBookmark(Number(postId));
         console.log(response);
-        alert('북마크를 삭제하였습니다.');
+        //alert('북마크를 삭제하였습니다.');
+        window.location.reload();
     }
 
     const handleBookmark = () => {
@@ -35,7 +33,6 @@ const BookmarkBtn = ({ postId, memberId, isBookmarked }: BookmarkBtnProps) => {
         } else {
             enableBookmark();
         }
-        //window.location.reload();
     };
 
     return(
