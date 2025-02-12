@@ -37,8 +37,13 @@ export interface ToggleBookmarkResult {
 
 }
 
+export interface GetCommentsResult {
+    content: any[];
+}
+
 export type GetPostResponse = GeneralResponse<PostResult>;
 export type GetAuthorResponse = GeneralResponse<AuthorResult>;
 export type GetIsFollowedResponse = GeneralResponse<boolean>;
 export type ToggleFollowResponse = GeneralResponse<ToggleFollowResult>;
 export type ToggleBookmarkResponse = GeneralResponse<ToggleBookmarkResult>;
+export type GetCommentsResponse = GeneralResponse<GetCommentsResult>;

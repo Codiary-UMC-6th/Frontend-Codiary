@@ -1,4 +1,4 @@
-import { GetPostResponse, GetAuthorResponse, GetIsFollowedResponse, ToggleFollowResponse, ToggleBookmarkResponse } from "./type";
+import { GetPostResponse, GetAuthorResponse, GetIsFollowedResponse, ToggleFollowResponse, ToggleBookmarkResponse, GetCommentsResponse } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getPost = async (postId: number) => {
@@ -9,8 +9,11 @@ export const getPost = async (postId: number) => {
   return response.data.result;
 }
 
-export const getComments = async () => {
-
+export const getComments = async (postId: number) => {
+  const response = await axiosInstance.get<
+  GetCommentsResponse
+  >(`/post/${postId}/comment?page=0&size=5&sort=string`);
+  return response.data.result;
 }
 
 export const getAuthorInfo = async (memberId: number) => {
