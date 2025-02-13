@@ -1,4 +1,4 @@
-import { GetPostResponse, GetAuthorResponse, GetIsFollowedResponse, ToggleFollowResponse, ToggleBookmarkResponse, GetCommentsResponse } from "./type";
+import { GetPostResponse, GetAuthorResponse, GetIsFollowedResponse, ToggleFollowResponse, ToggleBookmarkResponse, GetCommentsResponse, PostCommentResponse, PostCommentRequest } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getPost = async (postId: number) => {
@@ -6,13 +6,6 @@ export const getPost = async (postId: number) => {
   GetPostResponse
   >(`/post/${postId}`);
   console.log(response);
-  return response.data.result;
-}
-
-export const getComments = async (postId: number) => {
-  const response = await axiosInstance.get<
-  GetCommentsResponse
-  >(`/post/${postId}/comment?page=0&size=5&sort=string`);
   return response.data.result;
 }
 
@@ -52,5 +45,21 @@ export const deleteBookmark = async (postId: number) => {
   ToggleBookmarkResponse
   >(`/post/${postId}/bookmark`);
   console.log(response);
+  return response.data.result;
+}
+
+export const getComments = async (postId: number) => {
+  const response = await axiosInstance.get<
+  GetCommentsResponse
+  >(`/post/${postId}/comment?page=0&size=100&sort=string`);
+  return response.data.result;
+}
+
+export const postComment = async (postId: number, formData: PostCommentRequest) => {
+  const response = await axiosInstance.post<
+  PostCommentResponse
+  >(`/post/${postId}/comment`,
+    formData
+  );
   return response.data.result;
 }
