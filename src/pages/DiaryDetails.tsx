@@ -13,6 +13,7 @@ import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
 import CommentBox from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
+import CommentPage from "@/components/diaryDetails/comments/CommentPage";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
 import { getPost, getComments } from "@/shared/api/diaryDetail";
@@ -27,6 +28,7 @@ interface Post {
     authorId: number;
     createdAt: string;
     isBookmarked: boolean;
+    bookmarkCount: number;
 }
 
 interface Comment {
@@ -41,7 +43,7 @@ interface Comment {
     updated_at: string;
 }
 
-function DiaryDetails() {
+const DiaryDetails = () => {
     const memberId = 0;
     const { postId } = useParams<string>();
     const [post, setPost] = useState<Post>({
@@ -54,6 +56,7 @@ function DiaryDetails() {
         authorId: 0,
         createdAt: "",
         isBookmarked: false,
+        bookmarkCount: 0,
     });
 
     const loadPost = async () => {
@@ -69,10 +72,12 @@ function DiaryDetails() {
             authorId: response.member_id,
             createdAt: response.created_at,
             isBookmarked: response.is_bookmarked,
+            bookmarkCount: response.bookmark_count,
         })
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const [commentPage, setCommentPage] = useState<number>(0);
     const loadComments = async () => {
         const response = await getComments(Number(postId));
         setComments(response.content);
@@ -83,22 +88,7 @@ function DiaryDetails() {
         loadPost();
         loadComments();
     }, []);
-
-    /*
-    const stringModifyForImg = (content: any) => {
-        const regex = /<img\s+id="(\w+)">/g;
-        var string = content;
-        var i = 0;
-        string = string.replace(regex, function(match: string) {
-            const replacedString = match.replace(/<img/, `<img class="postImg" src=${post.postFileList[i].url}`);
-            i += 1;
-            console.log("replacedString", replacedString);
-            return replacedString;
-        });
-        return string;
-    }
-    */
-
+    
     return (
         <Container>
             <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked}/>
@@ -110,9 +100,9 @@ function DiaryDetails() {
                         <UserName>{post.author}</UserName>
                         <Details>
                             <img src={Scrap} alt='scrap icon'/>
-                            <ScrapCount>{/*bookmarkCount*/0}</ScrapCount>
+                            <ScrapCount>{post.bookmarkCount}</ScrapCount>
                             <img src={CommentIcon} alt='comment icon'/>
-                            <CommentCount>{/*totalComments*/0}</CommentCount>
+                            <CommentCount>{comments.length}</CommentCount>
                             <KebabModal memberId={memberId} authorId={post.authorId} commentId={0} />
                         </Details>
                     </NameBox>
@@ -125,11 +115,12 @@ function DiaryDetails() {
                     <ProfileCard authorId={data} author={''} />
                 )))
                 : <></>}
-                <CommentTitle>{/*totalComments*/0}개의 댓글</CommentTitle>
-                <CommentInput postId={post.postId} memberId={memberId} />
+                <CommentTitle>{comments.length}개의 댓글</CommentTitle>
+                <CommentInput postId={post.postId} loadComments={loadComments}/>
                 {comments.map((data) => (
                     <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
+                <CommentPage></CommentPage>
             </CenterBox>
             <OtherCards postId={post.postId} />
         </Container>

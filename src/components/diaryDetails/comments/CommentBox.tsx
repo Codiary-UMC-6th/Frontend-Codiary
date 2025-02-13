@@ -73,6 +73,7 @@ const CommentBox = ({ comment, postId, memberId }: CommentsProps) => {
 
 const Container = styled.div`
     margin-bottom: 40px;
+    border-bottom: 1px solid ${Color.gray300}
 `;
 
 const Box = styled.div`
