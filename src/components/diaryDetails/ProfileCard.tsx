@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import * as Color from '../../common/Color';
 import styled from "styled-components";
 import FollowBtn from "./FollowBtn";
-import { getAuthorInfo } from "@/shared/api/diaryDetail/index"
+import { getAuthorInfo } from "@/shared/api/diaryDetail/index";
+import { useLoginStore } from "@/store/LoginStore";
 
 interface Profileprops{
     authorId: number;
@@ -11,9 +12,9 @@ interface Profileprops{
 }
 
 const ProfileCard = ({ authorId, author }: Profileprops) => {
-    console.log('authorId', authorId);
+    const [isSelf, setIsSelf] = useState<boolean>(false);
+    const { memberId } = useLoginStore();
 
-    const memberId = 0;
     const navigate = useNavigate();
     const [introduction, setIntroduction] = useState<String>('');
     const [name, setName] = useState<String>('');
@@ -22,6 +23,7 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
         if (authorId !== 0) {
             const response = await getAuthorInfo(authorId);
             console.log(response);
+            if(response.current_member_id === response.user_id){ setIsSelf(true) };
             setName(response.user_name);
             setIntroduction(response.introduction);
         }
@@ -30,6 +32,9 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
     useEffect(() => {
         loadAuthorInfo();
     });
+
+    console.log('authorId', authorId);
+    console.log('memberId', memberId);
 
     return (
         <Container onClick={() => navigate(`/profile/${authorId}`)}>
@@ -40,7 +45,7 @@ const ProfileCard = ({ authorId, author }: Profileprops) => {
                     <Text>{introduction ? introduction : '소개가 없습니다.'}</Text>
                 </TextBox>
             </UserBox>
-            <FollowBtn authorId={authorId} /> 
+            {(!isSelf) && <FollowBtn authorId={authorId} />}
         </Container>
     );
 }

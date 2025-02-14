@@ -6,7 +6,7 @@ import DiaryDefaultImg from '../../assets/diary_default_img.png';
 import UserProfileDefault from '../../assets/user_profile_default.svg';
 
 interface PostType {
-    author: string;
+    author_name: string;
     author_image_url?: string;
     body: string;
     created_at: string;
@@ -27,7 +27,7 @@ function Card({ post }: CardProps) {
     const postTitle = post.title;
     const postBody = post.body;
     const authorImageUrl = post.author_image_url;
-    const author = post.author;
+    const author = post.author_name;
     const teamBannerImageUrl = post.team_banner_image_url;
     const teamProfileImageUrl = post.team_profile_image_url;
     const thumbnailImageUrl = post.thumbnail_image_url;

@@ -13,7 +13,7 @@ interface Project {
 type TeamProject = Project[];
 
 interface Diary {
-  author: string;
+  author_name: string;
   author_image_url: string;
   body: string;
   created_at: string;

@@ -9,16 +9,13 @@ interface FollowBtnProps {
 }
 
 const FollowBtn = ({ authorId }: FollowBtnProps) => {
-    const [isSelf, setIsSelf] = useState<boolean>(false);
     const [isFollowed, setisFollowed] = useState<boolean>(false);
     const loadFollow = async () => {
         try {
             const response = await getIsFollowed(authorId);
             setisFollowed(response);
-            setIsSelf(false);
         } catch (error) {
             console.log(error);
-            setIsSelf(true);
         }
     }
 
@@ -33,10 +30,6 @@ const FollowBtn = ({ authorId }: FollowBtnProps) => {
     }
 
     return(
-        isSelf
-        ?
-        <></>
-        :
         <Button onClick={handleClick}>
         { (isFollowed === false) ? <Follow>팔로우</Follow> : <Following>팔로잉</Following> }
         </Button>

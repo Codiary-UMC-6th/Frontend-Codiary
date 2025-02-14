@@ -9,7 +9,7 @@ const CommentPage = () => {
         <Container>
             <ArrowBtn></ArrowBtn>
             {pages.map((num) => {
-                return <PageBtn>{num}</PageBtn>
+                return <PageBtn key={num}>{num}</PageBtn>
             })}
             <ArrowBtn></ArrowBtn>
         </Container>

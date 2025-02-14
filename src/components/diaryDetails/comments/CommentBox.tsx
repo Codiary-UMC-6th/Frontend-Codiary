@@ -38,9 +38,7 @@ const CommentBox = ({ comment, postId, memberId }: CommentsProps) => {
                     <KebabModal memberId={memberId} authorId={comment.commenter_id} commentId={comment.comment_id} />
                 </Box>
             </Box>
-            
             <CommentContent>{comment.comment_body}</CommentContent>
-
             {
             /*comment.childCommentList && comment.childCommentList.length > 0 && (
                 <ReplyList>
