@@ -10,7 +10,7 @@ export interface Result {
 }
 
 export interface Post {
-    author: string;
+    author_name: string;
     author_image_url: string;
     body: string;
     created_at: string;

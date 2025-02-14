@@ -24,6 +24,8 @@ export interface PostResult {
 export interface AuthorResult {
     introduction: string;
     user_name: string;
+    current_member_id: number;
+    user_id: number;
 }
 
 export interface IsFollowedResult {
