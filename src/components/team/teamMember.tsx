@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { get } from "../../common/api";
 import MemberAdd from "./memberAdd";
 import { useParams } from "react-router-dom";
+import { teamMember, teamProfile } from "@/shared/api/team/type";
+import { ImageBox } from "./teamProfile";
 
 interface Member {
   team_member_id: Number;
@@ -19,26 +21,36 @@ interface MemberInfo {
 
 type Members = Member[];
 
-const TeamMember = ({ isManager }: { isManager: boolean }) => {
+type Propstype = {
+  props: {
+    isManager: boolean;
+    teamProfileData: teamProfile | undefined;
+    teamMemberList: teamMember[] | undefined;
+  }
+}
+
+const TeamMember = ({ props }: Propstype) => {
   const [memberIndex, setMemberIndex] = useState(0);
   const [isPop, setIsPop] = useState(false);
-  const [memberData, setMemberData] = useState<Members>([]);
+  const [memberData, setMemberData] = useState<teamMember[]>();
   const { teamId } = useParams();
-  useEffect(() => {
-    const getTeamInfo = async () => {
-      try {
-        const result = await get(`/teams/${teamId}`);
-        setMemberData(result?.result.team_member_list);
-        console.log(result?.result.team_member_list);
-      } catch (error) {
-        console.log("Error fetching team info:", error);
-      }
-    };
-    getTeamInfo();
-  }, [isPop]);
+
+  // useEffect(() => {
+  //   const getTeamInfo = async () => {
+  //     try {
+  //       const result = await get(`/teams/${teamId}`);
+  //       setMemberData(result?.result.team_member_list);
+  //       console.log(result?.result.team_member_list);
+  //     } catch (error) {
+  //       console.log("Error fetching team info:", error);
+  //     }
+  //   };
+  //   getTeamInfo();
+
+  // }, [isPop]);
 
   const nextMember = () => {
-    if (memberIndex + 3 < memberData.length) {
+    if (props.teamMemberList?.length && memberIndex + 3 < props.teamMemberList?.length) {
       setMemberIndex(memberIndex + 3);
     }
   };
@@ -57,7 +69,7 @@ const TeamMember = ({ isManager }: { isManager: boolean }) => {
       {isPop && <MemberAdd isPop={isPop} onClose={togglePop} />}
       <Title>
         구성원
-        {isManager && (
+        {props.isManager && (
           <AddBtn onClick={togglePop}>
             <img
               src={`${process.env.PUBLIC_URL}/team_images/member.png`}
@@ -78,16 +90,17 @@ const TeamMember = ({ isManager }: { isManager: boolean }) => {
           <EmptyNavigationButton />
         )}
 
-        {memberData.slice(memberIndex, memberIndex + 3).map((el, index) => (
+        {props.teamMemberList?.slice(memberIndex, memberIndex + 3).map((el, index) => (
           <MemberCard key={index}>
-            <MemberImage
+            {/* <MemberImage
               src={
                 el.member.photo_url
                   ? el.member.photo_url
                   : "https://codiary.s3.ap-northeast-2.amazonaws.com/files/61fa6597-b41f-4943-a589-8fa8a44e0148"
               }
               alt={el.member.user_name}
-            />
+            /> */}
+            <ImageBox diameter={64}/>
             <MemberName>{el.member.user_name}</MemberName>
             <MemberRole>
               {el.team_member_role === "ADMIN"
@@ -97,7 +110,7 @@ const TeamMember = ({ isManager }: { isManager: boolean }) => {
           </MemberCard>
         ))}
 
-        {memberIndex + 3 < memberData.length ? (
+        {props.teamMemberList?.length && memberIndex + 3 < props.teamMemberList?.length ? (
           <NavigationButton
             onClick={nextMember}
             src={`${process.env.PUBLIC_URL}/team_images/next.png`}
@@ -159,6 +172,11 @@ const EmptyNavigationButton = styled.div`
 const MemberCard = styled.div`
   margin: 15px;
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const MemberImage = styled.img`

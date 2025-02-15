@@ -1,24 +1,21 @@
 import styled from "styled-components";
+import * as Color from '../../common/Color';
+
 import { useState, useEffect } from "react";
 import TeamMember from "./teamMember";
 import { useNavigate, useParams } from "react-router-dom";
 import { get } from "../../common/api";
+import { teamMember, teamProfile } from "@/shared/api/team/type";
 
-interface TeamData {
-  team_id: 0;
-  name: "string";
-  intro: "string";
-  admin_mail: "string";
-  profile_image_url: "string";
-  banner_image_url: "string";
-  github: "string";
-  email: "string";
-  linked_in: "string";
-  discord: "string";
-  instagram: "string";
+type Propstype = {
+  props: {
+    isManager: boolean;
+    teamProfileData: teamProfile | undefined;
+    teamMemberList: teamMember[] | undefined;
+  }
 }
 
-const TeamProfile = (props: any) => {
+const TeamProfile = ({ props }: Propstype) => {
   const [teamName, setTeamName] = useState("Team Name");
   const [teamUrl, setTeamUrl] = useState([]);
   const [teamDescription, setTeamDescription] = useState("Team Introduce");
@@ -27,27 +24,14 @@ const TeamProfile = (props: any) => {
   );
 
   const isEdit = true;
-  const { teamId } = useParams();
-  const [teamData, setTeamData] = useState<TeamData | null>(null);
+  // const { teamId } = useParams();
 
-  const [isManager, setIsManager] = useState(true);
+  const [isManager, setIsManager] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchTeamData = async () => {
-      try {
-        const response = await get(`api/v2/teams/${teamId}`);
-        setTeamData(response.result);
-        console.log(response.result);
-      } catch (error) {
-        console.error("Error fetching team data:", error);
-      }
-    };
-    fetchTeamData();
-  }, []);
   const navigate = useNavigate();
 
   const onClickEdit = () => {
-    navigate(`/teamEdit/${teamId}`, { state: { isEdit } });
+    navigate(`/teamEdit/${props.teamProfileData?.team_id}`, { state: { isEdit } });
   };
 
   return (
@@ -55,7 +39,7 @@ const TeamProfile = (props: any) => {
       {/* Name Container */}
       <NameContainer>
         <NameText>
-          {teamData?.name}
+          {props.teamProfileData?.name}
           <UrlContainer>
             <UrlImg src={`${process.env.PUBLIC_URL}/team_images/github.png`} />
             <UrlImg src={`${process.env.PUBLIC_URL}/team_images/discord.png`} />
@@ -77,19 +61,44 @@ const TeamProfile = (props: any) => {
         <IntroduceLeft>
           <IntroduceTitle>팀 소개</IntroduceTitle>
           <InfoContainer>
-            <TeamImage src={teamImage} />
-            {teamData?.intro}
+            {/* <TeamImage src={teamImage} /> */}
+            <ImageBox diameter={134}/>
+            <Bio>
+              {props.teamProfileData?.intro}
+            </Bio>
           </InfoContainer>
         </IntroduceLeft>
         <IntroduceRight>
-          <TeamMember isManager={props.isManager} />
+          <TeamMember  
+            props={{
+              isManager: props.isManager, 
+              teamProfileData: props.teamProfileData,
+              teamMemberList: props.teamMemberList,
+            }} 
+            />
         </IntroduceRight>
       </IntroduceContainer>
+      <BorderBox />
     </Container>
   );
 };
 
 export default TeamProfile;
+
+
+export const ImageBox = styled.div<{ diameter: number }>`
+  background-color: ${Color.backgroundBlur};
+  width: ${({ diameter }) => diameter}px;
+  height: ${({ diameter }) => diameter}px;
+  border-radius : 140px;
+  position: relative;
+`
+
+const BorderBox = styled.div`
+  border-bottom: 1px solid ${Color.gray500};
+  height: 32px;
+  margin-bottom: 34px;
+`
 
 const Container = styled.div`
   width: 80vw;
@@ -103,7 +112,7 @@ const NameText = styled.div`
   display: flex;
   margin-top: 20px;
   color: #e19e58;
-  font-size: 36px;
+  font-size: 42px;
   align-items: center;
 `;
 
@@ -162,6 +171,23 @@ const TeamImage = styled.img`
   border-radius: 50%;
   margin-right: 20px;
 `;
+
+const Bio = styled.div`
+  background-color : ${Color.backgroundBlur};
+  height: 102px;
+  width: 488px;
+
+  padding: 16px;
+  margin-left: 26px;
+
+  color : ${Color.text3};
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: -0.06px;
+`
 
 const IntroduceRight = styled.div`
   width: 40%;

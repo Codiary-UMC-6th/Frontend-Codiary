@@ -93,7 +93,9 @@ const MyDiary = (props: props) => {
           <Content style={{ fontSize: "22px" }}>등록된 다이어리가 없습니다</Content>
         )}
       </DiaryBox>
-      <PagenationBox setCurrentPage={setCurrentPage} />
+      <PagenationContainer>
+        <PagenationBox setCurrentPage={setCurrentPage} />
+      </PagenationContainer>
     </Container>
   );
 }
@@ -153,6 +155,10 @@ const AddBtn = styled.button`
 const DiaryBox = styled.div`
     width: 100%;
     margin : 64px 0px 0px 0px;
+`
+
+const PagenationContainer = styled.div`
+  margin : 128px 0px 0px 206px;
 `
 
 export default MyDiary;

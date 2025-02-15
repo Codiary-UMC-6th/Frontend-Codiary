@@ -5,7 +5,7 @@ import Navbar from "./components/navbar/Navbar.tsx";
 import Footer from "./components/Footer.jsx";
 import Main from "./pages/Main.tsx";
 import Profile from "./pages/Profile.tsx";
-import Team from "./pages/Team.jsx";
+import Team from "./pages/Team.tsx";
 
 import Calendar from "./pages/Calendar.jsx";
 import Diary from "./pages/Diary.jsx";
