@@ -58,9 +58,10 @@ export const getMyProjectData = async () => {
   return response.data.result;
 }
 
-export const patchUserProfileImage = async () => {
+export const patchUserProfileImage = async (formData: FormData | undefined) => {
   const response = await axiosInstance.patch<userProfileImgResponse>(
-    'member/profile-image'
+    'member/profile-image',
+    formData,
   );
 
   return response.data;

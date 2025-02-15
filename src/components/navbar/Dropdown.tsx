@@ -8,6 +8,7 @@ import { useLoginStore } from "../../store/LoginStore.js";
 import EnabledSvg from "../../assets/dropdown-enabled.svg";
 import DisabledSvg from "../../assets/dropdown-disabled.svg";
 import { useNavigate } from "react-router-dom";
+import { getTeamList } from "@/shared/api/team";
 
 const Dropdown = () => {
   const [visibility, setVisibility] = useState(false);
@@ -22,25 +23,24 @@ const Dropdown = () => {
     navigate("/teamAdd");
   };
 
-  const handleTeamClick = (teamId) => {
+  const handleTeamClick = (teamId: string) => {
     navigate(`/team/${teamId}`);
     window.location.reload();
   };
 
   const { memberId, teamList, setTeamList } = useLoginStore(); 
-  const getTeamList = async () => {
+  const getTeamListData = async () => {
     try {
-      const response = await get(`/members/profile/${memberId}`);
-      const data = response.result.teamList;
-      console.log("팀 리스트 가져오기 성공", data);
-      setTeamList(data);
+      const response = await getTeamList();
+      console.log("팀 리스트 가져오기 성공", response);
+      setTeamList(response);
     } catch (error) {
       console.error("팀 리스트 가져오기 실패", error);
     }
   };
 
   useEffect(() => {
-    getTeamList();
+    // getTeamListData();
   }, []);
 
   return (
@@ -54,7 +54,7 @@ const Dropdown = () => {
           {teamList.length > 0 ? (
             <>
               <TeamBox>
-                {teamList.map((team) => (
+                {teamList.map((team: any) => (
                   <TeamListWrapper
                     key={team.teamId}
                     onClick={() => handleTeamClick(team.teamId)}
@@ -64,12 +64,12 @@ const Dropdown = () => {
                   </TeamListWrapper>
                 ))}
               </TeamBox>
-              <Create hasTeams={true} onClick={createTeam}>
+              <Create  onClick={createTeam}>
                 팀스페이스 만들기
               </Create>
             </>
           ) : (
-            <Create hasTeams={false} onClick={createTeam}>
+            <Create  onClick={createTeam}>
               팀스페이스 만들기
             </Create>
           )}
@@ -150,7 +150,6 @@ const Create = styled.div`
   font-weight: 400;
   line-height: 24px;
   text-decoration-line: underline;
-  margin-top: ${({ hasTeams }) => (hasTeams ? "auto" : "0")}; /* 팀이 없을 때 중앙에 배치 */
 `;
 
 export default Dropdown;

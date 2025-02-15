@@ -7,6 +7,7 @@ import { SignUpInputTitle } from "./SignUpInputTitle";
 import { CheckDuplicateBtn } from "./CheckDuplicateBtn";
 
 import { getCheckEmail, getCheckNickname } from "@/shared/api/signup/index";
+import { getCheckTeamName } from "@/shared/api/team";
 
 type SignUpInputContainerType = {
   props: {
@@ -42,6 +43,9 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
       case "생년월일":
         const dateRegex = /^\d{4}\d{2}\d{2}$/;
         return dateRegex.test(value) ? "" : "올바른 형식이 아닙니다";
+      case "관리자메일":
+        const administratorEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return administratorEmailRegex.test(value) ? "" : "올바른 형식이 아닙니다";  
       default:
         return "";
     }
@@ -58,10 +62,14 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
   const checkRedundancyAPI = async () => {
     console.log(value);
     try {
-      const response =
-        props.title === "이메일"
-          ? await getCheckEmail(value)
-          : await getCheckNickname(value);
+      let response: any;
+      if (props.title === "이메일") {
+        response = await getCheckEmail(value);
+      } else if (props.title === "닉네임") {
+        response = await getCheckNickname(value);
+      } else {
+        response = await getCheckTeamName(value);
+      }
 
       console.log(response);
 
@@ -73,6 +81,7 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
       }
     } catch (error: any) {
       if (!error.response.isSuccess) {
+        alert(`사용 불가한 ${props.title}입니다.`);
         setError(error.response.message);
       } else {
         console.log("중복확인 실패", error);
