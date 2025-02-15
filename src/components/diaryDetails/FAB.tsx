@@ -14,13 +14,14 @@ export const Button = styled.button`
 interface FABProps {
     postId: number | undefined;
     memberId: number | undefined;
+    isBookmarked: boolean | undefined;
 }
 
-const FAB = ({ postId, memberId }: FABProps) => {
+const FAB = ({ postId, memberId, isBookmarked }: FABProps) => {
 
     return(
         <Container>
-            <BookmarkBtn postId={postId} memberId={memberId} />
+            <BookmarkBtn postId={postId} memberId={memberId} isBookmarked={isBookmarked}/>
             <Button>
                 <img src={ShareIcon} alt='share icon' />
             </Button>

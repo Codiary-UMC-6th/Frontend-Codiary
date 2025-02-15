@@ -1,126 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import * as Color from "../../common/Color";
-import { useFileStore } from "../../store/FileStore";
-import { useLoginStore } from "../../store/LoginStore";
+import * as Color from "../common/Color";
 
-import { patch } from "../../common/api";
+import Card from "../components/main/Card";
 
-import Card from "../main/Card";
+import { postDiary } from '@/shared/api/diaryEditor';
 
 const DiaryRegister = () => {
-  const { teamList } = useLoginStore();
-
-  const [isPublic, setIsPublic] = useState(true);
-  const [coAuthors, setCoAuthors] = useState([]);
-  const [teamId, setTeamId] = useState("");
-  const [projectId, setProjectId] = useState("");
-  const [projectList, setProjectList] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
-
   const navigate = useNavigate();
 
-  const { files } = useFileStore();
+  const [isPublic, setIsPublic] = useState(true);
+  const [teamId, setTeamId] = useState(0);
+  const teamList = [];
+  const [projectId, setProjectId] = useState(0);
+  const projectList = [];
+  const coAuthors = [];
+  const [files, setFiles] = useState([]);
+  const categories = [];
+  
+  const uploadFile = (e) => {
+    setFiles([e.target.files[0]]);
+  };
+
   const handleSave = async () => {
     // Save the diary entry
-
-    const modifyContent = (content) => {
-      var string = content.replace(new RegExp("contenteditable=\"true\"", 'g'), '');
-      string = string.replace(new RegExp("class=\"block\"", 'g'), '');
-
-      let idCounter = 0;
-      string = string.replace(/<img[^>]*>/g, function() {
-        return `<img id="${idCounter++}">`;
-      });
-      return string.toString();
-    }
-
+    /*
     const formData = new FormData();
     formData.append('teamId', teamId);
     formData.append('projectId', projectId);
     formData.append('postTitle', sessionStorage.getItem('diary-title'));
-    const content = sessionStorage.getItem('diary-content');
-    const modified_content = modifyContent(content);
-    formData.append('postBody', modified_content);
+    formData.append('postBody', sessionStorage.getItem('diary-content'));
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
     formData.append('thumbnailImageName', '');
     files.forEach((file) => {
       formData.append('postFiles', file);
-    })
+    })    
+    */
+    const formData = new FormData();
+    formData.append('postTitle', localStorage.getItem('diary-title'));
+    formData.append('postBody', localStorage.getItem('diary-content'));
+    formData.append('postStatus', true);
+    formData.append('postAccess', 'ENTIRE');
+    formData.append('postFiles', files)
 
-    try {
-      const response = await fetch('/posts', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
-          'accept': '*/*'
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Response:', data);
-        categoryPatch(data.result.postId);
-        alert("다이어리 등록을 성공하였습니다.");
-        navigate('/');
-      } else {
-        console.error('Error uploading post:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error uploading post:', error);
-      alert("다이어리 등록을 실패하였습니다.");
-    }
+    const response = await postDiary(formData);
+    console.log(response);
   };
 
-  const categoryPatch = async (postId) => {
-    try {
-      const response= await patch(`/posts/categories/${postId}`, categories);
-      console.log("카테고리 요청 성공", response);
-    } catch (error) {
-      console.error("카테고리 요청 실패", error);
-    }
-    
-  }
+  const handleAddCoAuthor = (author) => {  };
 
-  const handleAddCoAuthor = (author) => {
-    if (!author) {
-      setErrorMsg("존재하지 않는 사용자입니다.");
-    } else {
-      setCoAuthors([...coAuthors, author]);
-      setErrorMsg("");
-    }
+  const handleAddCategory = (e) => {  };
+
+  const tempPost = {
+    id: 0,
+    author: 'temp',
+    body: 'string',
+    title: 'string',
+    created_at: 'string',
+    updated_at: 'string',
   };
-
-  const handleAddCategory = (e) => {
-    if((e.key === 'Enter')&&(e.target.value)){
-      setCategories([...categories, e.target.value]);
-      e.target.value = "";
-    }
-  };
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('http://43.202.229.89:8080/projects/list', {
-          method: 'GET',
-          headers: {
-            'Accept': '*/*',
-          },
-        });
-        const data = await response.json();
-        console.log(data);
-        setProjectList(data.result.projects);
-      } catch (error) {
-        console.error('Fetch error:', error);
-      }
-    };
-
-    fetchProjects();
-  }, [])
 
   return (
     <Container>
@@ -129,9 +69,7 @@ const DiaryRegister = () => {
         <DiaryPreview>
           <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
           <Card
-            title={sessionStorage.getItem("diary-title")}
-            author="Writer"
-            details={"내용 미리보기"}
+            post={tempPost}
           />
         </DiaryPreview>
       </LeftSection>
@@ -167,7 +105,6 @@ const DiaryRegister = () => {
               placeholder="공동 저자 아이디를 검색하세요."
               onBlur={(e) => handleAddCoAuthor(e.target.value)}
             />
-            {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
             <div>
               {coAuthors.map((author, index) => (
                 <span key={index}>{author}</span>
@@ -212,6 +149,7 @@ const DiaryRegister = () => {
         </FormSection>
         <Button onClick={handleSave}>작성 완료</Button>
       </RightSection>
+      <input type="file" onChange={uploadFile} />
     </Container>
   );
 };

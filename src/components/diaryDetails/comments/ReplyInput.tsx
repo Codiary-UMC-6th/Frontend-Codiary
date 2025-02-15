@@ -59,6 +59,7 @@ const ReplyText = styled.span`
 
     &:hover {
         color: ${Color.text4};
+    }
 `;
 
 const CancelBtn = styled.button`

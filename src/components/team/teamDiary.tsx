@@ -12,7 +12,7 @@ import PagenationBox from "../profile/PagenationBox";
 
 // PostType 타입 정의
 interface PostType {
-  author: string;
+  author_name: string;
   author_image_url?: string;
   body: string;
   created_at: string;
@@ -64,7 +64,7 @@ const TeamDiary = ({ props }: Propstype) => {
   useEffect(() => {
     const mappedPosts = diaryList.map((item) => ({
       id: item.post_id,
-      author: item.author_nickname,
+      author_name: item.author_nickname,
       body: item.post_body,
       created_at: item.created_at,
       updated_at: item.updated_at,

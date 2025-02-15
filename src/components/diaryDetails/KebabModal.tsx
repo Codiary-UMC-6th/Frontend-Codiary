@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import KebabIcon from "../../assets/symbols_kebab.svg";
 import * as Color from '../../common/Color';
@@ -10,44 +10,50 @@ interface Props {
     commentId: number;
 }
 
-
 const KebabModal = ({ memberId, authorId, commentId }: Props) => {
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const modalRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) { setShowModal(false); }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
 
     const toggleModal = () => {
         setShowModal(pre => !pre);
     }
 
-    const delComment = async () => {
-        try {
-            const result = await del(`/comments/delete/${commentId}`);
-            console.log("댓글 삭제 성공: ", result);
-        } catch (error) {
-            console.error("댓글 삭제 실패:", error);
-        }
-        toggleModal();
-    }
-
     return(
-        <div>
-            <KebabButton onClick={toggleModal}>
+        <Container>
+            <KebabButton onClick={(e) => {
+                e.stopPropagation();
+                toggleModal();
+            }}>
                 <img src={KebabIcon} alt='kebab icon' />
             </KebabButton>
             {showModal && (
-                <Modal>
+                <Modal ref={modalRef}>
                     {memberId === authorId ?
                         <>
-                        <Button onClick={delComment}>삭제하기</Button>
-                        <Button onClick={toggleModal} >수정하기</Button>
+                        <Button onClick={() => {}}>삭제하기</Button>
+                        <Button onClick={toggleModal}>수정하기</Button>
                         </> :
                         <Button onClick={toggleModal}>신고하기</Button>
                     }
                 </Modal>
             )}
-
-        </div>
+        </Container>
     )
 }
+
+const Container = styled.div`
+    position: relative;
+`
 
 const KebabButton = styled.button`
     border: 0;
@@ -71,13 +77,14 @@ const Button = styled.button`
     font-weight: 400;
     line-height: 24px;
 
-        &:hover {
+    &:hover {
         background: #666666;
     }
 `;
 
 const Modal = styled.div`
     position: absolute;
+    right: 0;
     display: flex;
     flex-direction: column;
 `
