@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 
 import Card from "../components/main/Card";
 import ViewBtn from "../components/main/ViewBtn";
-import styled from "styled-components";
 import * as Color from "../common/Color";
 import CategoryBtn from "../components/main/CategoryBtn";
 import useSearchStore from "../store/SearchStore";
