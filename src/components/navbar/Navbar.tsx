@@ -58,6 +58,7 @@ const Navbar = () => {
           localStorage.removeItem(GRANT_TYPE);
           useLoginStore.getState().setLogout();
           window.location.replace("/");
+          window.location.reload();
         }
       } catch (error) {
         console.error(error);
