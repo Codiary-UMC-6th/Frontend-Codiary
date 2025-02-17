@@ -1,9 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import styled from "styled-components";
 import * as Color from "@/common/Color";
-import { useLoginStore } from "@/store/LoginStore";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 import NaverIcon from "@/assets/login/naverIcon.svg";
 import KakaorIcon from "@/assets/login/kakaoIcon.svg";
