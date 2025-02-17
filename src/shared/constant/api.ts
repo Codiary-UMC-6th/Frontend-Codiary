@@ -1,6 +1,7 @@
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN" as const;
 export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN" as const;
 export const GRANT_TYPE = "GRANT_TYPE" as const;
+export const MEMBER_ID = "MEMBER_ID" as const;
 
 export const HTTP_STATUS_CODE = {
   SUCCESS: 200,
