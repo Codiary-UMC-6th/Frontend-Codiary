@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../common/Color";
@@ -10,13 +10,19 @@ import CanlendarPreview from "../components/profile/CalendarPreview";
 
 import { AddModal } from "../components/modal/AddModal";
 
-import { getMemberProfile, patchTeckstackData, postMyProjectData } from "@/shared/api/profile"
+import {
+  getMemberProfile,
+  patchTeckstackData,
+  postMyProjectData,
+} from "@/shared/api/profile";
 import { memberProfile } from "@/shared/api/profile/type";
 
 const Profile = () => {
   // load member info
   const { memberId } = useParams<string>();
-  const [memberProfileData, setMemberProfileData] = useState<memberProfile>({} as memberProfile);
+  const [memberProfileData, setMemberProfileData] = useState<memberProfile>(
+    {} as memberProfile
+  );
   const [techstackList, setTechstackList] = useState<string[]>([]);
   const [teamList, setTeamList] = useState([]);
 
@@ -126,7 +132,11 @@ const Profile = () => {
             <CanlendarPreview />
           </CalendarWrapper>
         </Top>
-        <MyDiary memberId={memberId} onClick={openAddProjectModal} myPage={memberProfileData.my_page} />
+        <MyDiary
+          memberId={memberId}
+          onClick={openAddProjectModal}
+          myPage={memberProfileData.my_page}
+        />
       </Container>
       {isAddProjectModalOpen && (
         <AddModal
