@@ -1,9 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import styled from "styled-components";
 import * as Color from "@/common/Color";
-import { useLoginStore } from "@/store/LoginStore";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 import NaverIcon from "@/assets/login/naverIcon.svg";
 import KakaorIcon from "@/assets/login/kakaoIcon.svg";
@@ -12,7 +9,10 @@ import GithubIcon from "@/assets/login/githubIcon.svg";
 import EmailIcon from "@/assets/login/mailIcon.svg";
 import CloseBtn from "@/assets/login/closeBtn.svg";
 import { useLoginMutation } from "@/components/login/useLoginMutation";
-import { getKakaoRedirectionURL } from "@/shared/api/socialLogin";
+import {
+  getGoogleRedirectionURL,
+  getKakaoRedirectionURL,
+} from "@/shared/api/socialLogin";
 
 type LoginModalProps = {
   onClose?: () => void;
@@ -57,6 +57,21 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
     }
   };
 
+  const handleGooleLogin = async () => {
+    try {
+      const response = await getGoogleRedirectionURL();
+      const redirectUrl = response.result.redirect_url;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        alert("Redirect URL을 가져올 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("Error fetching Google redirect URL:", error);
+    }
+  };
+
   return (
     <St.LoginModalBackground>
       <St.LoginModalWrapper>
@@ -97,7 +112,7 @@ export const LoginModal = ({ onClose }: LoginModalProps) => {
             <img src={KakaorIcon} alt="Kakao" onClick={handleKakaoLogin} />
           </St.IconButton>
           <St.IconButton>
-            <img src={GoogleIcon} alt="Google" />
+            <img src={GoogleIcon} alt="Google" onClick={handleGooleLogin} />
           </St.IconButton>
           <St.IconButton>
             <img src={GithubIcon} alt="Github" />
