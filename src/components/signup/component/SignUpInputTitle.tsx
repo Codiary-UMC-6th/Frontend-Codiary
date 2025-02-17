@@ -31,6 +31,8 @@ const St = {
     line-height: 32px;
     color: ${Color.text1};
     margin-left: 0px;
+    white-space: nowarp;
+
   `,
 
   EssentialPoint: styled.div`

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { teamInfo, memberProfile } from "@/shared/api/profile/type";
 import FollowBtn from "../diaryDetails/FollowBtn";
 import { useRef, useState } from "react";
+import { patchUserProfileImage } from "@/shared/api/profile";
 
 type userPersonalInfo = {
   props: {
@@ -27,20 +28,41 @@ const UserInfo = ({props}: userPersonalInfo) => {
   const data = props.memberProfileData;
   const navigate = useNavigate();
 
-
-  const handleUploadImg = () => {
-
-  }
-
-  const handlePreviewImg = () => {
-
-  }
-
   const modifyProfileButtonClicked = () => {
     navigate("/modify-profile", { state: { userInfo: props.memberProfileData } });
     console.log("Modify profile button clicked");
   }
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      // const response = await fetch("/api/v2/member/profile-image", {
+      //   method: "PATCH",
+      //   body: formData,
+      // });
+
+      const response = await patchUserProfileImage(formData);
+      alert("이미지가 성공적으로 업로드되었습니다!");
+    } catch (error) {
+      console.error(error);
+      alert("업로드 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <Container>
@@ -48,8 +70,8 @@ const UserInfo = ({props}: userPersonalInfo) => {
         <ImageBox>
           <Image/>
           <ImageUploadButtonWrapper>
-            {/*<ImageInput type="file" />*/}
-            <AddImageButton>+</AddImageButton>
+            {/* <ImageInput type="file" accept="image/*" onChange={handleFileChange} /> */}
+            <AddImageButton onClick={handleUpload} disabled={!selectedFile}>+</AddImageButton>
           </ImageUploadButtonWrapper>
         </ImageBox>
         <UserInfoWrapper>
@@ -118,7 +140,7 @@ const Image = styled.img`
 const ImageInput = styled.input`
 `
 
-const AddImageButton = styled.div`
+const AddImageButton = styled.button`
   background: ${Color.background2};
   border: none;
   color: ${Color.text1};

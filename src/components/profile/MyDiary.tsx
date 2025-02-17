@@ -7,7 +7,7 @@ import * as Color from '../../common/Color';
 import Diary from './Diary';
 import PagenationBox from "./PagenationBox";
 import { AddModal } from "../modal/AddModal";
-import { getMyProjectData, getPersonalDiaryData } from "@/shared/api/profile";
+import { getMyProjectData, getPersonalDiaryData, getProjectData } from "@/shared/api/profile";
 import { diary, projectList } from "@/shared/api/profile/type";
 import { Content } from "./BottomStyle";
 
@@ -38,18 +38,24 @@ const MyDiary = (props: props) => {
   }, [currentPage]);
 
   // 프로젝트 리스트 가져오기
-  const getMyProject = async () => {
+  const getProject = async (memberId: string | undefined, myPage: boolean) => {
     try {
-      const response = await getMyProjectData();
-      console.log(response);
-      setProjectList(response);
+      if (myPage) {
+        const response = await getMyProjectData();
+        console.log(response);
+        setProjectList(response);
+      } else {
+        const response = await getProjectData(memberId);
+        console.log(response);
+        setProjectList(response);
+      }
     } catch(error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
-    getMyProject();
+    getProject(props.memberId, props.myPage);
   }, []);
 
 
@@ -87,7 +93,9 @@ const MyDiary = (props: props) => {
           <Content style={{ fontSize: "22px" }}>등록된 다이어리가 없습니다</Content>
         )}
       </DiaryBox>
-      <PagenationBox setCurrentPage={setCurrentPage} />
+      <PagenationContainer>
+        <PagenationBox setCurrentPage={setCurrentPage} />
+      </PagenationContainer>
     </Container>
   );
 }
@@ -147,6 +155,10 @@ const AddBtn = styled.button`
 const DiaryBox = styled.div`
     width: 100%;
     margin : 64px 0px 0px 0px;
+`
+
+const PagenationContainer = styled.div`
+  margin : 128px 0px 0px 206px;
 `
 
 export default MyDiary;

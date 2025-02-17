@@ -61,7 +61,6 @@ const PagenationBox = (props: any) => {
 
 const Container = styled.div`
     display : flex;
-    margin : 128px 0px 0px 206px;
 ` 
 
 const Button = styled.img`

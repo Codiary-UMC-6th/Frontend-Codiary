@@ -1,18 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
-import { get } from "../../common/api.js";
-import { useLoginStore } from "../../store/LoginStore.js";
 
 import EnabledSvg from "../../assets/dropdown-enabled.svg";
 import DisabledSvg from "../../assets/dropdown-disabled.svg";
 import { useNavigate } from "react-router-dom";
 
+import { getTeamList } from "@/shared/api/navbar";
+import { Team } from "@/shared/api/navbar/type";
+
 const Dropdown = () => {
-  const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
 
+  const [visibility, setVisibility] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { setVisibility(false); }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+        document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const [teamList, setTeamList] = useState<Team[]>([]);
+  
   const toggleDropdown = () => {
     setVisibility(!visibility);
   };
@@ -22,60 +37,44 @@ const Dropdown = () => {
     navigate("/teamAdd");
   };
 
-  const handleTeamClick = (teamId) => {
+  const handleTeamClick = (teamId: number) => {
     navigate(`/team/${teamId}`);
     window.location.reload();
   };
 
-  const { memberId, teamList, setTeamList } = useLoginStore(); 
-  const getTeamList = async () => {
+  const loadTeamList = async () => {
     try {
-      const response = await get(`/members/profile/${memberId}`);
-      const data = response.result.teamList;
-      console.log("팀 리스트 가져오기 성공", data);
-      setTeamList(data);
+      const response = await getTeamList();
+      setTeamList(response.teams);
     } catch (error) {
       console.error("팀 리스트 가져오기 실패", error);
     }
   };
 
   useEffect(() => {
-    getTeamList();
+    loadTeamList();
   }, []);
 
   return (
     <Container>
-      <Nav onClick={toggleDropdown}>
+      <Nav onClick={(e) => {e.stopPropagation(); toggleDropdown()}}>
         <span>팀 홈</span>
         {visibility ? <Svg src={DisabledSvg} /> : <Svg src={EnabledSvg} />}
       </Nav>
+
       {visibility && (
-        <DropdownBox>
-          {teamList.length > 0 ? (
-            <>
-              <TeamBox>
-                {teamList.map((team) => (
-                  <TeamListWrapper
-                    key={team.teamId}
-                    onClick={() => handleTeamClick(team.teamId)}
-                  >
-                    <TeamColor />
-                    <TeamName>{team.teamName}</TeamName>
-                  </TeamListWrapper>
-                ))}
-              </TeamBox>
-              <Create hasTeams={true} onClick={createTeam}>
-                팀스페이스 만들기
-              </Create>
-            </>
-          ) : (
-            <Create hasTeams={false} onClick={createTeam}>
-              팀스페이스 만들기
-            </Create>
-          )}
+        <DropdownBox ref={dropdownRef}>
+          <TeamBox>
+            {teamList.map((team) => (
+              <TeamItem key={team.team_id} onClick={() => handleTeamClick(team.team_id)}>
+                <TeamColor />
+                <TeamName>{team.team_name}</TeamName>
+              </TeamItem>
+            ))}
+          </TeamBox>
+            <Create onClick={createTeam}>팀스페이스 만들기</Create>
         </DropdownBox>
-      )
-      }
+      )}
     </Container >
   );
 };
@@ -117,7 +116,7 @@ const TeamBox = styled.div`
   margin-bottom: 10px;
 `;
 
-const TeamListWrapper = styled.div`
+const TeamItem = styled.div`
   display: flex;
   align-items: center;
   padding: 8px 10px;
@@ -150,7 +149,6 @@ const Create = styled.div`
   font-weight: 400;
   line-height: 24px;
   text-decoration-line: underline;
-  margin-top: ${({ hasTeams }) => (hasTeams ? "auto" : "0")}; /* 팀이 없을 때 중앙에 배치 */
 `;
 
 export default Dropdown;

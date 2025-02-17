@@ -17,11 +17,15 @@ export interface PostResult {
     team_profile_image_url: string;
     thumbnail_image_url: string;
     updated_at: string;
+    is_bookmarked: boolean;
+    bookmark_count: number;
 }
 
 export interface AuthorResult {
     introduction: string;
     user_name: string;
+    current_member_id: number;
+    user_id: number;
 }
 
 export interface IsFollowedResult {
@@ -36,8 +40,22 @@ export interface ToggleBookmarkResult {
 
 }
 
+export interface GetCommentsResult {
+    content: any[];
+}
+
+export interface PostCommentResult {
+    comment_body: string;
+}
+
+export interface PostCommentRequest {
+    comment_body: string;
+}  
+
 export type GetPostResponse = GeneralResponse<PostResult>;
 export type GetAuthorResponse = GeneralResponse<AuthorResult>;
 export type GetIsFollowedResponse = GeneralResponse<boolean>;
 export type ToggleFollowResponse = GeneralResponse<ToggleFollowResult>;
 export type ToggleBookmarkResponse = GeneralResponse<ToggleBookmarkResult>;
+export type GetCommentsResponse = GeneralResponse<GetCommentsResult>;
+export type PostCommentResponse = GeneralResponse<PostCommentResponse>;

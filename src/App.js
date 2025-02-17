@@ -4,8 +4,9 @@ import styled from "styled-components";
 import Navbar from "./components/navbar/Navbar.tsx";
 import Footer from "./components/Footer.jsx";
 import Main from "./pages/Main.tsx";
+import Search from "./pages/Search.tsx";
 import Profile from "./pages/Profile.tsx";
-import Team from "./pages/Team.jsx";
+import Team from "./pages/Team.tsx";
 
 import Calendar from "./pages/Calendar.jsx";
 import Diary from "./pages/Diary.jsx";
@@ -70,6 +71,7 @@ function App() {
           <Route path="/oauth/callback" element={<KakaoCallback />} />
           <Route path="*" element={"404 not found"} />
           <Route path="/example" element={<Example />} />
+          <Route path="/search/:keyword" element={<Search />} />
         </Routes>
       </Container>
       <Footer />

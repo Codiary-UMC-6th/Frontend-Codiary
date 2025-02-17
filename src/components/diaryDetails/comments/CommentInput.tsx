@@ -1,8 +1,50 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
-import { post } from '../../../common/api';
 import * as Color from '../../../common/Color';
+
+import { postComment } from '@/shared/api/diaryDetail'
+
+interface CommentInputProps {
+    postId: number;
+    loadComments: any;
+}
+
+const CommentInput = ({ postId, loadComments }: CommentInputProps) => {
+    const [inputValue, setInputValue] = useState<string>('');
+    const handleChange = (e: any) => {
+        setInputValue(e.target.value);
+    }
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        console.log('submitted comment', inputValue);
+        const response = await postComment(postId, { comment_body: inputValue});
+        console.log('posted comment', response);
+        loadComments();
+        setInputValue('');
+    }
+
+    return (
+        <Container>
+            <form onSubmit={handleSubmit}>
+            <Input 
+                type="text"
+                value={inputValue}
+                onChange={handleChange}
+                placeholder='댓글을 작성하세요.' 
+            />
+            <Box>
+                <RegistrationBtn>등록</RegistrationBtn>
+            </Box>
+            </form>
+        </Container>
+    );
+}
+
+const Container = styled.div`
+    margin-bottom: 72px;
+`
 
 const Input = styled.input`
     display: flex;
@@ -29,6 +71,7 @@ const Box = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    justify-content: flex-end;
 `;
 
 const RegistrationBtn = styled.button`
@@ -46,61 +89,5 @@ const RegistrationBtn = styled.button`
     font-weight: 500;
     line-height: 32px;
 `;
-
-interface CommentInputProps {
-    postId: number | undefined;
-    memberId: number | undefined;
-}
-
-const CommentInput = ({ postId, memberId }: CommentInputProps) => {
-    const [inputValue, setInputValue] = useState<string>('');
-    const [commentBody, setCommentBody] = useState<string>('');
-
-    const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        setInputValue(e.target.value);
-    }
-
-    const handleClick = () => {
-        setCommentBody(inputValue);
-        window.location.reload();
-    }
-
-    useEffect(() => {
-        if (commentBody.trim() !== '') {
-            console.log(commentBody);
-            postComment();
-            setInputValue('');
-        }
-    }, [commentBody])
-
-    const postComment = async () => {
-        const endpoint = `/posts/add/comment/${memberId}/${postId}`;
-        const data = {
-            commentBody: commentBody
-        };
-
-        try {
-            const result = await post(endpoint, data);
-            console.log("댓글 추가 결과:", result);
-        } catch (error) {
-            console.error("댓글 작성 실패: ", error);
-        }
-    }
-
-    return (
-        <div style={{marginBottom: "72px"}}>
-            <Input 
-                type="text"
-                value={inputValue}
-                onChange={handleChange}
-                placeholder='댓글을 작성하세요.' 
-            />
-            <Box style={{justifyContent: "flex-end"}}>
-                <RegistrationBtn onClick={handleClick}>등록</RegistrationBtn>
-            </Box>
-        </div>
-    );
-    
-}
 
 export default CommentInput;

@@ -13,9 +13,10 @@ import CategoryChip from "../components/diaryDetails/CategoryChip";
 import ProfileCard from "../components/diaryDetails/ProfileCard";
 import CommentBox from "../components/diaryDetails/comments/CommentBox";
 import CommentInput from "../components/diaryDetails/comments/CommentInput";
+import CommentPage from "@/components/diaryDetails/comments/CommentPage";
 import OtherCards from "../components/diaryDetails/OtherCards";
 
-import { getPost } from "@/shared/api/diaryDetail";
+import { getPost, getComments } from "@/shared/api/diaryDetail";
 
 interface Post {
     coauthorIds: number[];
@@ -26,22 +27,23 @@ interface Post {
     author: string;
     authorId: number;
     createdAt: string;
-}
-
-interface CommentsInterface {
-    memberId: number;
-    nickname: string;
-    commentId: number;
-    commentBody: string;
-    createdAt: string;
-    childCommentList: CommentsInterface[] | undefined;
+    isBookmarked: boolean;
+    bookmarkCount: number;
 }
 
 interface Comment {
-
+    comment_body: string;
+    comment_id: number;
+    commenter_id: number;
+    commenter_nickname: string;
+    commenter_profile_image_url: string;
+    created_at: string;
+    number_of_reply: number;
+    post_id: number;
+    updated_at: string;
 }
 
-function DiaryDetails() {
+const DiaryDetails = () => {
     const memberId = 0;
     const { postId } = useParams<string>();
     const [post, setPost] = useState<Post>({
@@ -52,7 +54,9 @@ function DiaryDetails() {
         details: "",
         author: "",
         authorId: 0,
-        createdAt: ""
+        createdAt: "",
+        isBookmarked: false,
+        bookmarkCount: 0,
     });
 
     const loadPost = async () => {
@@ -67,33 +71,27 @@ function DiaryDetails() {
             author: response.author_nickname,
             authorId: response.member_id,
             createdAt: response.created_at,
+            isBookmarked: response.is_bookmarked,
+            bookmarkCount: response.bookmark_count,
         })
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const [commentPage, setCommentPage] = useState<number>(0);
+    const loadComments = async () => {
+        const response = await getComments(Number(postId));
+        setComments(response.content);
+        console.log(response.content);
+    }
 
     useEffect(() => {
         loadPost();
+        loadComments();
     }, []);
-
-    /*
-        const stringModifyForImg = (content: any) => {
-        const regex = /<img\s+id="(\w+)">/g;
-        var string = content;
-        var i = 0;
-        string = string.replace(regex, function(match: string) {
-            const replacedString = match.replace(/<img/, `<img class="postImg" src=${post.postFileList[i].url}`);
-            i += 1;
-            console.log("replacedString", replacedString);
-            return replacedString;
-        });
-        return string;
-    }
-    */
-
+    
     return (
         <Container>
-            <FAB postId={post.postId} memberId={memberId} />
+            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked}/>
             <CenterBox>
                 <Title>{post.title}</Title>
                 <CategoryChip postId={post.postId} />
@@ -102,9 +100,9 @@ function DiaryDetails() {
                         <UserName>{post.author}</UserName>
                         <Details>
                             <img src={Scrap} alt='scrap icon'/>
-                            <ScrapCount>{/*bookmarkCount*/0}</ScrapCount>
+                            <ScrapCount>{post.bookmarkCount}</ScrapCount>
                             <img src={CommentIcon} alt='comment icon'/>
-                            <CommentCount>{/*totalComments*/0}</CommentCount>
+                            <CommentCount>{comments.length}</CommentCount>
                             <KebabModal memberId={memberId} authorId={post.authorId} commentId={0} />
                         </Details>
                     </NameBox>
@@ -117,11 +115,12 @@ function DiaryDetails() {
                     <ProfileCard authorId={data} author={''} />
                 )))
                 : <></>}
-                <CommentTitle>{/*totalComments*/0}개의 댓글</CommentTitle>
-                <CommentInput postId={post.postId} memberId={memberId} />
+                <CommentTitle>{comments.length}개의 댓글</CommentTitle>
+                <CommentInput postId={post.postId} loadComments={loadComments}/>
                 {comments.map((data) => (
-                    <CommentBox comment={data} postId={post.postId} memberId={memberId} />
+                    <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
+                <CommentPage></CommentPage>
             </CenterBox>
             <OtherCards postId={post.postId} />
         </Container>
