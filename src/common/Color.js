@@ -24,3 +24,4 @@ export const backgroundBlur = "#434343";
 export const gray300 = "#CCCCCC";
 export const gray500 = "#999999";
 export const gray700 = "#666666";
+export const gray800 = "#434343";

@@ -6,6 +6,12 @@ html, body, #root {
     display: flex;
     flex-direction: column;
     background-color: #222222;
+    
+    font-family: 'Pretendard Variable';
+}
+
+button, input {
+    font-family: 'Pretendard Variable';
 }
 
 @font-face {

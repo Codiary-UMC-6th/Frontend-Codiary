@@ -59,11 +59,11 @@ const Btn = styled.button<BtnProps>`
   background: none;
   border: none;
   color: ${(props) => (props.active ? "#FFFFFF" : "#999999")};
-  text-decoration: none;
   padding-right: 60px;
   cursor: pointer;
+  
+  font-family: 'Pretendard Variable';
 
-  font-family: Pretendard;
   font-size: 32px;
   font-weight: 600;
   line-height: 48px;

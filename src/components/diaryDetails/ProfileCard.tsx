@@ -79,7 +79,6 @@ const UserName = styled.div`
     color: ${Color.primary_yellow};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
@@ -90,7 +89,6 @@ const Text = styled.div`
     color: ${Color.text5};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

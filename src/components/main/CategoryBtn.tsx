@@ -35,7 +35,6 @@ const Btn = styled.div`
     justify-content: center;
     align-items: center;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-weight: 500;
 `;
@@ -50,7 +49,6 @@ const AddBtn = styled.button`
     justify-content: center;
     align-items: center;
 
-    font-family: Pretendard;
     font-size: 40px;
     font-weight: 200;
     cursor: pointer;

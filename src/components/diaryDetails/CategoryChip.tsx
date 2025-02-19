@@ -25,7 +25,6 @@ const Category = styled.div`
     color: #2D7295;
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;

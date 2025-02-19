@@ -7,19 +7,50 @@ import Card from "../components/main/Card";
 
 import { postDiary } from '@/shared/api/diaryEditor';
 
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+
+interface PostType {
+  author_name: string;
+  author_image_url?: string;
+  body: string;
+  created_at: string;
+  id: number;
+  team_banner_image_url?: string;
+  team_profile_image_url?: string;
+  thumbnail_image_url?: string;
+  title: string;
+  updated_at: string;
+}
+
 const DiaryRegister = () => {
   const navigate = useNavigate();
 
+  // 미리보기
+  const loadEditorState = () => {
+    const savedEditorState = localStorage.getItem('diary-content');
+    if (savedEditorState) {
+      const rawContent = JSON.parse(savedEditorState);
+      const contentState = convertFromRaw(rawContent);
+      return EditorState.createWithContent(contentState);
+    }
+    return EditorState.createEmpty();
+  }
+  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
+  useEffect(() => {
+    setEditorState(loadEditorState());
+  }, []);
+
+  //
   const [isPublic, setIsPublic] = useState(true);
   const [teamId, setTeamId] = useState(0);
-  const teamList = [];
+  const teamList:any[] = [];
   const [projectId, setProjectId] = useState(0);
-  const projectList = [];
-  const coAuthors = [];
-  const [files, setFiles] = useState([]);
-  const categories = [];
+  const projectList:any[] = [];
+  const coAuthors:any[] = [];
+  const [files, setFiles] = useState<any[]>([]);
+  const categories:any[] = [];
   
-  const uploadFile = (e) => {
+  const uploadFile = (e:any) => {
     setFiles([e.target.files[0]]);
   };
 
@@ -37,7 +68,7 @@ const DiaryRegister = () => {
     files.forEach((file) => {
       formData.append('postFiles', file);
     })    
-    */
+    
     const formData = new FormData();
     formData.append('postTitle', localStorage.getItem('diary-title'));
     formData.append('postBody', localStorage.getItem('diary-content'));
@@ -47,22 +78,24 @@ const DiaryRegister = () => {
 
     const response = await postDiary(formData);
     console.log(response);
+    */
   };
 
-  const handleAddCoAuthor = (author) => {  };
+  const handleAddCoAuthor = (author:string) => {  };
 
-  const handleAddCategory = (e) => {  };
+  const handleAddCategory = (e:any) => {  };
 
-  const tempPost = {
-    id: 0,
-    author: 'temp',
+  const tempPost:PostType = {
+    author_name: 'string',
     body: 'string',
-    title: 'string',
     created_at: 'string',
-    updated_at: 'string',
+    id: 0,
+    title: 'string',
+    updated_at: 'string'
   };
 
   return (
+    <>
     <Container>
       <LeftSection>
         <CloseButton>&times;</CloseButton>
@@ -113,7 +146,7 @@ const DiaryRegister = () => {
             <Label>팀명</Label>
             <Select
               value={teamId}
-              onChange={(e) => setTeamId(e.target.value)}
+              onChange={(e) => setTeamId(Number(e.target.value))}
             >
               <Option value="">-</Option>
               {
@@ -125,7 +158,7 @@ const DiaryRegister = () => {
             <Label>프로젝트명</Label>
             <Select
               value={projectId}
-              onChange={(e) => setProjectId(e.target.value)}
+              onChange={(e) => setProjectId(Number(e.target.value))}
             >
               <Option value="">-</Option>
               {
@@ -151,6 +184,12 @@ const DiaryRegister = () => {
       </RightSection>
       <input type="file" onChange={uploadFile} />
     </Container>
+    <Editor 
+      editorState={editorState}
+      onChange={()=>{}}
+      readOnly={true}
+    />
+    </>
   );
 };
 

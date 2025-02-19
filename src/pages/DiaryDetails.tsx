@@ -145,7 +145,6 @@ const Title = styled.div`
     margin-top: 52px;
     margin-bottom: 48px;
 
-    font-family: Pretendard;
     font-size: 42px;
     font-style: normal;
     font-weight: 600;
@@ -168,7 +167,6 @@ const UserName = styled.div`
     color: ${Color.text1};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -184,7 +182,6 @@ const Details = styled.div`
 const ScrapCount = styled.div`
     color: ${Color.primary_yellow};
     text-align: justify;
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -196,7 +193,6 @@ const ScrapCount = styled.div`
 const CommentCount = styled.div`
     color: ${Color.primary_red};
     text-align: justify;
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -210,7 +206,6 @@ const PostInfo = styled.div`
     text-align: justify;
     margin-bottom: 25px;
 
-    font-family: Pretendard;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -222,7 +217,6 @@ const Text = styled.div`
     text-align: justify;
     margin-bottom: 130px;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -233,7 +227,6 @@ const Text = styled.div`
 const CommentTitle = styled.div`
     color: ${Color.text1};
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
