@@ -84,7 +84,6 @@ const Author = styled.div`
     color: ${Color.text1};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -96,7 +95,6 @@ const Date = styled.div`
     text-align: justify;
     margin-right: 16px;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -108,7 +106,6 @@ const CommentContent = styled.div`
     text-align: justify;
     padding: 32px 0px;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

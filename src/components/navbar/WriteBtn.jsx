@@ -30,7 +30,6 @@ const Btn = styled.button`
     border: none;
     border-radius: 30px;
     color: ${Color.text1};
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
