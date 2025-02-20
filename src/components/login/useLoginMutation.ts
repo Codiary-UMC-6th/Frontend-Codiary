@@ -6,6 +6,7 @@ import {
   ACCESS_TOKEN_KEY,
   GRANT_TYPE,
   HTTP_STATUS_CODE,
+  MEMBER_ID,
   REFRESH_TOKEN_KEY,
 } from "@/shared/constant/api";
 import { PostLoginErrorResponse } from "@/shared/api/signin/type";
@@ -24,6 +25,7 @@ export const useLoginMutation = (callbacks?: { onSuccess?: () => void }) => {
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
       localStorage.setItem(GRANT_TYPE, grantType);
+      localStorage.setItem(MEMBER_ID, String(data.member_id));
       axiosInstance.defaults.headers.Authorization = `${grantType} ${accessToken}`;
       setLogin(data.member_id, data.email, data.nickname);
 

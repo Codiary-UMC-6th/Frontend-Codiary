@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate,useLocation } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import * as Color from "../../common/Color";
@@ -9,35 +9,33 @@ import SearchBox from "./SearchBox";
 import WriteBtn from "./WriteBtn";
 import { LoginModal } from "../login/LoginModal";
 
-import { useEditorStore} from "../../store/EditorStore";
+import { useEditorStore } from "../../store/EditorStore";
 import { useLoginStore } from "../../store/LoginStore";
 import {
   ACCESS_TOKEN_KEY,
   GRANT_TYPE,
+  MEMBER_ID,
   REFRESH_TOKEN_KEY,
 } from "@/shared/constant/api";
 import { postLogout } from "@/shared/api/logout";
+import { userInfo } from "os";
 
 const Navbar = () => {
   const { setRegister } = useEditorStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [path, setPath] = useState<string>('/');
+  const [path, setPath] = useState<string>("/");
   useEffect(() => {
     setPath(location.pathname);
-  }, [location.pathname])
+  }, [location.pathname]);
 
   const { isLogin, setLogin, setLogout, memberId } = useLoginStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
-    if (token) {
-      const memberId = sessionStorage.getItem("memberId");
-      const email = sessionStorage.getItem("email");
-      const nickname = sessionStorage.getItem("nickname");
-      setLogin(memberId, email, nickname);
-    } else {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+    if (!token) {
       setLogout();
     }
   }, [setLogin]);
@@ -70,14 +68,12 @@ const Navbar = () => {
     }
   };
 
-  return (
-    (path !== '/diaryEditor')
-    ?
+  return path !== "/diaryEditor" ? (
     <>
       <Container>
         <Left>
           <Logo />
-          {(isLogin) && (
+          {isLogin && (
             <>
               <NavStyle to="/">홈</NavStyle>
               <NavStyle to={`/profile/${memberId}`}>내 다이어리</NavStyle>
@@ -89,7 +85,7 @@ const Navbar = () => {
         </Left>
         <Right>
           <SearchBox />
-          {(isLogin) ? (
+          {isLogin ? (
             <>
               <WriteBtn />
               <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
@@ -105,14 +101,20 @@ const Navbar = () => {
         <LoginModal onClose={() => setIsLoginModalOpen(false)} />
       )}
     </>
-    :
+  ) : (
     <Container>
       <Left>
         <Logo />
       </Left>
       <Right>
         <TempSaveBtn>임시저장</TempSaveBtn>
-        <SaveBtn onClick={()=>{setRegister(true)}}>작성하기</SaveBtn>
+        <SaveBtn
+          onClick={() => {
+            setRegister(true);
+          }}
+        >
+          작성하기
+        </SaveBtn>
       </Right>
     </Container>
   );
@@ -121,12 +123,12 @@ const Navbar = () => {
 const Logo = () => {
   return (
     <LinkStyle to="/">
-    <Typography>{"/*"}</Typography>
-    <Codiary>Codiary</Codiary>
-    <Typography>*/</Typography>
-  </LinkStyle>
+      <Typography>{"/*"}</Typography>
+      <Codiary>Codiary</Codiary>
+      <Typography>*/</Typography>
+    </LinkStyle>
   );
-}
+};
 
 const Container = styled.div`
   display: flex;
@@ -233,7 +235,7 @@ const TempSaveBtn = styled.div`
   &:hover {
     font-weight: bold;
   }
-`
+`;
 
 const SaveBtn = styled.div`
   display: flex;
@@ -254,6 +256,6 @@ const SaveBtn = styled.div`
   &:hover {
     font-weight: bold;
   }
-`
+`;
 
 export default Navbar;
