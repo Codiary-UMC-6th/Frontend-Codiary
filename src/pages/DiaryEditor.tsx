@@ -5,37 +5,80 @@ import styled from 'styled-components';
 import * as Color from "../common/Color";
 
 import { useEditorStore } from '../store/EditorStore';
-import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import { Editor, EditorState, convertToRaw } from 'draft-js';
 
 import ToolBox from '../components/diaryEditor/ToolBox';
+
+interface BlockType {
+    type: string;
+    editorState: EditorState;
+}
 
 const DiaryEditor: React.FC = () => {
     const navigate = useNavigate();
     const { register, setRegister } = useEditorStore();
 
     const [title, setTitle] = useState<string>('');
-    const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
+
+    // 블록 1개 = 에디터 1개
+    // 각 블록별로 editorState를 가짐
+    // 모든 블록을 담는 배열
+    const [selectedIndex, setSelectedIndex] = useState<number|null>(null);
+    const [blocks, setBlocks] = useState<BlockType[]>([
+        {
+            type: 'text',
+            editorState: EditorState.createEmpty(),
+        },
+        {
+            type: 'text',
+            editorState: EditorState.createEmpty(),
+        },
+        {
+            type: 'text',
+            editorState: EditorState.createEmpty(),
+        },
+    ]);
 
     // 에디터 변경시 상태 업데이트
-    const handleEditorChange = (state: EditorState) => {
+    const handleEditorChange = (newState: EditorState, index: number) => {
+        setBlocks((prevBlocks) => 
+            prevBlocks.map((block, i) => 
+                index === i
+                ? { ...block, editorState: newState}
+                : block
+            )
+        )
+    }
+    /*const handleEditorChange = (state: EditorState) => {
         setEditorState(state);
-    };
+    };*/
 
     // 도구 박스
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>();
     const handleMouseUp = () => {
         const selection = window.getSelection();
 
-        if (selection === null) { 
+        if (selection === null) {
             setSelectionRect(null);
         } else if (selection.isCollapsed) {
             setSelectionRect(null);
         } else if (selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-          setSelectionRect(rect); // Store the selection's bounding rect
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            setSelectionRect(rect);
         }
     };
+
+    //ToolBox 전달용
+    const setSelectedEditorState = (newState:EditorState) => {
+        setBlocks((prevBlocks) => 
+            prevBlocks.map((block, i) => 
+                selectedIndex === i
+                ? { ...block, editorState: newState}
+                : block
+            )
+        )
+    }
 
     // 등록
     // LocalStorage에 저장 후 등록 페이지로 이동
@@ -43,39 +86,52 @@ const DiaryEditor: React.FC = () => {
         if (register) {
             localStorage.setItem('diary-title', title);
 
-            const contentState = editorState.getCurrentContent();
-            const rawContent = convertToRaw(contentState);
-            localStorage.setItem('diary-content', JSON.stringify(rawContent));
+            //const contentState = editorState.getCurrentContent();
+            //const rawContent = convertToRaw(contentState);
+            //localStorage.setItem('diary-content', JSON.stringify(rawContent));
             setRegister(false);
             navigate('/diary/register');
         }
     }, [register])
 
+
+
     return (
         <Container onMouseUp={handleMouseUp}>
-            <OptionBtn onClick={() => {}}>출력</OptionBtn>
-            <Title 
+            <OptionBtn onClick={() => { }}>출력</OptionBtn>
+            <Title
                 value={title}
-                onChange={(e) => {setTitle(e.target.value)}}
+                onChange={(e) => { setTitle(e.target.value) }}
                 placeholder="제목을 입력하세요"
             />
             <HR></HR>
-            <EditorContainer>
-                <Editor
-                    editorState={editorState}
-                    onChange={handleEditorChange}
-                    customStyleMap={styleMap}
-                />
-            </EditorContainer>
-            
-            {selectionRect && <ToolBox selectionRect={selectionRect} editorState={editorState} setEditorState={setEditorState}/>}
+            {
+                blocks.map((block, index) => {
+                    if (block.type === 'text') {
+                        return (
+                            <EditorContainer>
+                                <Editor
+                                    editorState={block.editorState}
+                                    onChange={(state:EditorState) => { handleEditorChange(state, index); }}
+                                    onFocus={() => { setSelectedIndex(index); console.log("selected index: ", index) }}
+                                    customStyleMap={styleMap}
+                                />
+                            </EditorContainer>
+                        );
+                    } else {
+                        return <></>
+                    }
+                })
+            }
+
+            {selectionRect && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
         </Container>
-    );  
+    );
 }
 
 const styleMap = {
     'COLOR_#FFFFFF': {
-      color: '#FFFFFF',
+        color: '#FFFFFF',
     },
     'COLOR_#2D7295': {
         color: '#2D7295',
