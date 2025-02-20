@@ -64,14 +64,35 @@ const DiaryEditor: React.FC = () => {
                 <Editor
                     editorState={editorState}
                     onChange={handleEditorChange}
+                    customStyleMap={styleMap}
                 />
             </EditorContainer>
             
             {selectionRect && <ToolBox selectionRect={selectionRect} editorState={editorState} setEditorState={setEditorState}/>}
         </Container>
-    );
-  
+    );  
 }
+
+const styleMap = {
+    'COLOR_#FFFFFF': {
+      color: '#FFFFFF',
+    },
+    'COLOR_#2D7295': {
+        color: '#2D7295',
+    },
+    'COLOR_#AE5257': {
+        color: '#AE5257',
+    },
+    'COLOR_#E19E58': {
+        color: '#E19E58',
+    },
+    'COLOR_#83A67B': {
+        color: '#83A67B',
+    },
+    'COLOR_#EAB3CE': {
+        color: '#EAB3CE',
+    },
+};
 
 const OptionBtn = styled.button`
     width: 100px;
