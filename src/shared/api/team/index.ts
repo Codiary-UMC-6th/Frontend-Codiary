@@ -1,11 +1,11 @@
 import { baseResponse } from "../common/type";
 import { axiosInstance, axiosPublicInstance } from "../instance";
-import { AddTeamData, getTeamInfoResponse, postTeamResponse, getTeamProfileResponse, getTeamListResponse, getTeamDiaryResponse, getTeamProjectResponse } from "./type";
+import { AddTeamData, TeamInfoResponse, getTeamProfileResponse, getTeamListResponse, getTeamDiaryResponse, getTeamProjectResponse, getTeamFollowedResponse, ToggleFollowResponse } from "./type";
 
 export const postTeamMember = async (team_id: number) => {};
 
 export const postTeam = async (formData: AddTeamData) => {
-  const response = await axiosInstance.post<postTeamResponse>(
+  const response = await axiosInstance.post<TeamInfoResponse>(
     '/team',
     formData
   )
@@ -21,7 +21,7 @@ export const getCheckTeamName = async (teamName: string) => {
 }
 
 export const getTeamInfo = async (teamId: string | undefined) => {
-  const response = await axiosInstance.get<getTeamInfoResponse>(
+  const response = await axiosInstance.get<TeamInfoResponse>(
     `/team/${teamId}`
   )
 
@@ -34,6 +34,15 @@ export const getTeamProfile = async (teamId: string | undefined) => {
   )
 
   return response.data.result;
+}
+
+export const putTeamProfile = async (teamId: string | undefined, formData: AddTeamData) => {
+  const response = await axiosInstance.put<TeamInfoResponse>(
+    `team/${teamId}`,
+    formData
+  )
+
+  return response.data;
 }
 
 export const getTeamList = async () => {
@@ -55,6 +64,22 @@ export const getTeamDiaryData = async (teamId: string | undefined, page: number,
 export const getTeamProjectData = async (teamId: string | undefined) => {
   const response = await axiosInstance.get<getTeamProjectResponse>(
     `project/team/${teamId}`
+  );
+
+  return response.data.result;
+}
+
+export const getTeamFollowedData = async (teamId: number | undefined) => {
+  const response = await axiosInstance.get<getTeamFollowedResponse>(
+    `follow/team/${teamId}`
+  );
+
+  return response.data.result;
+}
+
+export const toggleTeamFollow = async (teamId: number | undefined) => {
+  const response = await axiosInstance.post<ToggleFollowResponse>(
+    `/follow/team/${teamId}`
   );
 
   return response.data.result;

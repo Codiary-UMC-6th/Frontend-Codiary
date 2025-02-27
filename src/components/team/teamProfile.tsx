@@ -6,6 +6,7 @@ import TeamMember from "./teamMember";
 import { useNavigate, useParams } from "react-router-dom";
 import { get } from "../../common/api";
 import { teamMember, teamProfile } from "@/shared/api/team/type";
+import TeamFollowBtn from "../profile/TeamFollowBtn";
 
 type Propstype = {
   props: {
@@ -31,7 +32,10 @@ const TeamProfile = ({ props }: Propstype) => {
   const navigate = useNavigate();
 
   const onClickEdit = () => {
-    navigate(`/teamEdit/${props.teamProfileData?.team_id}`, { state: { isEdit } });
+    navigate(
+      `/teamEdit/${props.teamProfileData?.team_id}`,
+      { state: { teamInfo: props.teamProfileData } }
+    );
   };
 
   return (
@@ -49,11 +53,11 @@ const TeamProfile = ({ props }: Propstype) => {
             />
           </UrlContainer>
         </NameText>
-        {props.isManager && (
-          <>
+        {props.isManager ? 
             <ProfileEditBtn onClick={onClickEdit}>프로필 수정</ProfileEditBtn>
-          </>
-        )}
+            :
+            <TeamFollowBtn teamId={props.teamProfileData?.team_id} />
+        }
       </NameContainer>
 
       {/* Introduce Container */}
@@ -133,9 +137,9 @@ const ProfileEditBtn = styled.button`
   border: 2px solid #999999;
   border-radius: 10px;
   color: #999999;
-  padding: 8px;
-  font-size: 16px;
-  margin-top: 20px;
+  padding: 8px 16px;
+  font-size: 18px;
+  margin: 20px 0;
   &:hover {
     opacity: 0.5;
     transition: 0.5s;

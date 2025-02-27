@@ -3,7 +3,7 @@ import { StringLiteral } from "typescript";
 //add team
 export interface AddTeamData {
   name: string;
-  admin_email: string;
+  email: string;
   intro: string;
   github: string;
   linked_in: string;
@@ -11,14 +11,7 @@ export interface AddTeamData {
   instagram: string;
 }
 
-export interface postTeamResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: teamInfo;
-}
-
-// 팀 정보 조회
+// 팀 정보 추가 & 조회 & 수정
 export interface teamInfo {
   team_id: number;
   name: string;
@@ -33,7 +26,7 @@ export interface teamInfo {
   instagram: string;
 }
 
-export interface getTeamInfoResponse {
+export interface TeamInfoResponse {
   isSuccess: boolean;
   code: string;
   message: string;
@@ -146,4 +139,21 @@ export interface getTeamProjectResponse {
 export interface teamProject {
   project_id: number;
   name: string;
+}
+
+// 팀 팔로우
+export interface getTeamFollowedResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: boolean;
+}
+
+export interface ToggleFollowResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    follow_status: boolean;
+  }
 }

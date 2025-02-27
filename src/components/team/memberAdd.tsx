@@ -130,65 +130,83 @@ const MemberAdd = ({ isPop, onClose }: MemberAddProps) => {
   if (!isPop) return null;
 
   return (
-    <Container>
-      <CloseBtn
-        onClick={onClose}
-        src={`${process.env.PUBLIC_URL}/team_images/close.png`}
-      />
-      <MemberContainer>
-        <p>구성원 관리</p>
-        <SearchContainer>
-          <img src={`${process.env.PUBLIC_URL}/team_images/search.png`} />
-          <MemberInput placeholder="추가하려는 사용자를 검색하세요" />
-        </SearchContainer>
-        <FollowerContainer>
-          {memberData.length > 0 ? (
-            memberData.map((el, index) => (
-              <FollowerBtn
-                key={index}
-                onClick={() => handleToggleMember(el.current_member_id)}
-                style={{
-                  backgroundColor: selectedMembers.has(el.current_member_id)
-                    ? "gray"
-                    : "#222222",
-                  color: "white",
-                }}
-              >
-                {el.user_name}
-              </FollowerBtn>
-            ))
-          ) : (
-            <div>Loading...</div>
-          )}
-        </FollowerContainer>
+    <ModalOverlay isOpen={isPop} onClick={onClose}>
+      <Container onClick={(e) => e.stopPropagation()}>
+        <CloseBtn
+          onClick={onClose}
+          src={`${process.env.PUBLIC_URL}/team_images/close.png`}
+        />
+        <MemberContainer>
+          <p>구성원 관리</p>
+          <SearchContainer>
+            <img src={`${process.env.PUBLIC_URL}/team_images/search.png`} />
+            <MemberInput placeholder="추가하려는 사용자를 검색하세요" />
+          </SearchContainer>
+          <FollowerContainer>
+            {memberData.length > 0 ? (
+              memberData.map((el, index) => (
+                <FollowerBtn
+                  key={index}
+                  onClick={() => handleToggleMember(el.current_member_id)}
+                  style={{
+                    backgroundColor: selectedMembers.has(el.current_member_id)
+                      ? "gray"
+                      : "#222222",
+                    color: "white",
+                  }}
+                >
+                  {el.user_name}
+                </FollowerBtn>
+              ))
+            ) : (
+              <div>Loading...</div>
+            )}
+          </FollowerContainer>
 
-        {showRolePopup && (
-          <RoleContainer>
-            <RoleInput
-              type="text"
-              value={memberRole}
-              onChange={(e) => setRole(e.target.value)}
-              placeholder="사용자의 역할을 추가해주세요."
-            />
-            <RoleBtn onClick={handleAddMember}>추가</RoleBtn>
-            <RoleBtn onClick={() => setShowRolePopup(false)}>취소</RoleBtn>
-          </RoleContainer>
-        )}
-      </MemberContainer>
-    </Container>
+          {showRolePopup && (
+            <RoleContainer>
+              <RoleInput
+                type="text"
+                value={memberRole}
+                onChange={(e) => setRole(e.target.value)}
+                placeholder="사용자의 역할을 추가해주세요."
+              />
+              <RoleBtn onClick={handleAddMember}>추가</RoleBtn>
+              <RoleBtn onClick={() => setShowRolePopup(false)}>취소</RoleBtn>
+            </RoleContainer>
+          )}
+        </MemberContainer>
+      </Container>
+    </ModalOverlay>
   );
 };
+
+const ModalOverlay = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  justify-content: center;
+  align-items: center;
+`;
 
 const Container = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
-  height: 400px;
-  padding: 20px;
-  background-color: #434343;
+  width: 600px;
+  height: 600px;
+  padding: 36px;
+  background-color: #222222;
+  box-shadow: 8px 8px 10px 0px rgba(17, 17, 17, 0.25);
   z-index: 1000;
+
 `;
 
 interface CloseBtnProps {
@@ -217,7 +235,7 @@ const MemberContainer = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid white;
+  border: 1px solid #999999;
   border-radius: 10px;
   padding: 10px 10px 7.5px;
   width: 70%;

@@ -17,7 +17,7 @@ const TeamAdd = () => {
 
   const [addTeamFormData, setAddTeamFormData] = useState<AddTeamData>({
     name: "",
-    admin_email: "",
+    email: "",
     intro: "",
     github: "",
     linked_in: "",
@@ -27,7 +27,7 @@ const TeamAdd = () => {
 
   const [errors, setErrors] = useState({
     name: "",
-    admin_email: "",
+    email: "",
     intro: "",
   })
 
@@ -75,7 +75,7 @@ const TeamAdd = () => {
     const hasErrors = Object.values(errors).some((error) => error);
     const requiredFields: Array<keyof AddTeamData> = [
       "name",
-      "admin_email",
+      "email",
       "intro",
     ];
     const hasEmptyFields = requiredFields.some(
