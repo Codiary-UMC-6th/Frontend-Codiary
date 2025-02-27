@@ -62,6 +62,11 @@ export const patchUserProfileImage = async (formData: FormData | undefined) => {
   const response = await axiosInstance.patch<userProfileImgResponse>(
     'member/profile-image',
     formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data', // 직접 지정하지 않는 것이 일반적으로 안전함
+      },
+    }
   );
 
   return response.data;

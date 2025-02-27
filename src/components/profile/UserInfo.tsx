@@ -70,7 +70,7 @@ const UserInfo = ({props}: userPersonalInfo) => {
         <ImageBox>
           <Image/>
           <ImageUploadButtonWrapper>
-            {/* <ImageInput type="file" accept="image/*" onChange={handleFileChange} /> */}
+            <ImageInput type="file" accept="image/*" onChange={handleFileChange} />
             <AddImageButton onClick={handleUpload} disabled={!selectedFile}>+</AddImageButton>
           </ImageUploadButtonWrapper>
         </ImageBox>

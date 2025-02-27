@@ -15,7 +15,7 @@ export const postTeam = async (formData: AddTeamData) => {
 
 export const getCheckTeamName = async (teamName: string) => {
   const response = await axiosInstance.get<baseResponse>(
-    `/team/check?name=${teamName}`
+    `/team/check_duplicate?team_name=${teamName}`
   )
   return response.data;
 }

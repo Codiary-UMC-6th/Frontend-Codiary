@@ -53,7 +53,7 @@ const Dropdown = () => {
 
   useEffect(() => {
     loadTeamList();
-  }, []);
+  }, [visibility]);
 
   return (
     <Container>

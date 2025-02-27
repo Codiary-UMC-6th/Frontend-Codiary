@@ -3,7 +3,7 @@ import { StringLiteral } from "typescript";
 //add team
 export interface AddTeamData {
   name: string;
-  // admin_mail: string;
+  admin_email: string;
   intro: string;
   github: string;
   linked_in: string;
@@ -53,6 +53,8 @@ export interface teamProfile {
   discord: string;
   instagram: string;
   is_followed: boolean;
+  current_member_id: number;
+  is_admin: boolean;
   team_member_list: teamMember[];
 }
 
