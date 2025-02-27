@@ -114,6 +114,7 @@ const TeamEdit = () => {
             onChange: (value, error) => handleChange('name', value, error),
             isButtonHidden: Boolean(true),
             type: "text",
+            disable: true,
           }}
         />
         <SignUpInputContainer
@@ -125,6 +126,7 @@ const TeamEdit = () => {
             onChange: (value, error) => handleChange('email', value, error),
             isButtonHidden: Boolean(true),
             type: "text",
+            disable: true,
           }}
         />
         <SignUpInputContainer
@@ -144,7 +146,9 @@ const TeamEdit = () => {
           handleChange: handleChange,
           github: teamProfileFromData.github,
           linkedIn: teamProfileFromData.linked_in,
-          discord: teamProfileFromData.discord
+          discord: teamProfileFromData.discord,
+          instagram: teamProfileFromData.instagram,
+          isTeam: true,
         }}
       />
       <SignUpBtnBox

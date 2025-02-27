@@ -3,6 +3,7 @@ import { SocialInputBox } from "./SocialInputBox";
 import githubIcon from "@/assets/signUp/github.svg";
 import linkedInIcon from "@/assets/signUp/linkedin.svg";
 import discordIcon from "@/assets/signUp/discord.svg";
+import instagramIcon from "@/assets/signUp/instagram.svg";
 import { SignUpInputTitle } from "./SignUpInputTitle";
 
 type SocialInputContainerProps = {
@@ -10,6 +11,8 @@ type SocialInputContainerProps = {
     github?: string;
     linkedIn?: string;
     discord?: string;
+    instagram?: string;
+    isTeam?: boolean;
     handleChange: (name: string, value: string, error?: string) => void;
   };
 };
@@ -48,6 +51,18 @@ export const SocialInputContainer = ({ props }: SocialInputContainerProps) => {
           }}
         />
       </St.SocialInputWithoutTitleWrapper>
+      {props.isTeam && (
+        <St.SocialInputWithoutTitleWrapper>
+        <SocialInputBox
+          props={{
+            image: <img src={instagramIcon} alt="instagram" />,
+            placeholder: "id를 입력해주세요.",
+            value: props.instagram,
+            onChange: (value) => props.handleChange("instagram", value, ""),
+          }}
+        />
+      </St.SocialInputWithoutTitleWrapper>
+      )}
     </>
   );
 };

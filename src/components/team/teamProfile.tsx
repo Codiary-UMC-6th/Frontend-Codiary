@@ -6,7 +6,7 @@ import TeamMember from "./teamMember";
 import { useNavigate, useParams } from "react-router-dom";
 import { get } from "../../common/api";
 import { teamMember, teamProfile } from "@/shared/api/team/type";
-import TeamFollowBtn from "../profile/TeamFollowBtn";
+import TeamFollowBtn from "./TeamFollowBtn";
 
 type Propstype = {
   props: {

@@ -160,6 +160,7 @@ const TeamAdd = () => {
       <SocialInputContainer
         props={{
           handleChange: handleChange,
+          isTeam: true,
         }}
       />
       <SignUpBtnBox
