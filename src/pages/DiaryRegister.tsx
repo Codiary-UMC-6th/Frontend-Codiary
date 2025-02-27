@@ -69,9 +69,7 @@ const DiaryRegister = () => {
     setBlocks(temp_blocks);
     return EditorState.createEmpty();
   }
-  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   useEffect(() => {
-    //setEditorState(loadEditorState());
     loadEditorState();
   }, []);
 
@@ -82,38 +80,36 @@ const DiaryRegister = () => {
   const [projectId, setProjectId] = useState(0);
   const projectList: any[] = [];
   const coAuthors: any[] = [];
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const categories: any[] = [];
 
   const uploadFile = (e: any) => {
-    setFiles([e.target.files[0]]);
+    console.log(e.target.files);
+    setFiles(e.target.files);
   };
 
   const handleSave = async () => {
-    // Save the diary entry
-    /*
     const formData = new FormData();
-    formData.append('teamId', teamId);
-    formData.append('projectId', projectId);
-    formData.append('postTitle', sessionStorage.getItem('diary-title'));
-    formData.append('postBody', sessionStorage.getItem('diary-content'));
+    //formData.append('teamId', teamId);
+    //formData.append('projectId', projectId);
+    formData.append('postTitle', localStorage.getItem('diary-title') || '');
+    formData.append('postBody', localStorage.getItem('diary-content') || '');
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
-    formData.append('thumbnailImageName', '');
-    files.forEach((file) => {
+    //formData.append('thumbnailImageName', '');
+    Array.from(files).forEach((file:File) => {
       formData.append('postFiles', file);
-    })    
-    
+    })
+    /*
     const formData = new FormData();
     formData.append('postTitle', localStorage.getItem('diary-title'));
     formData.append('postBody', localStorage.getItem('diary-content'));
     formData.append('postStatus', true);
     formData.append('postAccess', 'ENTIRE');
     formData.append('postFiles', files)
-
+    */
     const response = await postDiary(formData);
     console.log(response);
-    */
   };
 
   const handleAddCoAuthor = (author: string) => { };
@@ -217,9 +213,10 @@ const DiaryRegister = () => {
           </FormSection>
           <Button onClick={handleSave}>작성 완료</Button>
         </RightSection>
-        <input type="file" onChange={uploadFile} />
+        <input type="file" onChange={uploadFile} multiple/>
       </Container>
       {
+        //미리보기
         blocks.map((block, index) => {
           if (block.type === 'text') {
             return (
