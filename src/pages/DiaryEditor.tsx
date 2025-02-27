@@ -56,15 +56,7 @@ const DiaryEditor: React.FC = () => {
         {
             type: 'text',
             editorState: EditorState.createEmpty(),
-        },
-        {
-            type: 'text',
-            editorState: EditorState.createEmpty(),
-        },
-        {
-            type: 'text',
-            editorState: EditorState.createEmpty(),
-        },
+        }
     ]);
 
     // 블록 추가
@@ -146,10 +138,6 @@ const DiaryEditor: React.FC = () => {
         <Container
             onMouseUp={handleMouseUp}
         >
-            <OptionBtn onClick={() => { }}>출력</OptionBtn>
-            <OptionBtn onClick={() => { addBlockAtIndex(0) }}>Add 0</OptionBtn>
-            <OptionBtn onClick={() => { addBlockAtIndex(1) }}>Add 1</OptionBtn>
-            <OptionBtn onClick={() => { addBlockAtIndex(2) }}>Add 2</OptionBtn>
             <Title
                 value={title}
                 onChange={(e) => { setTitle(e.target.value) }}
@@ -176,6 +164,7 @@ const DiaryEditor: React.FC = () => {
                 })
             }
             <OptionBtn onClick={() => { addBlockAtIndex(blocks.length) }}>Add Last</OptionBtn>
+            <OptionBtn onClick={() => { }}>출력</OptionBtn>
             {selectionRect && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
         </Container>
     );

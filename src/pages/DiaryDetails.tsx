@@ -18,6 +18,9 @@ import OtherCards from "../components/diaryDetails/OtherCards";
 
 import { getPost, getComments } from "@/shared/api/diaryDetail";
 
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { parse } from "path";
+
 interface Post {
     coauthorIds: number[];
     postCategory: string;
@@ -42,6 +45,32 @@ interface Comment {
     post_id: number;
     updated_at: string;
 }
+
+interface BlockType {
+    type: string;
+    editorState: EditorState;
+}
+
+const styleMap = {
+    'COLOR_#FFFFFF': {
+        color: '#FFFFFF',
+    },
+    'COLOR_#2D7295': {
+        color: '#2D7295',
+    },
+    'COLOR_#AE5257': {
+        color: '#AE5257',
+    },
+    'COLOR_#E19E58': {
+        color: '#E19E58',
+    },
+    'COLOR_#83A67B': {
+        color: '#83A67B',
+    },
+    'COLOR_#EAB3CE': {
+        color: '#EAB3CE',
+    },
+};
 
 const DiaryDetails = () => {
     const memberId = 0;
@@ -73,7 +102,8 @@ const DiaryDetails = () => {
             createdAt: response.created_at,
             isBookmarked: response.is_bookmarked,
             bookmarkCount: response.bookmark_count,
-        })
+        });
+        parseContent(response.post_body);
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
@@ -84,14 +114,32 @@ const DiaryDetails = () => {
         console.log(response.content);
     }
 
+    // 내용 파싱
+    const [blocks, setBlocks] = useState<BlockType[]>([]);
+    const parseContent = (diary_content: string) => {
+        const parsed_content = JSON.parse((diary_content !== null) ? diary_content : '');
+        const temp_blocks: BlockType[] = [];
+        parsed_content.forEach((item: any) => {
+            console.log('item', item);
+            const converted = convertFromRaw(item.raw_content);
+            const contentState = EditorState.createWithContent(converted);
+            temp_blocks.push({
+                type: item.type,
+                editorState: contentState,
+            });
+        });
+        setBlocks(temp_blocks);
+        return EditorState.createEmpty();
+    }
+
     useEffect(() => {
         loadPost();
         loadComments();
     }, []);
-    
+
     return (
         <Container>
-            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked}/>
+            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked} />
             <CenterBox>
                 <Title>{post.title}</Title>
                 <CategoryChip postId={post.postId} />
@@ -99,24 +147,41 @@ const DiaryDetails = () => {
                     <NameBox>
                         <UserName>{post.author}</UserName>
                         <Details>
-                            <img src={Scrap} alt='scrap icon'/>
+                            <img src={Scrap} alt='scrap icon' />
                             <ScrapCount>{post.bookmarkCount}</ScrapCount>
-                            <img src={CommentIcon} alt='comment icon'/>
+                            <img src={CommentIcon} alt='comment icon' />
                             <CommentCount>{comments.length}</CommentCount>
                             <KebabModal memberId={memberId} authorId={post.authorId} commentId={0} />
                         </Details>
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(post.createdAt)}</PostInfo>
                 </DiaryInfo>
-                <Text dangerouslySetInnerHTML={{ __html: post.details/*stringModifyForImg(state.details)*/ }}></Text>
+                <Text>
+                    {
+                        blocks.map((block, index) => {
+                            if (block.type === 'text') {
+                                return (
+                                    <Editor
+                                        editorState={block.editorState}
+                                        onChange={() => { }}
+                                        onFocus={() => { }}
+                                        customStyleMap={styleMap}
+                                    />
+                                );
+                            } else {
+                                return <></>
+                            }
+                        })
+                    }
+                </Text>
                 <ProfileCard authorId={post.authorId} author={post.author} />
-                {post.coauthorIds ? 
-                (post.coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} author={''} />
-                )))
-                : <></>}
+                {post.coauthorIds ?
+                    (post.coauthorIds.map((data) => (
+                        <ProfileCard authorId={data} author={''} />
+                    )))
+                    : <></>}
                 <CommentTitle>{comments.length}개의 댓글</CommentTitle>
-                <CommentInput postId={post.postId} loadComments={loadComments}/>
+                <CommentInput postId={post.postId} loadComments={loadComments} />
                 {comments.map((data) => (
                     <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
