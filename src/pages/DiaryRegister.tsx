@@ -22,35 +22,70 @@ interface PostType {
   updated_at: string;
 }
 
+interface BlockType {
+  type: string;
+  editorState: EditorState;
+}
+
+const styleMap = {
+  'COLOR_#FFFFFF': {
+      color: '#FFFFFF',
+  },
+  'COLOR_#2D7295': {
+      color: '#2D7295',
+  },
+  'COLOR_#AE5257': {
+      color: '#AE5257',
+  },
+  'COLOR_#E19E58': {
+      color: '#E19E58',
+  },
+  'COLOR_#83A67B': {
+      color: '#83A67B',
+  },
+  'COLOR_#EAB3CE': {
+      color: '#EAB3CE',
+  },
+};
+
 const DiaryRegister = () => {
   const navigate = useNavigate();
 
   // 미리보기
+  const [blocks, setBlocks] = useState<BlockType[]>([]);
   const loadEditorState = () => {
-    const savedEditorState = localStorage.getItem('diary-content');
-    if (savedEditorState) {
-      const rawContent = JSON.parse(savedEditorState);
-      const contentState = convertFromRaw(rawContent);
-      return EditorState.createWithContent(contentState);
-    }
+    const diary_content = localStorage.getItem('diary-content');
+    const parsed_content = JSON.parse((diary_content!==null)?diary_content:'');
+    const temp_blocks:BlockType[] = [];
+    parsed_content.forEach((item:any) => {
+      console.log('item', item);
+      const converted = convertFromRaw(item.raw_content);
+      const contentState = EditorState.createWithContent(converted);
+      temp_blocks.push({
+        type: item.type,
+        editorState: contentState,
+      });
+    });
+    setBlocks(temp_blocks);
     return EditorState.createEmpty();
   }
   const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   useEffect(() => {
-    setEditorState(loadEditorState());
+    //setEditorState(loadEditorState());
+    loadEditorState();
   }, []);
 
   //
   const [isPublic, setIsPublic] = useState(true);
   const [teamId, setTeamId] = useState(0);
-  const teamList:any[] = [];
+  const teamList: any[] = [];
   const [projectId, setProjectId] = useState(0);
-  const projectList:any[] = [];
-  const coAuthors:any[] = [];
+  const projectList: any[] = [];
+  const coAuthors: any[] = [];
   const [files, setFiles] = useState<any[]>([]);
-  const categories:any[] = [];
-  
-  const uploadFile = (e:any) => {
+  const categories: any[] = [];
+
+  const uploadFile = (e: any) => {
     setFiles([e.target.files[0]]);
   };
 
@@ -81,11 +116,11 @@ const DiaryRegister = () => {
     */
   };
 
-  const handleAddCoAuthor = (author:string) => {  };
+  const handleAddCoAuthor = (author: string) => { };
 
-  const handleAddCategory = (e:any) => {  };
+  const handleAddCategory = (e: any) => { };
 
-  const tempPost:PostType = {
+  const tempPost: PostType = {
     author_name: 'string',
     body: 'string',
     created_at: 'string',
@@ -96,99 +131,110 @@ const DiaryRegister = () => {
 
   return (
     <>
-    <Container>
-      <LeftSection>
-        <CloseButton>&times;</CloseButton>
-        <DiaryPreview>
-          <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
-          <Card
-            post={tempPost}
-          />
-        </DiaryPreview>
-      </LeftSection>
-      <Divider />
-      <RightSection>
-        <FormSection>
-          <FormGroup>
-            <Label>공개 설정</Label>
-            <div>
-              <input
-                type="radio"
-                id="public"
-                name="visibility"
-                value="public"
-                checked={isPublic}
-                onChange={() => setIsPublic(true)}
-              />
-              <label htmlFor="public">공개</label>
-              <input
-                type="radio"
-                id="private"
-                name="visibility"
-                value="private"
-                checked={!isPublic}
-                onChange={() => setIsPublic(false)}
-              />
-              <label htmlFor="private">비공개</label>
-            </div>
-            <Label>공동 저자 추가</Label>
-            <Input
-              disabled={true}
-              type="text"
-              placeholder="공동 저자 아이디를 검색하세요."
-              onBlur={(e) => handleAddCoAuthor(e.target.value)}
+      <Container>
+        <LeftSection>
+          <CloseButton>&times;</CloseButton>
+          <DiaryPreview>
+            <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
+            <Card
+              post={tempPost}
             />
-            <div>
-              {coAuthors.map((author, index) => (
-                <span key={index}>{author}</span>
-              ))}
-            </div>
-            <Label>팀명</Label>
-            <Select
-              value={teamId}
-              onChange={(e) => setTeamId(Number(e.target.value))}
-            >
-              <Option value="">-</Option>
-              {
-                teamList.map((team) => (
-                  <Option value={team.teamId}>{team.teamName}</Option>
-                ))
-              }
-            </Select>
-            <Label>프로젝트명</Label>
-            <Select
-              value={projectId}
-              onChange={(e) => setProjectId(Number(e.target.value))}
-            >
-              <Option value="">-</Option>
-              {
-                projectList.map((project) => (
-                  <Option value={project.projectId}>{project.projectName}</Option>
-                ))
-              }
-            </Select>
-            <Label>카테고리 추가</Label>
-            <Input
-              type="text"
-              placeholder="카테고리를 입력하세요. (최대 7개)"
-              onKeyDown={(e) => {handleAddCategory(e)}}
-            />
-            <CategoryBox>
-              {categories.map((category, index) => (
-                <Category key={index}>{category}</Category>
-              ))}
-            </CategoryBox>
-          </FormGroup>
-        </FormSection>
-        <Button onClick={handleSave}>작성 완료</Button>
-      </RightSection>
-      <input type="file" onChange={uploadFile} />
-    </Container>
-    <Editor 
-      editorState={editorState}
-      onChange={()=>{}}
-      readOnly={true}
-    />
+          </DiaryPreview>
+        </LeftSection>
+        <Divider />
+        <RightSection>
+          <FormSection>
+            <FormGroup>
+              <Label>공개 설정</Label>
+              <div>
+                <input
+                  type="radio"
+                  id="public"
+                  name="visibility"
+                  value="public"
+                  checked={isPublic}
+                  onChange={() => setIsPublic(true)}
+                />
+                <label htmlFor="public">공개</label>
+                <input
+                  type="radio"
+                  id="private"
+                  name="visibility"
+                  value="private"
+                  checked={!isPublic}
+                  onChange={() => setIsPublic(false)}
+                />
+                <label htmlFor="private">비공개</label>
+              </div>
+              <Label>공동 저자 추가</Label>
+              <Input
+                disabled={true}
+                type="text"
+                placeholder="공동 저자 아이디를 검색하세요."
+                onBlur={(e) => handleAddCoAuthor(e.target.value)}
+              />
+              <div>
+                {coAuthors.map((author, index) => (
+                  <span key={index}>{author}</span>
+                ))}
+              </div>
+              <Label>팀명</Label>
+              <Select
+                value={teamId}
+                onChange={(e) => setTeamId(Number(e.target.value))}
+              >
+                <Option value="">-</Option>
+                {
+                  teamList.map((team) => (
+                    <Option value={team.teamId}>{team.teamName}</Option>
+                  ))
+                }
+              </Select>
+              <Label>프로젝트명</Label>
+              <Select
+                value={projectId}
+                onChange={(e) => setProjectId(Number(e.target.value))}
+              >
+                <Option value="">-</Option>
+                {
+                  projectList.map((project) => (
+                    <Option value={project.projectId}>{project.projectName}</Option>
+                  ))
+                }
+              </Select>
+              <Label>카테고리 추가</Label>
+              <Input
+                type="text"
+                placeholder="카테고리를 입력하세요. (최대 7개)"
+                onKeyDown={(e) => { handleAddCategory(e) }}
+              />
+              <CategoryBox>
+                {categories.map((category, index) => (
+                  <Category key={index}>{category}</Category>
+                ))}
+              </CategoryBox>
+            </FormGroup>
+          </FormSection>
+          <Button onClick={handleSave}>작성 완료</Button>
+        </RightSection>
+        <input type="file" onChange={uploadFile} />
+      </Container>
+      {
+        blocks.map((block, index) => {
+          if (block.type === 'text') {
+            return (
+                <Editor
+                  editorState={block.editorState}
+                  onChange={() => {}}
+                  onFocus={() => {}}
+                  customStyleMap={styleMap}
+                />
+            );
+          } else {
+            return <></>
+          }
+        })
+      }
     </>
   );
 };
