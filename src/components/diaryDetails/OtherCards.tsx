@@ -71,7 +71,6 @@ const Text = styled.div`
     text-align: justify;
     margin-bottom: 36px;
 
-    font-family: Pretendard;
     font-size: 28px;
     font-style: normal;
     font-weight: 500;
@@ -87,7 +86,6 @@ const NoDiary = styled.div`
     flex-shrink: 0;
     color: #434343;
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 350;

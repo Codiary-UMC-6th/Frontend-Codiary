@@ -58,6 +58,7 @@ const Navbar = () => {
           localStorage.removeItem(GRANT_TYPE);
           useLoginStore.getState().setLogout();
           window.location.replace("/");
+          window.location.reload();
         }
       } catch (error) {
         console.error(error);
@@ -191,7 +192,6 @@ const LoginBtn = styled.button`
 
   border-radius: 30px;
   color: ${Color.text1};
-  font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -208,7 +208,6 @@ const LogoutBtn = styled.button`
   border: 1px solid ${Color.text5};
   border-radius: 30px;
   color: ${Color.text5};
-  font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -223,7 +222,6 @@ const TempSaveBtn = styled.div`
   border-radius: 30px;
   border: 2px solid ${Color.primary_red};
 
-  font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -246,7 +244,6 @@ const SaveBtn = styled.div`
   border: 2px solid ${Color.primary_red};
   background: ${Color.primary_red};
 
-  font-family: Pretendard;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;

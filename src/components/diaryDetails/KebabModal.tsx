@@ -71,7 +71,6 @@ const Button = styled.button`
     color: ${Color.text1};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

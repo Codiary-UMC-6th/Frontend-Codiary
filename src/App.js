@@ -2,16 +2,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
 import Navbar from "./components/navbar/Navbar.tsx";
-import Footer from "./components/Footer.jsx";
+import Footer from "./components/Footer.tsx";
 import Main from "./pages/Main.tsx";
+import Search from "./pages/Search.tsx";
 import Profile from "./pages/Profile.tsx";
 import Team from "./pages/Team.tsx";
 
 import Calendar from "./pages/Calendar.jsx";
-import Diary from "./pages/Diary.jsx";
 import DiaryEditor from "./pages/DiaryEditor.tsx";
 import DiaryDetails from "./pages/DiaryDetails.tsx";
-import DiaryRegister from "./pages/DiaryRegister.jsx";
+import DiaryRegister from "./pages/DiaryRegister.tsx";
 import { SignUp } from "./components/signup/SignUp.tsx";
 import { ModifyProfile } from "./components/profile/ModifyProfile.tsx";
 import KakaoCallback from "@/components/login/component/KakaoCallback.tsx";
@@ -61,7 +61,6 @@ function App() {
           <Route path="/teamAdd" element={<TeamAdd />} />
           <Route path="teamEdit/:teamId" element={<TeamEdit />} />
           <Route path="/calendar" element={<Calendar />} />
-          <Route path="/diary" element={<Diary />} />
           <Route path="/diaryEditor" element={<DiaryEditor />}></Route>
           <Route path="/DiaryDetails/:postId" element={<DiaryDetails />} />
           <Route path="/diary/register" element={<DiaryRegister />} />
@@ -70,6 +69,7 @@ function App() {
           <Route path="/oauth/callback" element={<KakaoCallback />} />
           <Route path="*" element={"404 not found"} />
           <Route path="/example" element={<Example />} />
+          <Route path="/search/:keyword" element={<Search />} />
         </Routes>
       </Container>
       <Footer />

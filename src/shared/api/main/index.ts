@@ -16,3 +16,11 @@ export const getBookmarkPosts = async (page: number, size: number, sort: string)
   console.log(response);
   return response.data.result;
 }
+
+export const searchPosts = async (keyword: string) => {
+  const response = await axiosInstance.get<
+  GetPostsResponse
+  >(`/post/search?keyword=${keyword}&page=0&size=100&sort=string`);
+  console.log(response);
+  return response.data.result; 
+}

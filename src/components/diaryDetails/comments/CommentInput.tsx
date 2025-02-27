@@ -60,7 +60,6 @@ const Input = styled.input`
     color: ${Color.text2};
     text-align: justify;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -83,7 +82,6 @@ const RegistrationBtn = styled.button`
     border: none;
 
     color: ${Color.text1};
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;

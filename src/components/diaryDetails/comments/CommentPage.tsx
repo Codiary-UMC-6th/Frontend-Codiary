@@ -28,7 +28,6 @@ const ArrowBtn = styled.div`
 
 const PageBtn = styled.div`
     color: ${Color.text5};
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

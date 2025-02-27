@@ -113,7 +113,6 @@ const Title = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 
-    font-family: Pretendard;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -140,7 +139,6 @@ const AuthorDefault = styled.object`
 const AuthorName = styled.div`
     color: ${Color.text1};
 
-    font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -160,7 +158,6 @@ const Details = styled.span`
     -webkit-box-orient: vertical;
     white-space: normal;
 
-    font-family: Pretendard;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
