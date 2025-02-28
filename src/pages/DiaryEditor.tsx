@@ -5,9 +5,10 @@ import styled from 'styled-components';
 import * as Color from "../common/Color";
 
 import { useEditorStore } from '../store/EditorStore';
-import { Editor, EditorCommand, EditorState, convertToRaw, RawDraftContentState } from 'draft-js';
+import { Editor, EditorState, SelectionState, convertToRaw, RawDraftContentState } from 'draft-js';
 
 import ToolBox from '../components/diaryEditor/ToolBox';
+import SlashBox from '@/components/diaryEditor/SlashBox';
 
 //Register 전용 type
 interface ContentType {
@@ -82,21 +83,59 @@ const DiaryEditor: React.FC = () => {
                     : block
             )
         )
+
+        //slash box 설정
+        const currentText = newState.getCurrentContent().getPlainText();
+        const isSlashOnly = currentText === '/';
+        if (isSlashOnly) {
+            console.log("에디터에 '/'만 입력된 상태입니다.");
+            setShowSlashBox(true);
+        } else {
+            console.log("현재 텍스트:", currentText);
+            setShowSlashBox(false);
+        }
     }
 
+    // 마지막 블록 focus
+    const focusLastBlock = () => {
+        console.log('focus last block, move cursor to last');
+        const lastIndex = blocks.length - 1;
+        const lastComponent = document.getElementById(`editor-${lastIndex}`);
+        const innerEditor = lastComponent?.children[0].children[0].children[0] as HTMLElement;
+        innerEditor?.focus();
+
+        // 커서 이동
+        const currentEditorState = blocks[lastIndex].editorState;
+        const contentState = currentEditorState.getCurrentContent();
+        const lastBlock = contentState.getBlockForKey(contentState.getLastBlock().getKey());
+        const lastBlockLength = lastBlock.getLength();
+        const newSelection = SelectionState.createEmpty(lastBlock.getKey()).merge({
+            anchorOffset: lastBlockLength,
+            focusOffset: lastBlockLength,
+            hasFocus: true,
+        });
+        const newEditorState = EditorState.forceSelection(currentEditorState, newSelection);
+        setLastEditorState(newEditorState);
+    }
+
+    // Slash box
+    const [showSlashBox, setShowSlashBox] = useState<boolean>(false);
+    const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0});
+  
     // 도구 박스
+    const [showToolBox, setShowToolBox] = useState<boolean>(false);
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>();
     const handleMouseUp = () => {
         const selection = window.getSelection();
 
-        if (selection === null) {
+        if ((selection === null) || (selection.isCollapsed)) {
             setSelectionRect(null);
-        } else if (selection.isCollapsed) {
-            setSelectionRect(null);
+            setShowToolBox(false);
         } else if (selection.rangeCount > 0) {
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
             setSelectionRect(rect);
+            setShowToolBox(true);
         }
     };
 
@@ -111,13 +150,23 @@ const DiaryEditor: React.FC = () => {
         )
     }
 
+    const setLastEditorState = (newState: EditorState) => {
+        setBlocks((prevBlocks) =>
+            prevBlocks.map((block, i) =>
+                blocks.length - 1 === i
+                    ? { ...block, editorState: newState }
+                    : block
+            )
+        )
+    }
+
     // 등록
     // LocalStorage에 저장 후 등록 페이지로 이동
     useEffect(() => {
         if (register) {
             localStorage.setItem('diary-title', title);
-                        
-            const diary_content:ContentType[] = [];
+
+            const diary_content: ContentType[] = [];
             blocks.forEach((block) => {
                 if (block.type === 'text') {
                     const contentState = block.editorState.getCurrentContent();
@@ -134,10 +183,20 @@ const DiaryEditor: React.FC = () => {
         }
     }, [register])
 
+    useEffect(() => {
+        const selectedEditorContainer = document.getElementById(`editor-${selectedIndex}`);
+        if (selectedEditorContainer) {
+            const rect = selectedEditorContainer.getBoundingClientRect();
+            setCursorPosition({top: rect.top + 48, left: rect.left});
+        }        
+    }, [selectedIndex])
+
     return (
         <Container
             onMouseUp={handleMouseUp}
         >
+            <OptionBtn onClick={() => { addBlockAtIndex(blocks.length) }}>Add Last</OptionBtn>
+            <OptionBtn onClick={() => { focusLastBlock() }}>focus last</OptionBtn>
             <Title
                 value={title}
                 onChange={(e) => { setTitle(e.target.value) }}
@@ -148,14 +207,14 @@ const DiaryEditor: React.FC = () => {
                 blocks.map((block, index) => {
                     if (block.type === 'text') {
                         return (
-                            <EditorContainer>
+                            <EditorContainer id={`editor-${index}`}>
                                 <Editor
                                     editorState={block.editorState}
                                     onChange={(state: EditorState) => { handleEditorChange(state, index); }}
-                                    onFocus={() => { setSelectedIndex(index); console.log("selected index: ", index) }}
+                                    onFocus={() => { setSelectedIndex(index); }}
+                                    onBlur={() => { setSelectedIndex(null); console.log("Focus out") }}
                                     customStyleMap={styleMap}
                                 />
-
                             </EditorContainer>
                         );
                     } else {
@@ -163,9 +222,9 @@ const DiaryEditor: React.FC = () => {
                     }
                 })
             }
-            <OptionBtn onClick={() => { addBlockAtIndex(blocks.length) }}>Add Last</OptionBtn>
-            <OptionBtn onClick={() => { }}>출력</OptionBtn>
-            {selectionRect && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
+            <BlankBox onClick={focusLastBlock}>Blank</BlankBox>
+            {selectionRect && showToolBox && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
+            {showSlashBox && (selectedIndex !== null) && <SlashBox cursorPosition={cursorPosition}/>}
         </Container>
     );
 }
@@ -178,6 +237,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 60px 330px;
+    height: 100%;
 `
 
 const Title = styled.input`
@@ -204,6 +264,12 @@ const EditorContainer = styled.div`
     font-size: 20px;
 
     border: 1px solid ${Color.gray500};
+`
+
+const BlankBox = styled.div`
+    flex-grow: 1;
+    min-height: 200px;
+    border: 1px solid white
 `
 
 export default DiaryEditor;
