@@ -9,14 +9,16 @@ import { Editor, EditorState, SelectionState, convertToRaw, RawDraftContentState
 
 import ToolBox from '../components/diaryEditor/ToolBox';
 import SlashBox from '@/components/diaryEditor/SlashBox';
+import ImageBlock from '@/components/diaryEditor/ImageBlock';
+import { useFileStore } from '@/store/FileStore';
 
 //Register 전용 type
 interface ContentType {
     type: String;
-    raw_content: RawDraftContentState;
+    raw_content?: RawDraftContentState;
 }
 
-interface BlockType {
+export interface BlockType {
     type: string;
     editorState: EditorState;
 }
@@ -73,16 +75,23 @@ const DiaryEditor: React.FC = () => {
             return newArray;
         })
     }
+    
+    // 특정 index 블록 업데이트
+    const updateBlockAtIndex = (index:number, newBlock: BlockType) => {
+        setBlocks((prevBlocks) => {
+            const updatedBlocks = [...prevBlocks];
+            updatedBlocks[index] = newBlock;
+            return updatedBlocks;
+        });
+    };
 
     // 에디터 변경시 상태 업데이트
     const handleEditorChange = (newState: EditorState, index: number) => {
-        setBlocks((prevBlocks) =>
-            prevBlocks.map((block, i) =>
-                index === i
-                    ? { ...block, editorState: newState }
-                    : block
-            )
-        )
+        const newBlock: BlockType = {
+            type: 'text',
+            editorState: newState,
+        };
+        updateBlockAtIndex(index, newBlock);
 
         //slash box 설정
         const currentText = newState.getCurrentContent().getPlainText();
@@ -160,6 +169,9 @@ const DiaryEditor: React.FC = () => {
         )
     }
 
+    // 이미지
+    const { files } = useFileStore();
+
     // 등록
     // LocalStorage에 저장 후 등록 페이지로 이동
     useEffect(() => {
@@ -175,6 +187,10 @@ const DiaryEditor: React.FC = () => {
                         type: 'text',
                         raw_content: rawContent,
                     });
+                } else if (block.type === 'image') {
+                    diary_content.push({
+                        type: 'image'
+                    })
                 }
             })
             localStorage.setItem('diary-content', JSON.stringify(diary_content));
@@ -217,14 +233,16 @@ const DiaryEditor: React.FC = () => {
                                 />
                             </EditorContainer>
                         );
+                    } else if (block.type === 'image') {
+                        return (<ImageBlock />)
                     } else {
-                        return <></>
+                        return (<></>)
                     }
                 })
             }
             <BlankBox onClick={focusLastBlock}>Blank</BlankBox>
             {selectionRect && showToolBox && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
-            {showSlashBox && (selectedIndex !== null) && <SlashBox cursorPosition={cursorPosition}/>}
+            {showSlashBox && (selectedIndex !== null) && <SlashBox cursorPosition={cursorPosition} selectedIndex={selectedIndex} updateBlock={updateBlockAtIndex} setShowSlashBox={setShowSlashBox}/>}
         </Container>
     );
 }

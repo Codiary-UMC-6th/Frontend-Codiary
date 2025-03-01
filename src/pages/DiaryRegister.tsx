@@ -9,6 +9,8 @@ import { postDiary } from '@/shared/api/diaryEditor';
 
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 
+import { useFileStore } from '@/store/FileStore';
+
 interface PostType {
   author_name: string;
   author_image_url?: string;
@@ -24,7 +26,7 @@ interface PostType {
 
 interface BlockType {
   type: string;
-  editorState: EditorState;
+  editorState?: EditorState;
 }
 
 const styleMap = {
@@ -50,6 +52,7 @@ const styleMap = {
 
 const DiaryRegister = () => {
   const navigate = useNavigate();
+  const { files } = useFileStore();
 
   // 미리보기
   const [blocks, setBlocks] = useState<BlockType[]>([]);
@@ -58,13 +61,19 @@ const DiaryRegister = () => {
     const parsed_content = JSON.parse((diary_content!==null)?diary_content:'');
     const temp_blocks:BlockType[] = [];
     parsed_content.forEach((item:any) => {
-      console.log('item', item);
-      const converted = convertFromRaw(item.raw_content);
-      const contentState = EditorState.createWithContent(converted);
-      temp_blocks.push({
-        type: item.type,
-        editorState: contentState,
-      });
+      if (item.type === 'text') {
+        console.log('item', item);
+        const converted = convertFromRaw(item.raw_content);
+        const contentState = EditorState.createWithContent(converted);
+        temp_blocks.push({
+          type: item.type,
+          editorState: contentState,
+        });
+      } else if (item.type === 'image') {
+        temp_blocks.push({
+          type: item.type
+        });
+      }
     });
     setBlocks(temp_blocks);
     return EditorState.createEmpty();
@@ -80,13 +89,7 @@ const DiaryRegister = () => {
   const [projectId, setProjectId] = useState(0);
   const projectList: any[] = [];
   const coAuthors: any[] = [];
-  const [files, setFiles] = useState<File[]>([]);
   const categories: any[] = [];
-
-  const uploadFile = (e: any) => {
-    console.log(e.target.files);
-    setFiles(e.target.files);
-  };
 
   const handleSave = async () => {
     const formData = new FormData();
@@ -97,7 +100,7 @@ const DiaryRegister = () => {
     formData.append('postStatus', 'true');
     formData.append('postAccess', 'ENTIRE');
     //formData.append('thumbnailImageName', '');
-    Array.from(files).forEach((file:File) => {
+    files.forEach((file) => {
       formData.append('postFiles', file);
     })
     /*
@@ -129,7 +132,6 @@ const DiaryRegister = () => {
     <>
       <Container>
         <LeftSection>
-          <CloseButton>&times;</CloseButton>
           <DiaryPreview>
             <DiaryPreviewTitle>다이어리 미리보기</DiaryPreviewTitle>
             <Card
@@ -213,25 +215,7 @@ const DiaryRegister = () => {
           </FormSection>
           <Button onClick={handleSave}>작성 완료</Button>
         </RightSection>
-        <input type="file" onChange={uploadFile} multiple/>
       </Container>
-      {
-        //미리보기
-        blocks.map((block, index) => {
-          if (block.type === 'text') {
-            return (
-                <Editor
-                  editorState={block.editorState}
-                  onChange={() => {}}
-                  onFocus={() => {}}
-                  customStyleMap={styleMap}
-                />
-            );
-          } else {
-            return <></>
-          }
-        })
-      }
     </>
   );
 };
@@ -241,7 +225,6 @@ const Container = styled.div`
   background-color: ${Color.background};
   padding: 20px;
   color: white;
-  min-height: 100vh;
 `;
 
 const LeftSection = styled.div`
