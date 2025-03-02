@@ -18,6 +18,9 @@ import OtherCards from "../components/diaryDetails/OtherCards";
 
 import { getPost, getComments } from "@/shared/api/diaryDetail";
 
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { parse } from "path";
+
 interface Post {
     coauthorIds: number[];
     postCategory: string;
@@ -29,6 +32,7 @@ interface Post {
     createdAt: string;
     isBookmarked: boolean;
     bookmarkCount: number;
+    postFileList: any[];
 }
 
 interface Comment {
@@ -42,6 +46,33 @@ interface Comment {
     post_id: number;
     updated_at: string;
 }
+
+interface BlockType {
+    type: string;
+    editorState?: EditorState;
+    imageURL?: string;
+}
+
+const styleMap = {
+    'COLOR_#FFFFFF': {
+        color: '#FFFFFF',
+    },
+    'COLOR_#2D7295': {
+        color: '#2D7295',
+    },
+    'COLOR_#AE5257': {
+        color: '#AE5257',
+    },
+    'COLOR_#E19E58': {
+        color: '#E19E58',
+    },
+    'COLOR_#83A67B': {
+        color: '#83A67B',
+    },
+    'COLOR_#EAB3CE': {
+        color: '#EAB3CE',
+    },
+};
 
 const DiaryDetails = () => {
     const memberId = 0;
@@ -57,6 +88,7 @@ const DiaryDetails = () => {
         createdAt: "",
         isBookmarked: false,
         bookmarkCount: 0,
+        postFileList: [],
     });
 
     const loadPost = async () => {
@@ -73,7 +105,9 @@ const DiaryDetails = () => {
             createdAt: response.created_at,
             isBookmarked: response.is_bookmarked,
             bookmarkCount: response.bookmark_count,
-        })
+            postFileList: response.post_file_list.post_file_list,
+        });
+        parseContent(response.post_body, response.post_file_list.post_file_list);
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
@@ -84,14 +118,42 @@ const DiaryDetails = () => {
         console.log(response.content);
     }
 
+    // 내용 파싱
+    const [blocks, setBlocks] = useState<BlockType[]>([]);
+    const parseContent = (diary_content: string, file_list: any[]) => {
+        const parsed_content = JSON.parse((diary_content !== null) ? diary_content : '');
+        const temp_blocks: BlockType[] = [];
+        var imageCount = 0;
+        console.log('file list', file_list);
+        parsed_content.forEach((item: any) => {
+            if (item.type === 'text') {
+                console.log('item', item);
+                const converted = convertFromRaw(item.raw_content);
+                const contentState = EditorState.createWithContent(converted);
+                temp_blocks.push({
+                    type: item.type,
+                    editorState: contentState,
+                });
+            } else if (item.type === 'image') {
+                temp_blocks.push({
+                    type: item.type,
+                    imageURL: file_list[imageCount].url,
+                });
+                imageCount += 1;
+            }
+        });
+        setBlocks(temp_blocks);
+        return EditorState.createEmpty();
+    }
+
     useEffect(() => {
         loadPost();
         loadComments();
     }, []);
-    
+
     return (
         <Container>
-            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked}/>
+            <FAB postId={post.postId} memberId={memberId} isBookmarked={post.isBookmarked} />
             <CenterBox>
                 <Title>{post.title}</Title>
                 <CategoryChip postId={post.postId} />
@@ -99,28 +161,45 @@ const DiaryDetails = () => {
                     <NameBox>
                         <UserName>{post.author}</UserName>
                         <Details>
-                            <img src={Scrap} alt='scrap icon'/>
+                            <img src={Scrap} alt='scrap icon' />
                             <ScrapCount>{post.bookmarkCount}</ScrapCount>
-                            <img src={CommentIcon} alt='comment icon'/>
+                            <img src={CommentIcon} alt='comment icon' />
                             <CommentCount>{comments.length}</CommentCount>
                             <KebabModal memberId={memberId} authorId={post.authorId} commentId={0} />
                         </Details>
                     </NameBox>
                     <PostInfo>최초 등록일 {formatDateTime(post.createdAt)}</PostInfo>
                 </DiaryInfo>
-                <Text dangerouslySetInnerHTML={{ __html: post.details/*stringModifyForImg(state.details)*/ }}></Text>
+                <Text>
+                    {
+                        blocks.map((block, index) => {
+                            if (block.type === 'text') {
+                                return (
+                                    <Editor
+                                        editorState={block.editorState as EditorState}
+                                        onChange={() => { }}
+                                        onFocus={() => { }}
+                                        customStyleMap={styleMap}
+                                    />
+                                );
+                            } else if (block.type === 'image') {
+                                return (<ImgBox><Img src={block.imageURL} alt='content' /></ImgBox>);
+                            }
+                        })
+                    }
+                </Text>
                 <ProfileCard authorId={post.authorId} author={post.author} />
-                {post.coauthorIds ? 
-                (post.coauthorIds.map((data) => (
-                    <ProfileCard authorId={data} author={''} />
-                )))
-                : <></>}
+                {post.coauthorIds ?
+                    (post.coauthorIds.map((data) => (
+                        <ProfileCard authorId={data} author={''} />
+                    )))
+                    : <></>}
                 <CommentTitle>{comments.length}개의 댓글</CommentTitle>
-                <CommentInput postId={post.postId} loadComments={loadComments}/>
+                <CommentInput postId={post.postId} loadComments={loadComments} />
                 {comments.map((data) => (
                     <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
-                <CommentPage></CommentPage>
+                {/*<CommentPage></CommentPage>*/}
             </CenterBox>
             <OtherCards postId={post.postId} />
         </Container>
@@ -232,5 +311,16 @@ const CommentTitle = styled.div`
     font-weight: 500;
     line-height: 32px;
 `;
+
+const ImgBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+`
+
+const Img = styled.img`
+    max-width: 600px;
+`
 
 export default DiaryDetails;

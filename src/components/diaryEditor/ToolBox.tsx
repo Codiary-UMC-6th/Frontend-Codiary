@@ -6,7 +6,7 @@ import * as Color from "../../common/Color";
 
 import { EditorState, RichUtils } from 'draft-js';
 
-import CODE_PNG from '../../assets/diaryEditor/opt_code.png';
+import CodePNG from '../../assets/diaryEditor/opt_code.png';
 import DownSVG from '../../assets/diaryEditor/down.svg';
 
 interface Props {
@@ -22,7 +22,7 @@ const ToolBox = ({ selectionRect, editorState, setEditorState }: Props) => {
     useEffect(() => {
         if ( toolBoxRef.current === null ) { return }
         const floatingDiv = toolBoxRef.current;
-
+        
         if ( selectionRect === null ) {
             floatingDiv.style.display = 'none';
         } else if ( selectionRect ) {
@@ -81,7 +81,7 @@ const ToolBox = ({ selectionRect, editorState, setEditorState }: Props) => {
             <MiddleBtn onClick={handleItalicClick} style={{fontStyle:'italic', fontFamily: 'Noto Sans'}}>I</MiddleBtn>
             <MiddleBtn onClick={handleUnderlineClick} style={{textDecorationLine: 'underline', }}>U</MiddleBtn>
             <MiddleBtn onClick={handleStrikethroughClick} style={{textDecorationLine: 'line-through'}}>S</MiddleBtn>
-            <MiddleBtn onClick={()=> {alert('미구현')}}><img src={CODE_PNG} alt='code'/></MiddleBtn>
+            <MiddleBtn onClick={()=> {alert('미구현')}}><img src={CodePNG} alt='code'/></MiddleBtn>
             <RightBtn onClick={() => {setIsDropdownOpen(prev => !prev)}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <circle cx="9" cy="9" r="9" fill="white"/>

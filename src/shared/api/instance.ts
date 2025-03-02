@@ -29,3 +29,18 @@ axiosInstance.interceptors.request.use(handleCheckAndSetToken);
 axiosInstance.interceptors.response.use((res) => res, handleTokenError);
 
 axiosInstance.interceptors.response.use((res) => res, handleAPIError);
+
+export const axiosMultiInstance = axios.create({
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api/v2`,
+  withCredentials: true,
+
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
+axiosMultiInstance.interceptors.request.use(handleCheckAndSetToken);
+
+axiosMultiInstance.interceptors.response.use((res) => res, handleTokenError);
+
+axiosMultiInstance.interceptors.response.use((res) => res, handleAPIError);
