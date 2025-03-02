@@ -9,7 +9,7 @@ export interface PostResult {
     post_access: string;
     post_body: string;
     post_category: string;
-    post_file_list: any[];
+    post_file_list: any;
     post_id: number;
     post_status: boolean;
     post_title: string;

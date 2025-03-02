@@ -111,7 +111,7 @@ const Navbar = () => {
         <Logo />
       </Left>
       <Right>
-        <TempSaveBtn>임시저장</TempSaveBtn>
+        <TempSaveBtn onClick={()=>{alert('미구현')}}>임시저장</TempSaveBtn>
         <SaveBtn onClick={()=>{setRegister(true)}}>작성하기</SaveBtn>
       </Right>
     </Container>
