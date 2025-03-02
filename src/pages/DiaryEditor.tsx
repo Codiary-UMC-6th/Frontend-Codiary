@@ -5,12 +5,11 @@ import styled from 'styled-components';
 import * as Color from "../common/Color";
 
 import { useEditorStore } from '../store/EditorStore';
-import { Editor, EditorState, SelectionState, convertToRaw, RawDraftContentState } from 'draft-js';
+import { Editor, EditorState, convertToRaw, RawDraftContentState, getDefaultKeyBinding, Modifier } from 'draft-js';
 
 import ToolBox from '../components/diaryEditor/ToolBox';
 import SlashBox from '@/components/diaryEditor/SlashBox';
 import ImageBlock from '@/components/diaryEditor/ImageBlock';
-import { useFileStore } from '@/store/FileStore';
 
 //Register 전용 type
 interface ContentType {
@@ -74,10 +73,15 @@ const DiaryEditor: React.FC = () => {
             newArray.splice(index, 0, newBlock);
             return newArray;
         })
+        setTimeout(() => {
+            const lastComponent = document.getElementById(`editor-${index}`);
+            const innerEditor = lastComponent?.children[0].children[0].children[0] as HTMLElement;
+            innerEditor?.focus();
+        }, 0);
     }
-    
+
     // 특정 index 블록 업데이트
-    const updateBlockAtIndex = (index:number, newBlock: BlockType) => {
+    const updateBlockAtIndex = (index: number, newBlock: BlockType) => {
         setBlocks((prevBlocks) => {
             const updatedBlocks = [...prevBlocks];
             updatedBlocks[index] = newBlock;
@@ -106,31 +110,48 @@ const DiaryEditor: React.FC = () => {
     }
 
     // 마지막 블록 focus
-    const focusLastBlock = () => {
-        console.log('focus last block, move cursor to last');
+    const clickBottomBlank = () => {
         const lastIndex = blocks.length - 1;
-        const lastComponent = document.getElementById(`editor-${lastIndex}`);
-        const innerEditor = lastComponent?.children[0].children[0].children[0] as HTMLElement;
-        innerEditor?.focus();
-
-        // 커서 이동
-        const currentEditorState = blocks[lastIndex].editorState;
-        const contentState = currentEditorState.getCurrentContent();
-        const lastBlock = contentState.getBlockForKey(contentState.getLastBlock().getKey());
-        const lastBlockLength = lastBlock.getLength();
-        const newSelection = SelectionState.createEmpty(lastBlock.getKey()).merge({
-            anchorOffset: lastBlockLength,
-            focusOffset: lastBlockLength,
-            hasFocus: true,
-        });
-        const newEditorState = EditorState.forceSelection(currentEditorState, newSelection);
-        setLastEditorState(newEditorState);
+        const lastBlock = blocks[lastIndex];
+        if ((lastBlock.type === 'text') && (lastBlock.editorState.getCurrentContent().getPlainText() === '')) {
+            console.log('focus last block, move cursor to last');
+            const lastComponent = document.getElementById(`editor-${lastIndex}`);
+            const innerEditor = lastComponent?.children[0].children[0].children[0] as HTMLElement;
+            innerEditor?.focus();
+        } else {
+            addBlockAtIndex(blocks.length);
+        }
     }
+
+    // Editor 커서를 마지막으로 이동
+    /*
+    const currentEditorState = blocks[lastIndex].editorState;
+    const contentState = currentEditorState.getCurrentContent();
+    const lastBlock = contentState.getBlockForKey(contentState.getLastBlock().getKey());
+    const lastBlockLength = lastBlock.getLength();
+    const newSelection = SelectionState.createEmpty(lastBlock.getKey()).merge({
+        anchorOffset: lastBlockLength,
+        focusOffset: lastBlockLength,
+        hasFocus: true,
+    });
+    const newEditorState = EditorState.forceSelection(currentEditorState, newSelection);
+    setLastEditorState(newEditorState);
+    
+    const setLastEditorState = (newState: EditorState) => {
+        setBlocks((prevBlocks) =>
+            prevBlocks.map((block, i) =>
+                blocks.length - 1 === i
+                    ? { ...block, editorState: newState }
+                    : block
+            )
+        )
+    }
+    */
 
     // Slash box
     const [showSlashBox, setShowSlashBox] = useState<boolean>(false);
-    const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0});
-  
+    const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });
+
     // 도구 박스
     const [showToolBox, setShowToolBox] = useState<boolean>(false);
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>();
@@ -158,19 +179,6 @@ const DiaryEditor: React.FC = () => {
             )
         )
     }
-
-    const setLastEditorState = (newState: EditorState) => {
-        setBlocks((prevBlocks) =>
-            prevBlocks.map((block, i) =>
-                blocks.length - 1 === i
-                    ? { ...block, editorState: newState }
-                    : block
-            )
-        )
-    }
-
-    // 이미지
-    const { files } = useFileStore();
 
     // 등록
     // LocalStorage에 저장 후 등록 페이지로 이동
@@ -203,16 +211,48 @@ const DiaryEditor: React.FC = () => {
         const selectedEditorContainer = document.getElementById(`editor-${selectedIndex}`);
         if (selectedEditorContainer) {
             const rect = selectedEditorContainer.getBoundingClientRect();
-            setCursorPosition({top: rect.top + 48, left: rect.left});
-        }        
+            setCursorPosition({ top: rect.top + 48, left: rect.left });
+        }
     }, [selectedIndex])
+
+    const handleKeyCommand = (command: string, editorState: EditorState) => {
+        if (command === 'enter') {
+            if(selectedIndex !== null) {
+                addBlockAtIndex(selectedIndex + 1);
+            }
+            return 'handled'; 
+        }
+        if (command === 'shift-enter') {
+            // Shift+Enter 시 개행 처리
+            const contentState = editorState.getCurrentContent();
+            const selectionState = editorState.getSelection();
+            const newContentState = Modifier.splitBlock(contentState, selectionState);
+            const newEditorState = EditorState.push(editorState, newContentState, 'split-block');
+            const newBlock = { type: 'text', editorState: newEditorState};
+            if (selectedIndex !== null) {
+                updateBlockAtIndex(selectedIndex, newBlock);
+            }
+            return 'handled';
+        }
+        return 'not-handled';
+    };
+
+    const keyBindingFn = (e: React.KeyboardEvent): string | null => {
+        if (e.key === 'Enter' && e.shiftKey) {
+            return 'shift-enter';
+        }
+
+        if (e.key === 'Enter') {
+            return 'enter';
+        }
+
+        return getDefaultKeyBinding(e);
+    };
 
     return (
         <Container
             onMouseUp={handleMouseUp}
         >
-            <OptionBtn onClick={() => { addBlockAtIndex(blocks.length) }}>Add Last</OptionBtn>
-            <OptionBtn onClick={() => { focusLastBlock() }}>focus last</OptionBtn>
             <Title
                 value={title}
                 onChange={(e) => { setTitle(e.target.value) }}
@@ -230,6 +270,8 @@ const DiaryEditor: React.FC = () => {
                                     onFocus={() => { setSelectedIndex(index); }}
                                     onBlur={() => { setSelectedIndex(null); console.log("Focus out") }}
                                     customStyleMap={styleMap}
+                                    handleKeyCommand={handleKeyCommand}
+                                    keyBindingFn={keyBindingFn}
                                 />
                             </EditorContainer>
                         );
@@ -240,9 +282,9 @@ const DiaryEditor: React.FC = () => {
                     }
                 })
             }
-            <BlankBox onClick={focusLastBlock}>Blank</BlankBox>
+            <BlankBox onClick={clickBottomBlank}></BlankBox>
             {selectionRect && showToolBox && (selectedIndex !== null) && <ToolBox selectionRect={selectionRect} editorState={blocks[selectedIndex].editorState} setEditorState={setSelectedEditorState} />}
-            {showSlashBox && (selectedIndex !== null) && <SlashBox cursorPosition={cursorPosition} selectedIndex={selectedIndex} updateBlock={updateBlockAtIndex} setShowSlashBox={setShowSlashBox}/>}
+            {showSlashBox && (selectedIndex !== null) && <SlashBox cursorPosition={cursorPosition} selectedIndex={selectedIndex} updateBlock={updateBlockAtIndex} setShowSlashBox={setShowSlashBox} />}
         </Container>
     );
 }
@@ -281,13 +323,15 @@ const EditorContainer = styled.div`
     color: ${Color.text1};
     font-size: 20px;
 
-    border: 1px solid ${Color.gray500};
+    &:hover {
+        background-color: ${Color.background2}
+    }
 `
+//border: 1px solid ${Color.gray500};
 
 const BlankBox = styled.div`
     flex-grow: 1;
     min-height: 200px;
-    border: 1px solid white
 `
 
 export default DiaryEditor;

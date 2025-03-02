@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { useFileStore } from '@/store/FileStore';
 
+import defaultPreview from '@/assets/diaryEditor/Media.png'
+
 const ImageBlock = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -13,16 +15,28 @@ const ImageBlock = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
         if (files) {
-            addFiles(Array.from(files));
-            setPreviewURL(URL.createObjectURL(files[0]));
+            try {
+                addFiles(Array.from(files));
+                setPreviewURL(URL.createObjectURL(files[0]));
+            } catch(error) {
+                console.error(error);
+            }
+
         }
     }
 
     return (
         <Container >
             <input style={{visibility:'hidden'}} ref={fileInputRef} type="file"  onChange={handleFileChange} />
-            <Preview src={previewURL} alt={`preview`} />
-            <Btn onClick={() => { fileInputRef?.current?.click(); }}>클릭하여 탐색기 열기</Btn>
+            <Preview src={previewURL?previewURL:defaultPreview} alt={`preview`} />
+            <Btn 
+                onClick={(event) => { 
+                    fileInputRef?.current?.click();
+                    const target = event.target as HTMLButtonElement;
+                    target.style.visibility = "hidden"}}
+            >
+                클릭하여 탐색기 열기
+            </Btn>
         </Container>
     );
 }

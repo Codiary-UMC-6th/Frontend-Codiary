@@ -32,6 +32,7 @@ interface Post {
     createdAt: string;
     isBookmarked: boolean;
     bookmarkCount: number;
+    postFileList: any[];
 }
 
 interface Comment {
@@ -48,7 +49,8 @@ interface Comment {
 
 interface BlockType {
     type: string;
-    editorState: EditorState;
+    editorState?: EditorState;
+    imageURL?: string;
 }
 
 const styleMap = {
@@ -86,6 +88,7 @@ const DiaryDetails = () => {
         createdAt: "",
         isBookmarked: false,
         bookmarkCount: 0,
+        postFileList: [],
     });
 
     const loadPost = async () => {
@@ -102,8 +105,9 @@ const DiaryDetails = () => {
             createdAt: response.created_at,
             isBookmarked: response.is_bookmarked,
             bookmarkCount: response.bookmark_count,
+            postFileList: response.post_file_list.post_file_list,
         });
-        parseContent(response.post_body);
+        parseContent(response.post_body, response.post_file_list.post_file_list);
     }
 
     const [comments, setComments] = useState<Comment[]>([]);
@@ -116,17 +120,27 @@ const DiaryDetails = () => {
 
     // 내용 파싱
     const [blocks, setBlocks] = useState<BlockType[]>([]);
-    const parseContent = (diary_content: string) => {
+    const parseContent = (diary_content: string, file_list: any[]) => {
         const parsed_content = JSON.parse((diary_content !== null) ? diary_content : '');
         const temp_blocks: BlockType[] = [];
+        var imageCount = 0;
+        console.log('file list', file_list);
         parsed_content.forEach((item: any) => {
-            console.log('item', item);
-            const converted = convertFromRaw(item.raw_content);
-            const contentState = EditorState.createWithContent(converted);
-            temp_blocks.push({
-                type: item.type,
-                editorState: contentState,
-            });
+            if (item.type === 'text') {
+                console.log('item', item);
+                const converted = convertFromRaw(item.raw_content);
+                const contentState = EditorState.createWithContent(converted);
+                temp_blocks.push({
+                    type: item.type,
+                    editorState: contentState,
+                });
+            } else if (item.type === 'image') {
+                temp_blocks.push({
+                    type: item.type,
+                    imageURL: file_list[imageCount].url,
+                });
+                imageCount += 1;
+            }
         });
         setBlocks(temp_blocks);
         return EditorState.createEmpty();
@@ -162,14 +176,14 @@ const DiaryDetails = () => {
                             if (block.type === 'text') {
                                 return (
                                     <Editor
-                                        editorState={block.editorState}
+                                        editorState={block.editorState as EditorState}
                                         onChange={() => { }}
                                         onFocus={() => { }}
                                         customStyleMap={styleMap}
                                     />
                                 );
-                            } else {
-                                return <></>
+                            } else if (block.type === 'image') {
+                                return (<ImgBox><Img src={block.imageURL} alt='content' /></ImgBox>);
                             }
                         })
                     }
@@ -185,7 +199,7 @@ const DiaryDetails = () => {
                 {comments.map((data) => (
                     <CommentBox key={data.comment_id} comment={data} postId={Number(postId)} memberId={memberId} />
                 ))}
-                <CommentPage></CommentPage>
+                {/*<CommentPage></CommentPage>*/}
             </CenterBox>
             <OtherCards postId={post.postId} />
         </Container>
@@ -297,5 +311,16 @@ const CommentTitle = styled.div`
     font-weight: 500;
     line-height: 32px;
 `;
+
+const ImgBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+`
+
+const Img = styled.img`
+    max-width: 600px;
+`
 
 export default DiaryDetails;
