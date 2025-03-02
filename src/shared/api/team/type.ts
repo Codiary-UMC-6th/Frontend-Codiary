@@ -1,4 +1,5 @@
 import { StringLiteral } from "typescript";
+import { memberProfile } from "../profile/type";
 
 //add team
 export interface AddTeamData {
@@ -52,14 +53,14 @@ export interface teamProfile {
 }
 
 export interface teamMember {
-  team_member_id: Number;
-  team_member_role: string;
-  team_member_position: string;
   member: MemberInfo;
+  team_member_id: number;
+  team_member_role: "MEMBER" | "ADMIN";
+  team_member_position: "BACKEND" | "FRONTEND" | "DESIGNER" | "PLANNER";
 }
 
 export interface MemberInfo {
-  user_id: Number;
+  user_id: number;
   user_name: string;
   photo_url: string;
 }
@@ -156,4 +157,25 @@ export interface ToggleFollowResponse {
   result: {
     follow_status: boolean;
   }
+}
+
+// 팀원 추가
+export interface getUserInfoByNicknameResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: memberProfile[];
+}
+
+export interface postTeamMemberResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: teamMember;
+}
+
+export interface teamMemberData {
+  member_nick_name: string;
+  member_role: "MEMBER" | "ADMIN";
+  member_position: "BACKEND" | "FRONTEND" | "DESIGNER" | "PLANNER";
 }

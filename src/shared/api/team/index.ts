@@ -1,8 +1,6 @@
 import { baseResponse } from "../common/type";
 import { axiosInstance, axiosPublicInstance } from "../instance";
-import { AddTeamData, TeamInfoResponse, getTeamProfileResponse, getTeamListResponse, getTeamDiaryResponse, getTeamProjectResponse, getTeamFollowedResponse, ToggleFollowResponse } from "./type";
-
-export const postTeamMember = async (team_id: number) => {};
+import { AddTeamData, TeamInfoResponse, getTeamProfileResponse, getTeamListResponse, getTeamDiaryResponse, getTeamProjectResponse, getTeamFollowedResponse, ToggleFollowResponse, getUserInfoByNicknameResponse, postTeamMemberResponse, teamMember, teamMemberData } from "./type";
 
 export const postTeam = async (formData: AddTeamData) => {
   const response = await axiosInstance.post<TeamInfoResponse>(
@@ -83,4 +81,33 @@ export const toggleTeamFollow = async (teamId: number | undefined) => {
   );
 
   return response.data.result;
+}
+
+export const getUserInfoByNickname = async (nickname: string) => {
+  const response = await axiosInstance.get<getUserInfoByNicknameResponse>(
+    `/member/all?nickname=${nickname}`
+  );
+
+  return response.data.result;
+}
+
+export const postTeamMember = async (teamId: string | undefined, member_nick_name: string, member_position: string) => {
+  const response = await axiosInstance.post<postTeamMemberResponse>(
+    `/team/team_member?team_id=${teamId}`,
+    {
+      "member_nick_name": member_nick_name,
+      "member_role": "MEMBER",
+      "member_position": member_position
+    }
+  );
+
+  return response.data.result;
+}
+
+export const deleteTeamMember = async (teamId: string | undefined, team_member_id: number) => {
+  const response = await axiosInstance.delete<baseResponse>(
+    `/team/team_member?team_id=${teamId}&member_id=${team_member_id}`
+  );
+
+  return response.data;
 }

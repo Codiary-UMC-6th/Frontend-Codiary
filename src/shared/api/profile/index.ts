@@ -1,4 +1,4 @@
-import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse, getProjectResponse } from "./type";
+import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse, getProjectResponse, getMyTeamListResponse } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getMemberProfile = async (memberId: string | undefined) => {
@@ -83,6 +83,14 @@ export const getUserProfileImage = async () => {
 export const getProjectData = async (memberId: string | undefined) => {
   const response = await axiosInstance.get<getProjectResponse>(
     `project/${memberId}`
+  );
+
+  return response.data.result;
+}
+
+export const getMyTeamListData = async (memberId: string | undefined) => {
+  const response = await axiosInstance.get<getMyTeamListResponse>(
+    `team/${memberId}/myTeam`
   );
 
   return response.data.result;

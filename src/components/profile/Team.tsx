@@ -7,7 +7,7 @@ import { Head, Infotype, Content } from './BottomStyle';
 
 import { teamInfo } from "@/shared/api/profile/type";
 
-const Team = (props: { teamList: teamInfo[]; }) => {
+const Team = (props: { teamList: teamInfo[] | undefined }) => {
     const { teamList } = props;
     const navigate = useNavigate();
     // console.log("teamList", teamList);
@@ -48,6 +48,7 @@ const Container = styled.div`
 const TeamListWrapper = styled.div`
     display: flex;
     align-items: center;
+    height: 20px;
     padding: 8px 32px;
     border-radius: 4px;
     cursor: pointer;
