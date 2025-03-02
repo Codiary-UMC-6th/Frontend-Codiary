@@ -15,7 +15,7 @@ import {
   patchTeckstackData,
   postMyProjectData,
 } from "@/shared/api/profile";
-import { memberProfile } from "@/shared/api/profile/type";
+import { memberProfile, teamInfo } from "@/shared/api/profile/type";
 
 const Profile = () => {
   // load member info
@@ -24,7 +24,7 @@ const Profile = () => {
     {} as memberProfile
   );
   const [techstackList, setTechstackList] = useState<string[]>([]);
-  const [teamList, setTeamList] = useState([]);
+  const [teamList, setTeamList] = useState<teamInfo[]>();
 
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
@@ -41,6 +41,7 @@ const Profile = () => {
     console.log(response);
     setMemberProfileData(response);
     setTechstackList(response.tech_stacks_list);
+    setTeamList(response.team_list);
   };
 
   useEffect(() => {

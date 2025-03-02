@@ -20,7 +20,7 @@ type userPersonalInfo = {
     memberProfileData: memberProfile;
     onClick: any;
     techstackList: string[];
-    teamList: teamInfo[];
+    teamList: teamInfo[] | undefined;
   }
 }
 
@@ -70,8 +70,8 @@ const UserInfo = ({props}: userPersonalInfo) => {
         <ImageBox>
           <Image/>
           <ImageUploadButtonWrapper>
-            {/* <ImageInput type="file" accept="image/*" onChange={handleFileChange} /> */}
-            <AddImageButton onClick={handleUpload} disabled={!selectedFile}>+</AddImageButton>
+            {/* <ImageInput type="file" accept="image/*" onChange={handleFileChange} />
+            <AddImageButton onClick={handleUpload} disabled={!selectedFile}>+</AddImageButton> */}
           </ImageUploadButtonWrapper>
         </ImageBox>
         <UserInfoWrapper>

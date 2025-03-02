@@ -1,4 +1,4 @@
-import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse, getProjectResponse } from "./type";
+import { GetMemberProfileResponse, userInfoResponse, userInfo, patchTeckstackResponse, postPersonalProjectResponse, getPersonalDiaryResponse, getMyProjectResponse, userProfileImgResponse, getProjectResponse, getMyTeamListResponse } from "./type";
 import { axiosInstance } from "../instance";
 
 export const getMemberProfile = async (memberId: string | undefined) => {
@@ -62,6 +62,11 @@ export const patchUserProfileImage = async (formData: FormData | undefined) => {
   const response = await axiosInstance.patch<userProfileImgResponse>(
     'member/profile-image',
     formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data', // 직접 지정하지 않는 것이 일반적으로 안전함
+      },
+    }
   );
 
   return response.data;
@@ -78,6 +83,14 @@ export const getUserProfileImage = async () => {
 export const getProjectData = async (memberId: string | undefined) => {
   const response = await axiosInstance.get<getProjectResponse>(
     `project/${memberId}`
+  );
+
+  return response.data.result;
+}
+
+export const getMyTeamListData = async (memberId: string | undefined) => {
+  const response = await axiosInstance.get<getMyTeamListResponse>(
+    `team/${memberId}/myTeam`
   );
 
   return response.data.result;

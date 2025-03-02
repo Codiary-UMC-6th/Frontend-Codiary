@@ -20,6 +20,7 @@ const Team = () => {
     const response = await getTeamProfile(teamId);
     setTeamProfileData(response);
     setTeamMemberList(response.team_member_list);
+    setIsManager(response.is_admin);
   }
 
   useEffect(() => {

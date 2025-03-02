@@ -1,9 +1,10 @@
 import { StringLiteral } from "typescript";
+import { memberProfile } from "../profile/type";
 
 //add team
 export interface AddTeamData {
   name: string;
-  // admin_mail: string;
+  email: string;
   intro: string;
   github: string;
   linked_in: string;
@@ -11,14 +12,7 @@ export interface AddTeamData {
   instagram: string;
 }
 
-export interface postTeamResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: teamInfo;
-}
-
-// 팀 정보 조회
+// 팀 정보 추가 & 조회 & 수정
 export interface teamInfo {
   team_id: number;
   name: string;
@@ -33,7 +27,7 @@ export interface teamInfo {
   instagram: string;
 }
 
-export interface getTeamInfoResponse {
+export interface TeamInfoResponse {
   isSuccess: boolean;
   code: string;
   message: string;
@@ -53,18 +47,20 @@ export interface teamProfile {
   discord: string;
   instagram: string;
   is_followed: boolean;
+  current_member_id: number;
+  is_admin: boolean;
   team_member_list: teamMember[];
 }
 
 export interface teamMember {
-  team_member_id: Number;
-  team_member_role: string;
-  team_member_position: string;
   member: MemberInfo;
+  team_member_id: number;
+  team_member_role: "MEMBER" | "ADMIN";
+  team_member_position: "BACKEND" | "FRONTEND" | "DESIGNER" | "PLANNER";
 }
 
 export interface MemberInfo {
-  user_id: Number;
+  user_id: number;
   user_name: string;
   photo_url: string;
 }
@@ -144,4 +140,42 @@ export interface getTeamProjectResponse {
 export interface teamProject {
   project_id: number;
   name: string;
+}
+
+// 팀 팔로우
+export interface getTeamFollowedResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: boolean;
+}
+
+export interface ToggleFollowResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    follow_status: boolean;
+  }
+}
+
+// 팀원 추가
+export interface getUserInfoByNicknameResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: memberProfile[];
+}
+
+export interface postTeamMemberResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: teamMember;
+}
+
+export interface teamMemberData {
+  member_nick_name: string;
+  member_role: "MEMBER" | "ADMIN";
+  member_position: "BACKEND" | "FRONTEND" | "DESIGNER" | "PLANNER";
 }

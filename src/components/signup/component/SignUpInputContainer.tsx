@@ -80,12 +80,14 @@ export const SignUpInputContainer = ({ props }: SignUpInputContainerType) => {
         setError(response.message);
       }
     } catch (error: any) {
-      if (!error.response.isSuccess) {
-        alert(`사용 불가한 ${props.title}입니다.`);
-        setError(error.response.message);
-      } else {
-        console.log("중복확인 실패", error);
-      }
+      alert(`사용 불가한 ${props.title}입니다.`);
+
+      // if (!error.response.isSuccess) {
+      //   alert(`사용 불가한 ${props.title}입니다.`);
+      //   setError(error.response.message);
+      // } else {
+      //   console.log("중복확인 실패", error);
+      // }
     }
   };
 

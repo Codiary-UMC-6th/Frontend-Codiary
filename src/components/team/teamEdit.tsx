@@ -1,95 +1,186 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { post, patch } from "../../common/api";
-import TeamAddUi from "./teamAddUi";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { getTeamInfo, putTeamProfile } from "@/shared/api/team";
+import * as Color from "@/common/Color";
+import SignUpTitle from "../signup/component/SignUpTitle";
+import { SignUpInputContainer } from "../signup/component/SignUpInputContainer";
+import { SocialInputContainer } from "../signup/component/SocialInputContainer";
+import { SignUpBtnBox } from "../signup/component/SignUpBtnBox";
+
 const TeamEdit = () => {
-  const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [intro, setIntro] = useState("");
-  const [github, setGithub] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [linked, setLinked] = useState("");
-  const [instagram, setInstagram] = useState("");
-
   const { teamId } = useParams();
+  const navigate = useNavigate();
+  
+  const [teamProfileFromData, setTeamProfileFromData] = useState({
+    "name": '',
+    "email": '',
+    "intro": '',
+    "github": '',
+    "linked_in": '',
+    "discord": '',
+    "instagram": '',
+  });
 
-  const location = useLocation();
-  const { isEdit } = location.state || false;
-
-  const editData = {
-    name: name,
-    intro: intro,
-    github: github,
-    linkedIn: linked,
-    discord: discord,
-    instagram: instagram,
-  };
-
-  const onClickEdit = async () => {
+  const getTeamInfoData = async () => {
     try {
-      const result = await patch(`/teams/profile/${teamId}`, editData);
-      console.log("PATCH 요청 결과:", result);
-      navigate(`/team/${teamId}`);
+      const userData = await getTeamInfo(teamId);
+      setTeamProfileFromData({
+        name: userData.name,
+        email: userData.email,
+        intro: userData.intro || '',
+        github: userData.github || '',
+        linked_in: userData.linked_in || '',
+        discord: userData.discord || '',
+        instagram: userData.instagram || '',
+      });
+      console.log(teamProfileFromData);
     } catch (error) {
-      console.error("PATCH 요청 실패:", error);
+      console.error(error);
     }
-  };
-  return (
-    <TeamForm>
-      <TeamAddUi
-        onChangeName={(e: any) => setName(e.target.value)}
-        onChangeEmail={(e: any) => setEmail(e.target.value)}
-        onChangeIntro={(e: any) => setIntro(e.target.value)}
-        onChangeGithub={(e: any) => setGithub(e.target.value)}
-        onChangeDiscord={(e: any) => setDiscord(e.target.value)}
-        onChangeLinked={(e: any) => setLinked(e.target.value)}
-        onChangeInstagram={(e: any) => setInstagram(e.target.value)}
-        isEdit={isEdit}
-      />
-      <SubmitBtn type="submit" onClick={onClickEdit}>
-        수정하기
-      </SubmitBtn>
+  }
 
-      <Link
-        to={`/team/${teamId}`}
-        style={{
-          textDecorationColor: "#888888",
-          color: "#888888",
-          fontSize: "14px",
+  const [changeFormData, setChangeFormData] = useState({
+    "name": teamProfileFromData.name,
+    "email": teamProfileFromData.email,
+    "intro": teamProfileFromData.intro,
+    "github": teamProfileFromData.github,
+    "linked_in": teamProfileFromData.linked_in,
+    "discord": teamProfileFromData.discord,
+    "instagram": teamProfileFromData.instagram,
+  });
+
+  useEffect(() => {
+    if (teamId) {
+      getTeamInfoData();
+    }
+  }, [teamId]);
+
+  // 에러 체크
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    intro: '',
+  });
+
+  const handleChange = (name: string, value: string, error: string | undefined) => {
+    setTeamProfileFromData({
+      ...teamProfileFromData,
+      [name]: value,
+    });
+    
+    setErrors({
+      ...errors,
+      [name]: error,
+    });
+
+    setChangeFormData({
+      ...teamProfileFromData,
+      [name]: value,
+    });
+  };
+
+  const putTeamProfileData = async () => {
+    try {
+      if (Object.values(errors).some(error => error)) {
+        console.error('폼 형식이 알맞지 않습니다.');
+        return;
+      }
+
+      const formattedData = {
+        ...changeFormData
+      }
+
+      const response = await putTeamProfile(teamId, formattedData);
+      alert(response.message);
+      console.log('팀프로필 수정 성공', changeFormData);
+      navigate(-1);
+    } catch (error) {
+      console.error('팀프로필 수정 실패', error);
+      console.log(changeFormData);
+    }
+  }
+
+  return (
+    <St.SignUpWrapper>
+      <SignUpTitle>팀 정보</SignUpTitle>
+      <St.SignUpContainerWrapper>
+        <SignUpInputContainer
+          props={{
+            title: "팀 이름",
+            essential: Boolean(true),
+            placeholder: "Team Name",
+            value: teamProfileFromData.name,
+            onChange: (value, error) => handleChange('name', value, error),
+            isButtonHidden: Boolean(true),
+            type: "text",
+            disable: true,
+          }}
+        />
+        <SignUpInputContainer
+          props={{
+            title: "관리자메일",
+            essential: Boolean(true),
+            placeholder: "usermail@codiary.com",
+            value: teamProfileFromData.email,
+            onChange: (value, error) => handleChange('email', value, error),
+            isButtonHidden: Boolean(true),
+            type: "text",
+            disable: true,
+          }}
+        />
+        <SignUpInputContainer
+          props={{
+            title: "팀 소개",
+            essential: Boolean(true),
+            type: "text",
+            value: teamProfileFromData.intro,
+            placeholder: "팀 소개",
+            isButtonHidden: Boolean(true),
+            onChange: (value, error) => handleChange("intro", value, error),
+          }}
+        />
+      </St.SignUpContainerWrapper>
+      <SocialInputContainer
+        props={{
+          handleChange: handleChange,
+          github: teamProfileFromData.github,
+          linkedIn: teamProfileFromData.linked_in,
+          discord: teamProfileFromData.discord,
+          instagram: teamProfileFromData.instagram,
+          isTeam: true,
         }}
-      >
-        뒤로가기
-      </Link>
-    </TeamForm>
+      />
+      <SignUpBtnBox
+        props={{
+          onSubmit: putTeamProfileData,
+          isDisabled: false,
+          title: "저장하기",
+        }}
+      />      
+    </St.SignUpWrapper>
   );
 };
 
-const TeamForm = styled.div`
-  flex: 1;
-  display: flex;
-  background-color: #222222;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 50px;
-`;
+const St = {
+  SignUpWrapper: styled.div`
+    width: 100%;
+    height: 100%;
+    position: flex;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: ${Color.background};
+    padding-bottom: 126px;
+  `,
 
-const SubmitBtn = styled.button`
-  width: 150px;
-  height: 45px;
-  color: white;
-  background-color: #2d7295;
-  border: none;
-  font-size: 16px;
-  margin-bottom: 20px;
-  &:hover {
-    opacity: 0.5;
-    transition: 0.25s;
-    cursor: pointer;
-  }
-`;
+  SignUpContainerWrapper: styled.div`
+    display: flex;
+    align-items: center;
+    margin-top: 48px;
+    flex-direction: column;
+  `,
+};
 
 export default TeamEdit;

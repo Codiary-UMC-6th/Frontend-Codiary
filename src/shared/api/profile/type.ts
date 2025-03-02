@@ -138,3 +138,14 @@ export interface getProjectResponse {
   message: string;
   result: projectList[];
 }
+
+//get my team list
+export interface getMyTeamListResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    team_id: number;
+    team_name: string;
+  }
+}

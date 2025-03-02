@@ -13,12 +13,11 @@ import { SignUpBtnBox } from "../signup/component/SignUpBtnBox";
 
 
 const TeamAdd = () => {
-
   const navigate = useNavigate();
 
   const [addTeamFormData, setAddTeamFormData] = useState<AddTeamData>({
     name: "",
-    // admin_mail: "",
+    email: "",
     intro: "",
     github: "",
     linked_in: "",
@@ -28,11 +27,11 @@ const TeamAdd = () => {
 
   const [errors, setErrors] = useState({
     name: "",
-    // admin_mail: "",
+    email: "",
     intro: "",
   })
 
-  const [isNameChecked, setIsNameChecked] = useState<boolean>(true);
+  const [isNameChecked, setIsNameChecked] = useState<boolean>(false);
 
   const handleChange = (name: string, value: string, error?: string) => {
     setAddTeamFormData({
@@ -46,7 +45,7 @@ const TeamAdd = () => {
 
     // 중복확인 - 이름이 변경되었을 시 초기화
     if (name === "name") {
-      // setIsNameChecked(false);
+      setIsNameChecked(false);
     }
   }
 
@@ -65,6 +64,7 @@ const TeamAdd = () => {
       alert("팀 추가 성공");
       navigate(`/team/${response.team_id}`);
     } catch (error) {
+      alert("팀 추가 실패");
       console.log(error);
     }
   }
@@ -75,7 +75,7 @@ const TeamAdd = () => {
     const hasErrors = Object.values(errors).some((error) => error);
     const requiredFields: Array<keyof AddTeamData> = [
       "name",
-      // "administratorEmail",
+      "email",
       "intro",
     ];
     const hasEmptyFields = requiredFields.some(
@@ -136,16 +136,16 @@ const TeamAdd = () => {
             onCheckDuplicate: () => setIsNameChecked(true),
           }}
         />
-        {/* <SignUpInputContainer
+        <SignUpInputContainer
           props={{
             title: "관리자메일",
             essential: Boolean(true),
             type: "text",
             placeholder: "usermail@codiary.com",
             isButtonHidden: Boolean(true),
-            onChange: (value, error) => handleChange("administratorEmail", value, error),
+            onChange: (value, error) => handleChange("admin_email", value, error),
           }}
-        /> */}
+        />
         <SignUpInputContainer
           props={{
             title: "팀 소개",
@@ -160,6 +160,7 @@ const TeamAdd = () => {
       <SocialInputContainer
         props={{
           handleChange: handleChange,
+          isTeam: true,
         }}
       />
       <SignUpBtnBox

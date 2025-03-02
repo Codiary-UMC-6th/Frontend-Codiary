@@ -49,6 +49,10 @@ const TeamMember = ({ props }: Propstype) => {
 
   // }, [isPop]);
 
+  useEffect(() => {
+    console.log(props.teamMemberList);
+  }, [props.teamMemberList])
+
   const nextMember = () => {
     if (props.teamMemberList?.length && memberIndex + 3 < props.teamMemberList?.length) {
       setMemberIndex(memberIndex + 3);
@@ -63,7 +67,11 @@ const TeamMember = ({ props }: Propstype) => {
 
   const togglePop = () => {
     setIsPop(!isPop);
+    if (isPop == true) {
+      window.location.reload();
+    }
   };
+
   return (
     <Container>
       {isPop && <MemberAdd isPop={isPop} onClose={togglePop} />}
@@ -105,7 +113,7 @@ const TeamMember = ({ props }: Propstype) => {
             <MemberRole>
               {el.team_member_role === "ADMIN"
                 ? el.team_member_role
-                : el.team_member_position}
+                : el.team_member_role}
             </MemberRole>
           </MemberCard>
         ))}
@@ -170,7 +178,7 @@ const EmptyNavigationButton = styled.div`
 `;
 
 const MemberCard = styled.div`
-  margin: 15px;
+  margin: 15px 1.389vw;
   text-align: center;
 
   display: flex;
