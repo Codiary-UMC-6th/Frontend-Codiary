@@ -33,6 +33,8 @@ const TeamAdd = () => {
 
   const [isNameChecked, setIsNameChecked] = useState<boolean>(false);
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
   const handleChange = (name: string, value: string, error?: string) => {
     setAddTeamFormData({
       ...addTeamFormData,
@@ -47,16 +49,23 @@ const TeamAdd = () => {
     if (name === "name") {
       setIsNameChecked(false);
     }
+    console.log(name, value);
   }
 
   // Team add api
-  const handleTeamAdd = async () => {
+  const handleSubmit = async () => {
     try {
       if (Object.values(errors).some((error) => error)) {
         console.error("폼 형식이 알맞지 않습니다.");
         return;
       } else if (!isNameChecked) {
         alert("팀 이름 중복 확인이 필요합니다.");
+        return;
+      } else if (addTeamFormData.email == "") {
+        alert("관리자메일을 입력해주세요!");
+        return;
+      } else if (addTeamFormData.intro == "") {
+        alert("팀 소개를 입력해주세요!");
         return;
       }
       const response = await postTeam(addTeamFormData);
@@ -69,8 +78,6 @@ const TeamAdd = () => {
     }
   }
 
-  const [isDisabled, setIsDisabled] = useState(true);
-
   useEffect(() => {
     const hasErrors = Object.values(errors).some((error) => error);
     const requiredFields: Array<keyof AddTeamData> = [
@@ -82,6 +89,7 @@ const TeamAdd = () => {
       (field) => !addTeamFormData[field]
     );
     const disable = hasErrors || hasEmptyFields;
+    console.log(isDisabled);
     setIsDisabled(disable);
   }, [addTeamFormData, errors]);
 
@@ -143,7 +151,7 @@ const TeamAdd = () => {
             type: "text",
             placeholder: "usermail@codiary.com",
             isButtonHidden: Boolean(true),
-            onChange: (value, error) => handleChange("admin_email", value, error),
+            onChange: (value, error) => handleChange("email", value, error),
           }}
         />
         <SignUpInputContainer
@@ -165,7 +173,7 @@ const TeamAdd = () => {
       />
       <SignUpBtnBox
         props={{
-          onSubmit: handleTeamAdd,
+          onSubmit: handleSubmit,
           isDisabled: isDisabled,
           title: "저장하기",
         }}

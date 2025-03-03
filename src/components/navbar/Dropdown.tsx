@@ -143,6 +143,7 @@ const Create = styled.div`
   cursor: pointer;
   color: ${Color.text5};
   text-align: center;
+  font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
