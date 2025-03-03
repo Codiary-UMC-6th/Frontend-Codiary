@@ -18,6 +18,10 @@ import {
 } from "@/shared/constant/api";
 import { postLogout } from "@/shared/api/logout";
 
+interface UserInfo {
+  current_member_id: number
+}
+
 const Navbar = () => {
   const { setRegister } = useEditorStore();
   const navigate = useNavigate();
@@ -33,7 +37,11 @@ const Navbar = () => {
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
-      const memberId = sessionStorage.getItem("memberId");
+      const userInfoStorage = localStorage.getItem("userInfoStorage");
+      if(userInfoStorage !== null) {
+        const userInfo = JSON.parse(userInfoStorage);
+        const memberId = userInfo.current_memeber_id;
+      }
       const email = sessionStorage.getItem("email");
       const nickname = sessionStorage.getItem("nickname");
       setLogin(memberId, email, nickname);
