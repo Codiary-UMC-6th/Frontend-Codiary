@@ -113,6 +113,7 @@ const DiaryRegister = () => {
     */
     const response = await postDiary(formData);
     console.log(response);
+    navigate(`/`)
   };
 
   const handleAddCoAuthor = (author: string) => { };
